@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail( $id );
         if( $product->delete() ){
-            return new ArtigoResource( $product );
+            return new ProductResource( $product );
         }
     }
 }
