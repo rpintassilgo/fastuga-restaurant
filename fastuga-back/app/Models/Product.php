@@ -24,4 +24,8 @@ class Product extends Model
         'name',
         'type',
     ];
+
+    protected $nullable = [ // será que todos os campos são mandatórios ??
+        'description' // a descrição é obrigatória ou pode ser null ??
+    ];
 }

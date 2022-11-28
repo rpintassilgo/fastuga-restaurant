@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Product extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,10 +18,12 @@ class Product extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
             'type' => $this->type,
-            'description' => $this->description,
+            'blocked' => $this->blocked,
             'photo_url' => $this->photo_url,
-            'price' => $this->price,
-        ];
-    }
+
+        ];  // será que temos de meter aqui created_at, updated_at, deleted_at ??
+    }       // o que é a coluna 'custom' existente em todas as tabelas ??
 }
