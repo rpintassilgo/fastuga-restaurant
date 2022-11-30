@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Customer;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\CustomerResource;
+use App\Controllers\CustomerController;
 
 class UserController extends Controller
 {
@@ -20,6 +23,12 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    public function showCustomer($id)
+    {
+        $user = User::with('customer')->findOrFail($id);
+        return new CustomerResource($user);
+    }
+
     public function store(Request $request)
     {
         $user = new User;
@@ -32,6 +41,24 @@ class UserController extends Controller
 
         if( $user->save() ){
             return new UserResource($user);
+        }
+    }
+
+    public function storeCustomer(Request $request)
+    {
+        $user = new User;
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
+        $user->type = $request->input('type');
+        $user->blocked = $request->input('blocked');
+        $user->photo_url = $request->input('photo_url');
+
+        if( $user->save() ){
+            $customer = (new CustomerController)->store($request);
+            if( isset($customer) ){
+               return new CustomerResource($request);
+            }
         }
     }
 

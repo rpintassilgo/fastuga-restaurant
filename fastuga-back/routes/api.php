@@ -36,7 +36,9 @@ Route::delete('product/{id}', [ProductController::class,'destroy']);
 */
 Route::get('users', [UserController::class, 'index']);
 Route::get('user/{id}', [UserController::class, 'show']);
+Route::get('customer/{id}', [UserController::class, 'showCustomer']);
 Route::post('user', [UserController::class, 'store']);
+Route::post('customer', [UserController::class, 'storeCustomer']);
 Route::put('user/{id}', [UserController::class, 'update']);
 Route::delete('user/{id}', [UserController::class,'destroy']);
 /*
