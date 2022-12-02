@@ -25,8 +25,8 @@ class UserController extends Controller
 
     public function showCustomer($id)
     {
-        $user = User::with('customer')->findOrFail($id);
-        return new CustomerResource($user);
+        $user = User::where('type','C')->findOrFail($id);
+        return new UserResource($user);
     }
 
     public function store(Request $request)
@@ -54,12 +54,20 @@ class UserController extends Controller
         $user->blocked = $request->input('blocked');
         $user->photo_url = $request->input('photo_url');
 
-        if( $user->save() ){
-            $customer = (new CustomerController)->store($request);
-            if( isset($customer) ){
-               return new CustomerResource($request);
-            }
+        $customer = new Customer;
+        
+        /*
+        $customer->user_id = $request->input('user_id');
+        $customer->phone = $request->input('phone');
+        $customer->points = $request->input('points');
+        $customer->nif = $request->input('nif');
+        $customer->default_payment_type = $request->input('default_payment_type');
+        $customer->default_payment_reference = $request->input('default_payment_reference');*/
+    
+        if( $customer->user()->save($user) ){
+            return $user;
         }
+
     }
 
     public function update(Request $request, $id)
