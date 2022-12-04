@@ -1,85 +1,333 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { useRouter, RouterLink, RouterView } from "vue-router"
+import { ref, inject } from "vue"
+import { useUserStore } from "./stores/user.js"
+import { useProjectsStore } from "./stores/projects.js"
+
+const router = useRouter()  
+const toast = inject("toast")
+const userStore = useUserStore()
+const projectsStore = useProjectsStore()
+
+const buttonSidebarExpand = ref(null)
+
+const logout = async () => {
+  if (await userStore.logout()) {
+    toast.success("User has logged out of the application.")
+    clickMenuOption()
+    router.push({name: 'home'})
+  } else {
+    toast.error("There was a problem logging out of the application!")
+  }
+}
+
+const clickMenuOption = () => {
+  if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
+    buttonSidebarExpand.value.click()
+  }
+}
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <nav
+    class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow"
+  >
+    <div class="container-fluid">
+      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" :to="{ name: 'home' }"
+                   @click="clickMenuOption">
+        <img src="@/assets/logo.svg" alt="" width="30" height="24" 
+        class="d-inline-block align-text-top"/>
+        App name
+      </router-link>
+      <button
+        id="buttonSidebarExpandId"
+        ref="buttonSidebarExpand"
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+            :to="{ name: 'Register' }" @click="clickMenuOption">
+                  <i class="bi bi-person-check-fill"></i>
+                  Register
+                </router-link>
+              </li>
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }"
+            :to="{ name: 'Login' }" @click="clickMenuOption">
+              <i class="bi bi-box-arrow-in-right"></i>
+              Login
+            </router-link>
+          </li>
+          <li class="nav-item dropdown" v-show="userStore.user">
+            <a class="nav-link dropdown-toggle" href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                :src="userStore.userPhotoUrl"
+                class="rounded-circle z-depth-0 avatar-img"
+                alt="avatar image"
+              />
+              <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }}</span>
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <router-link
+                  class="dropdown-item"
+                  :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
+                  :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>Profile
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  class="dropdown-item"
+                  :class="{ active: $route.name === 'ChangePassword' }"
+                  :to="{ name: 'ChangePassword' }"
+                  @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change password
+                </router-link>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <a class="dropdown-item" @click.prevent="logout">
+                  <i class="bi bi-arrow-right"></i>Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <RouterView />
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <div class="position-sticky pt-3">
+          <ul class="nav flex-column" v-if="userStore.user">
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                :class="{ active: $route.name === 'Dashboard' }"
+                :to="{ name: 'Dashboard' }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-house"></i>
+                Dashboard
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                :class="{ active: $route.name === 'CurrentTasks' }"
+                :to="{ name: 'CurrentTasks' }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-list-stars"></i>
+                Current Tasks
+              </router-link>
+            </li>
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{ active: $route.name === 'Tasks' }"
+                :to="{ name: 'Tasks' }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-list-check"></i>
+                Tasks
+              </router-link>
+              <router-link
+                class="link-secondary"
+                :to="{ name: 'NewTask' }"
+                aria-label="Add a new task"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-xs bi-plus-circle"></i>
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                :class="{ active: $route.name === 'Projects' }"
+                :to="{ name: 'Projects' }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-files"></i>
+                Projects
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                :class="{ active: $route.name === 'Users' }"
+                :to="{ name: 'Users' }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-people"></i>
+                Team Members
+              </router-link>
+            </li>
+            <li class="nav-item" v-show="userStore.user?.type == 'A'">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
+                :to="{ name: 'Reports' }" @click="clickMenuOption">
+                <i class="bi bi-bar-chart-line"></i>
+                Reports
+              </router-link>
+            </li>
+          </ul>
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+              v-if="userStore.user">
+            <span>My Projects</span>
+            <router-link
+              class="link-secondary"
+              :to="{ name: 'NewProject' }"
+              aria-label="Add a new project"
+              @click="clickMenuOption"
+            >
+              <i class="bi bi-xs bi-plus-circle"></i>
+            </router-link>
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
+              <router-link
+                class="nav-link w-100 me-3"
+                :class="{
+                  active: $route.name == 'ProjectTasks' && $route.params.id == prj.id,
+                }"
+                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-file-ruled"></i>
+                {{ prj.name }}
+              </router-link>
+            </li>
+          </ul>
+
+          <div class="d-block d-md-none">
+            <h6
+              class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+            >
+              <span>User</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item" v-show="!userStore.user">
+                <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                :to="{ name: 'Register' }" @click="clickMenuOption">
+                  <i class="bi bi-person-check-fill"></i>
+                  Register
+                </router-link>
+              </li>
+              <li class="nav-item" v-show="!userStore.user">
+                <router-link class="nav-link" :class="{ active: $route.name === 'Login' }"
+                :to="{ name: 'Login' }" @click="clickMenuOption">
+                  <i class="bi bi-box-arrow-in-right"></i>
+                  Login
+                </router-link>
+              </li>
+              <li class="nav-item dropdown" v-show="userStore.user">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdownMenuLink2"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img
+                    :src="userStore.userPhotoUrl"
+                    class="rounded-circle z-depth-0 avatar-img"
+                    alt="avatar image"
+                  />
+                  <span class="avatar-text">User Name</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                  <li>
+                    <router-link
+                      class="dropdown-item"
+                      :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
+                      :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
+                      <i class="bi bi-person-square"></i>Profile
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      class="dropdown-item"
+                      :class="{ active: $route.name === 'ChangePassword' }"
+                      :to="{ name: 'ChangePassword' }"
+                      @click="clickMenuOption">
+                      <i class="bi bi-key-fill"></i>
+                      Change password
+                    </router-link>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a class="dropdown-item" @click.prevent="logout">
+                      <i class="bi bi-arrow-right"></i>Logout
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <router-view></router-view>
+      </main>
+    </div>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style>
+@import "./assets/dashboard.css";
+
+.avatar-img {
+  margin: -1.2rem 0.8rem -2rem 0.8rem;
+  width: 3.3rem;
+  height: 3.3rem;
+}
+.avatar-text {
+  line-height: 2.2rem;
+  margin: 1rem 0.5rem -2rem 0;
+  padding-top: 1rem;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.dropdown-item {
+  font-size: 0.875rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.btn:focus {
+  outline: none;
+  box-shadow: none;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+#sidebarMenu {
+  overflow-y: auto;
 }
 </style>
