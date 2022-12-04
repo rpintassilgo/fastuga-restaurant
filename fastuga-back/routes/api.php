@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +37,15 @@ Route::delete('product/{id}', [ProductController::class,'destroy']);
 */
 Route::get('users', [UserController::class, 'index']);
 Route::get('user/{id}', [UserController::class, 'show']);
-Route::get('customer/{id}', [UserController::class, 'showCustomer']);
 Route::post('user', [UserController::class, 'store']);
-Route::post('customer', [UserController::class, 'storeCustomer']);
 Route::put('user/{id}', [UserController::class, 'update']);
-Route::put('customer/{id}', [UserController::class, 'updateCustomer']);
 Route::delete('user/{id}', [UserController::class,'destroy']);
-Route::delete('customer/{id}', [UserController::class,'destroyCustomer']);
+
+Route::get('customers', [CustomerController::class, 'index']);
+Route::get('customer/{id}', [CustomerController::class, 'show']);
+Route::post('customer', [CustomerController::class, 'store']);
+Route::put('customer/{id}', [CustomerController::class, 'update']);
+Route::delete('customer/{id}', [CustomerController::class,'destroy']);
 /*
 |--------------------------------------------------------------------------
 */

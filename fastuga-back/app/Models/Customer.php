@@ -20,7 +20,7 @@ class Customer extends Model
         'points',
         'nif',
         'default_payment_type',
-        'default_payment_reference',
+        'default_payment_reference'
     ];
 
     public function user(){
