@@ -40,7 +40,9 @@ Route::get('customer/{id}', [UserController::class, 'showCustomer']);
 Route::post('user', [UserController::class, 'store']);
 Route::post('customer', [UserController::class, 'storeCustomer']);
 Route::put('user/{id}', [UserController::class, 'update']);
+Route::put('customer/{id}', [UserController::class, 'updateCustomer']);
 Route::delete('user/{id}', [UserController::class,'destroy']);
+Route::delete('customer/{id}', [UserController::class,'destroyCustomer']);
 /*
 |--------------------------------------------------------------------------
 */
