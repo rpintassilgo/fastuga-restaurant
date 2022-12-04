@@ -1,44 +1,39 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\api\TaskController;
+use App\Http\Controllers\api\ProjectController;
+use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
+Route::post('login', [AuthController::class, 'login']);
 
+Route::middleware('auth:api')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('users/me', [UserController::class, 'show_me']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::get('users', [UserController::class, 'index']);
+    Route::get('users/{user}', [UserController::class, 'show'])
+        ->middleware('can:view,user');
+    Route::put('users/{user}', [UserController::class, 'update'])
+        ->middleware('can:update,user');
+    Route::patch('users/{user}/password', [UserController::class, 'update_password'])
+        ->middleware('can:updatePassword,user');
+
+    Route::get('users/{user}/tasks', [TaskController::class, 'getTasksOfUser']);
+    Route::get('tasks/{task}', [TaskController::class, 'show']);
+    Route::post('tasks', [TaskController::class, 'store']);
+    Route::delete('tasks/{task}', [TaskController::class, 'destroy']);
+    Route::put('tasks/{task}', [TaskController::class, 'update']);
+    Route::patch('tasks/{task}/completed', [TaskController::class, 'update_completed']);
+
+    Route::get('projects', [ProjectController::class, 'index']);
+    Route::get('projects/{project}', [ProjectController::class, 'show']);
+    Route::get('projects/{project}/tasks', [ProjectController::class, 'showWithTasks']);
+    Route::post('projects', [ProjectController::class, 'store']);
+    Route::delete('projects/{project}', [ProjectController::class, 'destroy']);
+    Route::put('projects/{project}', [ProjectController::class, 'update']);
+    Route::get('users/{user}/projects', [ProjectController::class, 'getProjectsOfUser']);
+    Route::get('users/{user}/projects/inprogress', [ProjectController::class, 'getProjectsInProgressOfUser']);
 });
-*/
 
-/* PRODUCTS - rotas CRUD dos produtos
-|--------------------------------------------------------------------------
-*/
-
-Route::get('products', [ProductController::class, 'index']);
-Route::get('product/{id}', [ProductController::class, 'show']);
-Route::post('product', [ProductController::class, 'store']);
-Route::put('product/{id}', [ProductController::class, 'update']);
-Route::delete('product/{id}', [ProductController::class,'destroy']);
-
-/* USERS - rotas CRUD dos users
-|--------------------------------------------------------------------------
-*/
-Route::get('users', [UserController::class, 'index']);
-Route::get('user/{id}', [UserController::class, 'show']);
-Route::post('user', [UserController::class, 'store']);
-Route::put('user/{id}', [UserController::class, 'update']);
-Route::delete('user/{id}', [UserController::class,'destroy']);
-/*
-|--------------------------------------------------------------------------
-*/
