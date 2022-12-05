@@ -37,9 +37,17 @@ const save = () => {
   emit("save", editingUser.value);
 }
 
+const changing = (input) => {
+//FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
+
+}
+
+
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
+
+
 </script>
 
 <template>
@@ -124,6 +132,13 @@ const cancel = () => {
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
           </div>
+          <div class="form-control text-center">
+          <input type="file" id="actual-btn" hidden/>
+          <label for="actual-btn" class="btn-new-one" @click="changing">Escolhe a Foto</label>
+          
+        
+          
+        </div>
         </div>
       </div>
     </div>
@@ -137,5 +152,15 @@ const cancel = () => {
 <style scoped>
 .total_hours {
   width: 26rem;
+}
+
+.btn-new-one {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 </style>
