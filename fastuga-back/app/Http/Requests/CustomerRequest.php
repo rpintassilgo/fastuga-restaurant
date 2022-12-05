@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Rules\PaymentReferenceRule;
+use App\Enums\PaymentTypeEnum;
 
 class CustomerRequest extends FormRequest
 {
@@ -11,8 +14,8 @@ class CustomerRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() // verificar isto depois mais tarde
+    { 
         return false;
     }
 
@@ -27,14 +30,14 @@ class CustomerRequest extends FormRequest
             'name' => 'required|alpha|max:255',
             'email' => 'required|email',
             'password' => 'required|string',
-            'type' => 'required|in:EC,ED,EM',
+            'type' => 'required|in:C',
             'blocked' => 'required|boolean',
             'photo_url' => 'nullable|image|max:8192',
-            'phone' => '',
-            'points' => '',
-            'nif' => '',
-            'default_payment_type' => '',
-            'default_payment_reference' => '',
+            'phone' => 'required|digits:9', // nao sei se convem verificar o segundo digito tbm pq n existe numeros começados por 99, 90 etc
+            'points' => 'required|integer|min:0',
+            'nif' => 'required|digits:9',
+            'default_payment_type' => ['required',new Enum(PaymentTypeEnum::class)],
+            'default_payment_reference' => ['required','string',new PaymentTypeRule],
         ];
     }
 

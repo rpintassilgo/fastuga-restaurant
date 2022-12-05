@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\UserTypeEnum;
 
 class UserRequest extends FormRequest
 {
@@ -36,7 +37,7 @@ class UserRequest extends FormRequest
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ], */
             'password' => 'required|string',
-            'type' => 'required|in:EC,ED,EM',
+            'type' => ['required',new Enum(UserTypeEnum::class)],
             'blocked' => 'required|boolean',
             'photo_url' => 'nullable|image|max:8192'
         ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Customer;
+use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
         try{
             DB::beginTransaction();
@@ -55,7 +56,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function update(Request $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
         try{
             DB::beginTransaction();
