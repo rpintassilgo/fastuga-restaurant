@@ -29,7 +29,9 @@ class Order extends Model
         'delivered_by',
     ];
 
-    protected $nullable = [ // será que todos os campos são mandatórios ??
-        'description' // a descrição é obrigatória ou pode ser null ??
-    ];
+    public function orderItems()
+    {
+        return $this->hasMany('App\Models\OrderItem');
+    }
+
 }

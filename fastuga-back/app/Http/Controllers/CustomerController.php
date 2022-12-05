@@ -52,7 +52,6 @@ class CustomerController extends Controller
             return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
         }
 
-
         return new UserResource($user);
     }
 

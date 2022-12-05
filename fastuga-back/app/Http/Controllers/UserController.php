@@ -20,7 +20,7 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         $user = new User;
         $user->name = $request->input('name');
@@ -35,7 +35,7 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $user = User::findOrFail( $request->id );
         $user->name = $request->input('name');
