@@ -30,16 +30,21 @@ const clickMenuOption = () => {
 </script>
 
 <template>
+  <div class="topbar">
+        <marquee direction="up" scrolldelay="500" scrollamount="3" style="color: white;text-align:center">
+            Registe-se para ter acesso a desconstos baseados em pontos
+        </marquee>
+    </div>
+
   <nav
-    class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow"
+    class="navbar navbar-light navbar-expand-md  sticky-top flex-md-nowrap  shadow" style="background-color: #FFD700;"
   >
-    <div class="container-fluid">
-      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" :to="{ name: 'home' }"
-                   @click="clickMenuOption">
-        <img src="@/assets/logo.svg" alt="" width="30" height="24" 
-        class="d-inline-block align-text-top"/>
-        App name
-      </router-link>
+    <div class="container-fluid ">
+
+        <router-link :to="{ name: 'home' }" @click="clickMenuOption">
+          <img src="@/assets/fastuga-logo.png" alt="" width="95" height="80" class=" logo d-inline-block align-text-top" style="margin-left: 50px;"/>
+        </router-link>
+
       <button
         id="buttonSidebarExpandId"
         ref="buttonSidebarExpand"
@@ -56,6 +61,14 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
+          <router-link :to="{ name: 'home' }" @click="clickMenuOption">
+            <img src="@/assets/fastuga-letras.png" alt="" width="230" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 300px;"/>
+          </router-link>
+
+          <router-link :to="{ name: 'Menu' }" @click="clickMenuOption">
+            <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
+          </router-link>
+
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
             :to="{ name: 'Register' }" @click="clickMenuOption">
@@ -123,7 +136,7 @@ const clickMenuOption = () => {
 
   <div class="container-fluid">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="margin-top: 5%;">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column" v-if="userStore.user">
             <li class="nav-item">
@@ -306,6 +319,22 @@ const clickMenuOption = () => {
 
 <style>
 @import "./assets/dashboard.css";
+
+.topbar{
+    color: white;
+    text-align:center;
+    background-color: rgb(0, 0, 0);
+    height:32px;
+    overflow:hidden;
+    position:relative;
+    width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
 
 .avatar-img {
   margin: -1.2rem 0.8rem -2rem 0.8rem;

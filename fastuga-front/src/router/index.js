@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "../stores/user.js"
 
 import HomeView from '../views/HomeView.vue'
+import Menu from '../views/Menu.vue'
 
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
@@ -43,6 +44,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
+    },
+    {
+      path: '/menu',
+      name: 'Menu',
+      component: Menu
     },
     {
       path: '/tasks',
