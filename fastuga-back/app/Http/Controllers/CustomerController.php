@@ -23,7 +23,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function store(CustomerRequest $request)
+    public function signUpCustomer(CustomerRequest $request)
     {
         try{
             DB::beginTransaction();
@@ -31,15 +31,15 @@ class CustomerController extends Controller
             $user = new User;
             $user->name = $request->input('name');
             $user->email = $request->input('email');
-            $user->password = $request->input('password');
+            $user->password = bcrypt($request->input('password'));
             $user->type = $request->input('type');
-            $user->blocked = $request->input('blocked');
+            $user->blocked = 0;
             $user->photo_url = $request->input('photo_url');
             $user->save(); // save user to create an id for user_id
 
             $customer = new Customer();
             $customer->phone = $request->input('phone');
-            $customer->points = $request->input('points');
+            $customer->points = 0;
             $customer->nif = $request->input('nif');
             $customer->default_payment_type = $request->input('default_payment_type');
             $customer->default_payment_reference = $request->input('default_payment_reference');

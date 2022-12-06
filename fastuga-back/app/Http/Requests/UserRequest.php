@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\UserTypeEnum;
 
 class UserRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +24,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email',
            /* 'password' => [  // isto pode ser um extra nao sei como na db as pws sao todas 123
                 'required',
@@ -37,7 +36,7 @@ class UserRequest extends FormRequest
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ], */
             'password' => 'required|string',
-            'type' => ['required',new Enum(UserTypeEnum::class)],
+            'type' => 'required|in:EC,ED,EM',
             'blocked' => 'required|boolean',
             'photo_url' => 'nullable|image|max:8192'
         ];
@@ -48,7 +47,6 @@ class UserRequest extends FormRequest
             'name.required' => 'Name required to create new user',
             'email.unique' => 'Email must not be present already',
             'password.required' => 'Password required to create new user',
-            'name.alpha' => 'Name must contain only alphabetic characters',
             'type.in' => 'Invalid type',
         ];
     }

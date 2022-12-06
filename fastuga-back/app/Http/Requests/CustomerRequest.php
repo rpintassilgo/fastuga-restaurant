@@ -3,9 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 use App\Rules\PaymentReferenceRule;
-use App\Enums\PaymentTypeEnum;
 
 class CustomerRequest extends FormRequest
 {
@@ -16,7 +14,7 @@ class CustomerRequest extends FormRequest
      */
     public function authorize() // verificar isto depois mais tarde
     { 
-        return false;
+        return true;
     }
 
     /**
@@ -36,7 +34,7 @@ class CustomerRequest extends FormRequest
             'phone' => 'required|digits:9', // nao sei se convem verificar o segundo digito tbm pq n existe numeros começados por 99, 90 etc
             'points' => 'required|integer|min:0',
             'nif' => 'required|digits:9',
-            'default_payment_type' => ['required',new Enum(PaymentTypeEnum::class)],
+            'default_payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
             'default_payment_reference' => ['required','string',new PaymentTypeRule],
         ];
     }
@@ -47,7 +45,7 @@ class CustomerRequest extends FormRequest
             'email.unique' => 'Email must not be present already',
             'password.required' => 'Password required to create new user',
             'name.alpha' => 'Name must contain only alphabetic characters',
-            'type.in' => 'Invalid type',
+            'type.enum_value' => 'Invalid type',
         ];
     }
 }

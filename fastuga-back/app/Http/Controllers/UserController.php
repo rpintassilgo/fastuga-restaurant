@@ -23,12 +23,14 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
+        //dd($request);
+
         $user = new User;
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->password = $request->input('password');
+        $user->password = bcrypt($request->input('password'));
         $user->type = $request->input('type');
-        $user->blocked = $request->input('blocked');
+        $user->blocked = 0;
         $user->photo_url = $request->input('photo_url');
 
         if( $user->save() ){
