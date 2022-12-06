@@ -11,11 +11,20 @@
         <th>Valor</th>
     </tr>
     <tr>
-        <td>BigMac MENU</td>
+        <td>
+        <figcaption style="text-align:center;"><b>Alheira</b></figcaption>
+        <div class="single-img"><img src="@/assets/alheira.jpg" alt="" width="200" height="125" style="text"/>    
+        </div>
+        </td>
         <td >10,00 €</td>
+       
     </tr>
     <tr>
-        <td>CBO MENU</td>
+        <td>
+          <figcaption style="text-align:center;"><b>Bitoque</b></figcaption>
+          <div class="single-img"><img src="@/assets/bitoque.jpg" alt="" width="200" height="125"/> 
+          </div>
+        </td>
         <td >20,00 €</td>
     </tr>
 </table>

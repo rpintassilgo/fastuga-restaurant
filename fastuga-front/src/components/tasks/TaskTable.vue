@@ -109,7 +109,7 @@ const deleteClick = (task) => {
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId">#</th>
+        <th v-if="showId">ID do Pedido</th>
         <th class="text-center" v-if="showCompleted">Completed</th>
         <th>Description</th>
         <th v-if="showOwner">Owner</th>
