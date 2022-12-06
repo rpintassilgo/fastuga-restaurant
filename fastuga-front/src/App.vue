@@ -158,7 +158,7 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-list-stars"></i>
-                Current Tasks
+                Pedidos Atuais
               </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
@@ -169,7 +169,7 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-list-check"></i>
-                Tasks
+                Pedidos
               </router-link>
               <router-link
                 class="link-secondary"
@@ -180,17 +180,6 @@ const clickMenuOption = () => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :class="{ active: $route.name === 'Projects' }"
-                :to="{ name: 'Projects' }"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-files"></i>
-                Projects
-              </router-link>
-            </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
               <router-link
                 class="nav-link"
@@ -199,7 +188,7 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-people"></i>
-                Team Members
+                Utilizadores
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
@@ -213,7 +202,7 @@ const clickMenuOption = () => {
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
               v-if="userStore.user">
-            <span>My Projects</span>
+            <span>Meus Pedidos</span>
             <router-link
               class="link-secondary"
               :to="{ name: 'NewProject' }"
