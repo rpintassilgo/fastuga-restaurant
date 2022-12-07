@@ -61,7 +61,7 @@
       <label
         for="inputName"
         class="form-label"
-      >Name</label>
+      >Nome</label>
       <input
         type="text"
         class="form-control"

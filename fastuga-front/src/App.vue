@@ -73,7 +73,7 @@ const clickMenuOption = () => {
             <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
             :to="{ name: 'Register' }" @click="clickMenuOption">
                   <i class="bi bi-person-check-fill"></i>
-                  Register
+                  Registar
                 </router-link>
               </li>
           <li class="nav-item" v-show="!userStore.user">
@@ -106,7 +106,7 @@ const clickMenuOption = () => {
                   class="dropdown-item"
                   :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
                   :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
-                  <i class="bi bi-person-square"></i>Profile
+                  <i class="bi bi-person-square"></i>Perfil
                 </router-link>
               </li>
               <li>
@@ -116,7 +116,7 @@ const clickMenuOption = () => {
                   :to="{ name: 'ChangePassword' }"
                   @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
-                  Change password
+                  Mudar a password
                 </router-link>
               </li>
               <li>
@@ -239,7 +239,7 @@ const clickMenuOption = () => {
                 <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
                 :to="{ name: 'Register' }" @click="clickMenuOption">
                   <i class="bi bi-person-check-fill"></i>
-                  Register
+                  Registar
                 </router-link>
               </li>
               <li class="nav-item" v-show="!userStore.user">
@@ -271,7 +271,7 @@ const clickMenuOption = () => {
                       class="dropdown-item"
                       :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
                       :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
-                      <i class="bi bi-person-square"></i>Profile
+                      <i class="bi bi-person-square"></i>Perfil
                     </router-link>
                   </li>
                   <li>
@@ -281,7 +281,7 @@ const clickMenuOption = () => {
                       :to="{ name: 'ChangePassword' }"
                       @click="clickMenuOption">
                       <i class="bi bi-key-fill"></i>
-                      Change password
+                      Mudar a password
                     </router-link>
                   </li>
                   <li>

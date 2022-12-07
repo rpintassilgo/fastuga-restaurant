@@ -106,8 +106,8 @@
 <template>
   <confirmation-dialog
     ref="confirmationLeaveDialog"
-    confirmationBtn="Discard changes and leave"
-    msg="Do you really want to leave? You have unsaved changes!"
+    confirmationBtn="Descartar mudanças e sair"
+    msg="Deseja mesmo sair? Tem mudanças que não foram guardadas!"
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  

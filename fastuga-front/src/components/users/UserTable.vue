@@ -63,10 +63,10 @@ const canViewUserDetail  = (userId) => {
       <tr>
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
-        <th class="align-middle">Name</th>
+        <th class="align-middle">Nome</th>
         <th v-if="showEmail" class="align-middle">Email</th>
         <th v-if="showAdmin" class="align-middle">Admin?</th>
-        <th v-if="showGender" class="align-middle">Gender</th>
+        <th v-if="showGender" class="align-middle">Sexo</th>
       </tr>
     </thead>
     <tbody>

@@ -42,7 +42,7 @@
   const props = defineProps({
     tasksTitle: {
       type: String,
-      default: 'Tasks'
+      default: 'Pedidos'
     },
     onlyCurrentTasks: {
       type: Boolean,
@@ -104,40 +104,26 @@
       <label
         for="selectCompleted"
         class="form-label"
-      >Filter by completed:</label>
+      >Filtrar Por Estado do Pedido:</label>
       <select
         class="form-select"
         id="selectCompleted"
         v-model="filterByCompleted"
       >
-        <option value="-1">Any</option>
-        <option value="0">Pending Tasks</option>
-        <option value="1">Completed Tasks</option>
+        <option value="-1">Nenhum Filtro</option>
+        <option value="0">A Preparar</option>
+        <option value="1">Pronto</option>
+        <option value="2">Entregue</option>
+        <option value="3">Cancelada</option>
       </select>
     </div>
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label
-        for="selectProject"
-        class="form-label"
-      >Filter by project:</label>
-      <select
-        class="form-select"
-        id="selectProject"
-        v-model="filterByProjectId"
-      >
-        <option value="-1">Any</option>
-        <option :value="null">-- No project --</option>
-        <option v-for="prj in projectsStore.projects" :key="prj.id" :value="prj.id">
-          {{prj.name}}
-        </option>
-      </select>
-    </div>
+
     <div class="mx-2 mt-2">
       <button
         type="button"
         class="btn btn-success px-4 btn-addtask"
         @click="addTask"
-      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Task</button>
+      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp;Adicionar Pedido</button>
     </div>
   </div>
   <task-table

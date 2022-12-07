@@ -50,7 +50,7 @@
     <thead>
       <tr>
         <th v-if="showId">#</th>
-        <th>Name</th>
+        <th>Nome</th>
         <th>Status</th>
         <th v-if="showResponsible">Responsible</th>
         <th v-if="showDates">Preview Start Date</th>

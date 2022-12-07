@@ -21,7 +21,7 @@
     novalidate
     @submit.prevent="changePassword"
   >
-    <h3 class="mt-5 mb-3">Change Password</h3>
+    <h3 class="mt-5 mb-3">Mudar a Password</h3>
     <hr>
     <div class="mb-3">
       <div class="mb-3">
@@ -73,7 +73,7 @@
         type="button"
         class="btn btn-primary px-5"
         @click="changePassword"
-      >Change Password</button>
+      >Mudar a Password</button>
     </div>
   </form>
 </template>

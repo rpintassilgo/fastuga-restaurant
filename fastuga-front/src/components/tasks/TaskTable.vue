@@ -47,7 +47,7 @@ const deleteConfirmationDialog = ref(null)
 
 const taskToDeleteDescription = computed(() => {
   return taskToDelete.value
-    ? `#${taskToDelete.value.id} (${taskToDelete.value.description})`
+    ? `#${taskToDelete.value.id} `
     : ""
 })
 
@@ -100,8 +100,8 @@ const deleteClick = (task) => {
 <template>
   <confirmation-dialog
     ref="deleteConfirmationDialog"
-    confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the task ${taskToDeleteDescription}?`"
+    confirmationBtn="Apagar Pedido"
+    :msg="`Quer mesmo Apagar o Pedido ${taskToDeleteDescription}?`"
     @confirmed="dialogConfirmedDelete"
   >
   </confirmation-dialog>
@@ -109,16 +109,18 @@ const deleteClick = (task) => {
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId">ID do Pedido</th>
-        <th class="text-center" v-if="showCompleted">Completed</th>
-        <th>Description</th>
-        <th v-if="showOwner">Owner</th>
-        <th v-if="showProject">Project</th>
+        <th v-if="showId">ID</th>
+        <th v-if="showCompleted">Numero do Pedido</th>
+        <th class="text-center" v-if="showCompleted">Estado do Pedido</th>
+        <th>Descrição</th>
+        <th v-if="showOwner">Criador</th>
         <th v-if="showCompletedButton || showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="task in editingTasks" :key="task.id">
+        <td v-if="showId">{{ task.id }}</td>
+        <!-- Continuar aqui-->
         <td v-if="showId">{{ task.id }}</td>
         <td class="text-center" v-if="showCompleted">
           {{ task.completed ? "yes" : "-" }}
