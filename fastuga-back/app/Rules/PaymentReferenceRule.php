@@ -28,13 +28,14 @@ class PaymentReferenceRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($value == null || !request()->has('default_payment_type')){
+        if($value == null || !request()->has('default_payment_type') || !request()->has('payment_type')){
             $this->error = "No Payment reference or type";
 
             return false;
         }
 
-        $paymentType = request()->get('default_payment_type');
+        $paymentType = request()->has('default_payment_type') ? 
+                       request()->get('default_payment_type') : request()->get('payment_type');
 
         switch($paymentType){
             case('visa'):

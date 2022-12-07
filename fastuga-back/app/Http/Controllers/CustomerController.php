@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\DB;
 class CustomerController extends Controller
 {
 
-    public function index()
+    public function showAllCustomers()
     {
         return User::where('type','C')->get();
     }
 
-    public function show($id)
+    public function showCustomer($id)
     {
         $user = User::where('type','C')->findOrFail($id);
         return new UserResource($user);
@@ -56,7 +56,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function update(CustomerRequest $request, $id)
+    public function editCustomerProfile(CustomerRequest $request, $id)
     {
         try{
             DB::beginTransaction();
@@ -92,7 +92,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function destroy($id)
+    public function deleteCustomerAccount($id)
     {
         $user = User::where('type','C')->findOrFail( $id );
         if( $user->delete() ){

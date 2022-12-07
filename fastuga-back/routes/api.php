@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\api\AuthController;
 
 /*
@@ -36,19 +37,30 @@ Route::delete('product/{id}', [ProductController::class,'destroy']);
 /* USERS - rotas CRUD dos users
 |--------------------------------------------------------------------------
 */
-Route::get('users', [UserController::class, 'index']);
-Route::get('user/{id}', [UserController::class, 'show']);
-Route::post('user', [UserController::class, 'store']);
-Route::put('user/{id}', [UserController::class, 'update']);
-Route::delete('user/{id}', [UserController::class,'destroy']);
+Route::get('users', [UserController::class, 'showAllUsers']);
+Route::get('user/{id}', [UserController::class, 'showUser']);
+Route::post('user', [UserController::class, 'signUpUser']);
+Route::put('user/{id}', [UserController::class, 'editUserProfile']);
+Route::delete('user/{id}', [UserController::class,'deleteUserAccount']);
 
-Route::get('customers', [CustomerController::class, 'index']);
-Route::get('customer/{id}', [CustomerController::class, 'show']);
-Route::post('customer', [CustomerController::class, 'store']);
-Route::put('customer/{id}', [CustomerController::class, 'update']);
-Route::delete('customer/{id}', [CustomerController::class,'destroy']);
-/*
+Route::get('customers', [CustomerController::class, 'showAllCustomers']);
+Route::get('customer/{id}', [CustomerController::class, 'showCustomer']);
+Route::post('customer', [CustomerController::class, 'signUpCustomer']);
+Route::put('customer/{id}', [CustomerController::class, 'editCustomerProfile']);
+Route::delete('customer/{id}', [CustomerController::class,'deleteCustomerAccount']);
+
+/* AUTH
 |--------------------------------------------------------------------------
 */
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+
+/* ORDERS - rotas CRUD dos users
+|--------------------------------------------------------------------------
+*/
+Route::get('order', [OrderController::class, 'showAllOrders']);
+Route::get('order/{id}', [OrderController::class, 'showOrder']);
+Route::post('order', [OrderController::class, 'createOrder']);
+Route::put('order/{id}/ready', [OrderController::class, 'setOrderToReady']);
+Route::put('order/{id}/deliver', [OrderController::class, 'deliverOrder']);
+Route::put('order/{id}/cancel', [OrderController::class, 'cancelOrder']);

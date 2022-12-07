@@ -11,12 +11,12 @@ class OrderItem extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'orders';
+    protected $table = 'order_items';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'order_id',
-        'order_local_numbers',
+        'order_local_number',
         'product_id',
         'status',
         'price',
@@ -25,7 +25,9 @@ class OrderItem extends Model
     ];
 
     protected $nullable = [ 
-        'notes' 
+        'order_id',
+        'notes',
+        'preparation_by'
     ];
 
     public function order()

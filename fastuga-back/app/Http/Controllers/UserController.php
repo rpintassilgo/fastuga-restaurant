@@ -10,20 +10,20 @@ use App\Http\Requests\UserRequest;
 class UserController extends Controller
 {
 
-    public function index()
+    public function showAllUsers()
     {
         return User::all();
     }
 
-    public function show($id)
+    public function showUser($id)
     {
         $user = User::findOrFail($id);
         return new UserResource($user);
     }
 
-    public function store(UserRequest $request)
+    // this function cannot be used to sign up customers 
+    public function signUpUser(UserRequest $request)
     {
-        //dd($request);
 
         $user = new User;
         $user->name = $request->input('name');
@@ -38,7 +38,8 @@ class UserController extends Controller
         }
     }
 
-    public function update(UserRequest $request, $id)
+    // this function cannot be used to edit customers 
+    public function editUserProfile(UserRequest $request, $id)
     {
         $user = User::findOrFail( $request->id );
         $user->name = $request->input('name');
@@ -53,7 +54,7 @@ class UserController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function deleteUserAccount($id)
     {
         $user = User::findOrFail( $id );
         if( $user->delete() ){
