@@ -25,7 +25,7 @@ class OrderItemRule implements Rule
         }
 
         // foreach de cada item do pedido
-        foreach ($item as $value){
+        foreach ($value as $item){
             // verificar se o item tem product_id
             if( is_null($item->product_id) ) return false;
             

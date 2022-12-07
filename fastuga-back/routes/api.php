@@ -58,7 +58,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api')
 /* ORDERS - rotas CRUD dos users
 |--------------------------------------------------------------------------
 */
-Route::get('order', [OrderController::class, 'showAllOrders']);
+Route::get('orders', [OrderController::class, 'showAllOrders']);
 Route::get('order/{id}', [OrderController::class, 'showOrder']);
 Route::post('order', [OrderController::class, 'createOrder']);
 Route::put('order/{id}/ready', [OrderController::class, 'setOrderToReady']);

@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\OrderItem;
+use App\Http\Resources\OrderItemResource;
 
 class OrderResource extends JsonResource
 {
@@ -28,7 +30,10 @@ class OrderResource extends JsonResource
             'payment_reference' => $this->payment_reference,
             'date' => $this->date,
             'delivery_by' => $this->delivery_by,
-            // mostras todos os orders items tbm
+            'order_items' => OrderItemResource::collection($this->order_items)
+            //'order_items' => OrderItemResource::collection(OrderItem::where('order_id',$this->id)->get())
+            // isto funciona mas nao precisamos de dar load manualmente, podemos dar load no controlador
         ];
+
     }
 }

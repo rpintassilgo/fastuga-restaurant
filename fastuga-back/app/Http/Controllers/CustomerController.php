@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class CustomerController extends Controller
 {
 
-    public function showAllCustomers()
+    public function showAllCustomers() // nao tou a dar load aqui tbm acho eu
     {
         return User::where('type','C')->get();
     }

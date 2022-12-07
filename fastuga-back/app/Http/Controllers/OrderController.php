@@ -14,11 +14,17 @@ class OrderController extends Controller
 
     public function showAllOrders()
     {
-        return Order::all();
+        return Order::with('orderItems')->get();
+        // return OrderResource::collection(Order::with('orderItems')->get());   (isto aqui nem sei bem oq é, só sei que crashou a api e o postman)
+        // ver isto amanha, o primeiro n conseguia pq atingia o limite maximo do tamanho do pedido
+        // era fixer conseguir enviar todos os pedidos com todos os items
+        // se nao for possivel sei la, posso enviar todos os pedidos e ao clicar no pedido faz um pedido de todos os itens desse pedido ao server
+        // isto no frontend
     }
 
     public function showOrder($id)
     {
+        //$order = Order::findOrFail($id)->with('orderItems');
         $order = Order::findOrFail($id);
         return new OrderResource($order);
     }
@@ -68,7 +74,7 @@ class OrderController extends Controller
             // criar itens do pedido e adicioná-los ao pedido
             $items = $request->input('order_items');
             $orderLocalNumber = 1;
-            foreach ($item as $items){
+            foreach ($items as $item){
                 $orderItem = new OrderItem();
 
                 $orderItem->order_local_number = $orderLocalNumber;
