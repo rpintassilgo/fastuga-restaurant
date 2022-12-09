@@ -46,7 +46,7 @@
       novalidate
       @submit.prevent="register"
     >
-      <h3 class="mt-5 mb-3">Register</h3>
+      <h3 class="mt-5 mb-3">Registar</h3>
       <hr>
       <div class="mb-3">
           <label
@@ -78,7 +78,7 @@
           <label
             for="inputPassword1"
             class="form-label"
-          >Password Confirmation</label>
+          >Confirmação da Password</label>
           <input
             type="password"
             class="form-control"
@@ -92,7 +92,7 @@
           <label
             for="inputName"
             class="form-label"
-          >Name</label>
+          >Nome</label>
           <input
             type="text"
             class="form-control"
@@ -122,7 +122,7 @@
           type="button"
           class="btn btn-primary px-5"
           @click="register"
-        >Register</button>
+        >Registar</button>
       </div>
 
 

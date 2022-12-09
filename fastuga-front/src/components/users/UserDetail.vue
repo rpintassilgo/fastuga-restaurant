@@ -37,9 +37,17 @@ const save = () => {
   emit("save", editingUser.value);
 }
 
+const changing = (input) => {
+//FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
+
+}
+
+
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
+
+
 </script>
 
 <template>
@@ -49,16 +57,16 @@ const cancel = () => {
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
-          <label for="inputName" class="form-label">Name</label>
+          <label for="inputName" class="form-label">Nome</label>
           <input
             type="text"
             class="form-control"
             id="inputName"
-            placeholder="User Name"
+            placeholder="Nome de utilizador"
             required
             v-model="editingUser.name"
           />
-          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+          <field-error-message :errors="errors" fieldName="nome"></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -85,7 +93,7 @@ const cancel = () => {
                 id="inputType"
               />
               <label class="form-check-label" for="inputType">
-                User is Administrator
+                O Utilizador é Administrador
               </label>
               <field-error-message :errors="errors" fieldName="type"></field-error-message>
             </div>
@@ -124,11 +132,18 @@ const cancel = () => {
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
           </div>
+          <div class="form-control text-center">
+          <input type="file" id="actual-btn" hidden/>
+          <label for="actual-btn" class="btn-new-one" @click="changing">Escolhe a Foto</label>
+          
+        
+          
+        </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5" @click="save">Guardar</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
@@ -137,5 +152,15 @@ const cancel = () => {
 <style scoped>
 .total_hours {
   width: 26rem;
+}
+
+.btn-new-one {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 </style>

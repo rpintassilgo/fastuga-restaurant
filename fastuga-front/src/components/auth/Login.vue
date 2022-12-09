@@ -40,7 +40,7 @@
         <label
           for="inputUsername"
           class="form-label"
-        >Username</label>
+        >Email</label>
         <input
           type="text"
           class="form-control"

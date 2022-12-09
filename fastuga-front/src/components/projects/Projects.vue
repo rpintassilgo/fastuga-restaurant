@@ -87,7 +87,7 @@
   <confirmation-dialog
     ref="deleteConfirmationDialog"
     confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the task ${projectToDeleteDescription}?`"
+    :msg="`Quer mesmo Apagar o Pedido ${projectToDeleteDescription}?`"
     @confirmed="deleteProjectConfirmed"
   >
   </confirmation-dialog>

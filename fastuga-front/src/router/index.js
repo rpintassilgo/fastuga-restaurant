@@ -59,7 +59,7 @@ const router = createRouter({
       path: '/tasks/current',
       name: 'CurrentTasks',
       component: Tasks,
-      props: { onlyCurrentTasks: true, tasksTitle: 'Current Tasks' }
+      props: { onlyCurrentTasks: true, tasksTitle: 'Pedidos Atuais' }
     },
     {
       path: '/projects',
