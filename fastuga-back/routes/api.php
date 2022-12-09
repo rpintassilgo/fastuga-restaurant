@@ -28,11 +28,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 
-Route::get('products', [ProductController::class, 'index']);
-Route::get('product/{id}', [ProductController::class, 'show']);
-Route::post('product', [ProductController::class, 'store']);
-Route::put('product/{id}', [ProductController::class, 'update']);
-Route::delete('product/{id}', [ProductController::class,'destroy']);
+Route::get('products', [ProductController::class, 'showAllProducts']);
+Route::get('product/{id}', [ProductController::class, 'showProduct']);
+Route::get('products/hotdishes', [ProductController::class, 'showHotDishes']);
+Route::get('products/colddishes', [ProductController::class, 'showColdDishes']);
+Route::get('products/drinks', [ProductController::class, 'showDrinks']);
+Route::get('products/desserts', [ProductController::class, 'showDesserts']);
+Route::post('product', [ProductController::class, 'createProduct']);
+Route::put('product/{id}', [ProductController::class, 'editProduct']);
+Route::delete('product/{id}', [ProductController::class,'deleteProduct']);
 
 /* USERS - rotas CRUD dos users
 |--------------------------------------------------------------------------

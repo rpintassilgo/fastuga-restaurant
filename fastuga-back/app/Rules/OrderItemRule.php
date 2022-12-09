@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use App\Models\Product;
 
 class OrderItemRule implements Rule
 {
@@ -24,17 +25,16 @@ class OrderItemRule implements Rule
             return false;
         }
 
+        //dd($value);
+
         // foreach de cada item do pedido
         foreach ($value as $item){
             // verificar se o item tem product_id
-            if( is_null($item->product_id) ) return false;
+            if( is_null($item['product_id']) ) return false;
             
             // verificar se o produto existe
-            $product = Product::find( $item->product_id );
+            $product = Product::find( $item['product_id'] );
             if($product == null) return false;
-
-            $orderItem->product_id = $item->product_id;
-            $orderItem->notes =  !is_null($item->notes) ? $item->notes : null;
     
         }
 

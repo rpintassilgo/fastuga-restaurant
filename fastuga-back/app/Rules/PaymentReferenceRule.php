@@ -28,7 +28,8 @@ class PaymentReferenceRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($value == null || !request()->has('default_payment_type') || !request()->has('payment_type')){
+        //dd($attribute);
+        if($value == null && !request()->has('default_payment_type') && !request()->has('payment_type')){
             $this->error = "No Payment reference or type";
 
             return false;
@@ -37,20 +38,22 @@ class PaymentReferenceRule implements Rule
         $paymentType = request()->has('default_payment_type') ? 
                        request()->get('default_payment_type') : request()->get('payment_type');
 
+        //dd($paymentType);
+
         switch($paymentType){
-            case('visa'):
+            case('VISA'):
                 if(mb_strlen($value) != 16){
                     $this->error = 'Digit length must be 16 for visa';
                     return false;
                 }
                 break;
-            case('mbway'):
+            case('MBWAY'):
                 if(mb_strlen($value) != 9){
                     $this->error = 'Digit length must be 9 for mbway';
                     return false;
                 }
                 break;
-            case('paypal'):
+            case('PAYPAL'):
                 if(!filter_var($value, FILTER_VALIDATE_EMAIL)){
                     $this->error = 'Invalid email';
                     return false;

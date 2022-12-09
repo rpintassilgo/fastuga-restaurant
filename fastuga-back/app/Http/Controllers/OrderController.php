@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Http\Requests\OrderRequest;
 use App\Models\Product;
 use App\Http\Resources\OrderResource;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -26,7 +27,7 @@ class OrderController extends Controller
     public function showAllOrdersFromCustomer($id)
     {
         $order = Order::with('orderItems.product')->where('customer_id',$id)->get();
-        return new OrderResource($order);
+        return OrderResource::collection($order);
     }
 
     public function showOrder($id)
@@ -38,10 +39,15 @@ class OrderController extends Controller
     public function createOrder(OrderRequest $request)
     {
 
-        // check if logged user is customer or if it is not logged (customer without account)
+        //dd($request);
+
+        // check if logged user is customer or if it is not logged (customer without account) 
+        // isto devia ser middleware depois e secalhar toda a gente pode criar order
+        /*
         if (Auth::user()->user_type != "C" || !Auth::check()){
             return response()->json(['message' => 'The user is not a customer'],400);
         }
+        */
 
         try{
             DB::beginTransaction();
@@ -50,17 +56,18 @@ class OrderController extends Controller
 
             $order->status = "P";
             $order->customer_id = $request->has('customer_id') ? $request->input('customer_id') : null; //
-            $order->total_price = $request->input('total_price');
             $order->total_paid = $request->input('total_paid');
             $order->total_paid_with_points = $request->input('total_paid_with_points');
             $order->points_gained = $request->input('points_gained');
             $order->points_used_to_pay = $request->input('points_used_to_pay');
             $order->payment_type = $request->input('payment_type');
             $order->payment_reference = $request->input('payment_reference');
-            $order->date = now()->toDateTimeString('Y-m-d');
-            $order->delivery_by = null;
+            //$order->date = now()->toDateTimeString('Y-m-d');
+            $order->delivered_by = null;
 
             $order->save(); // save order to create an "id for order_id" and "id to check the ticket number from the order with id-1"
+
+            dd($order->id-1);
 
             // get ticket number from previous order
             $previousOrder = Order::findOrFail($order->id-1);
@@ -79,6 +86,7 @@ class OrderController extends Controller
             // criar itens do pedido e adicioná-los ao pedido
             $items = $request->input('order_items');
             $orderLocalNumber = 1;
+            $totalPrice = 0;
             foreach ($items as $item){
                 $orderItem = new OrderItem();
 
@@ -92,10 +100,16 @@ class OrderController extends Controller
                 $orderItem->status = "W"; // the inicial status of an item order is Waiting
                 $orderItem->price = $product->price;
                 $orderItem->notes =  !is_null($item->notes) ? $item->notes : null;
+
+                $totalPrice = $totalPrice + $product->price;
         
                 $order->orderItem()->save($orderItem);
             }
-    
+
+            $order->total_price = $totalPrice;
+
+            $order->save(); // save again to save total price
+
 
             DB::commit();
 

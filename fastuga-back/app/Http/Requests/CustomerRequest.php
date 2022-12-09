@@ -35,7 +35,7 @@ class CustomerRequest extends FormRequest
             'points' => 'required|integer|min:0',
             'nif' => 'required|digits:9',
             'default_payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
-            'default_payment_reference' => ['required','string',new PaymentTypeRule],
+            'default_payment_reference' => ['required','string',new PaymentReferenceRule],
         ];
     }
 

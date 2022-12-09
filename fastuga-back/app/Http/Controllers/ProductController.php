@@ -5,50 +5,97 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
+use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
   
-    public function index()
+    public function showAllProducts()
     {
         return Product::all();
     }
 
-    public function show($id)
+    public function showProduct($id)
     {
         $product = Product::findOrFail($id);
         return new ProductResource($product);
     }
 
-    public function store(Request $request)
+    public function showHotDishes()
     {
-        $product = new Product;
-        $product->name = $request->input('name');
-        $product->type = $request->input('type');
-        $product->description = $request->input('description');
-        $product->photo_url = $request->input('photo_url');
-        $product->price = $request->input('price');
-
-        if( $product->save() ){
-            return new ProductResource($product);
-        }
+        $product = Product::where('type','hot dish')->get();
+        return ProductResource::collection($product);
     }
 
-    public function update(Request $request, $id)
+    public function showColdDishes()
     {
-        $product = Product::findOrFail( $request->id );
-        $product->name = $request->input('name');
-        $product->type = $request->input('type');
-        $product->description = $request->input('description');
-        $product->photo_url = $request->input('photo_url');
-        $product->price = $request->input('price');
-
-        if( $product->save() ){
-            return new ProductResource($product);
-        }
+        $product = Product::where('type','cold dish')->get();
+        return ProductResource::collection($product);
     }
 
-    public function destroy($id)
+    public function showDrinks()
+    {
+        $product = Product::where('type','drink')->get();
+        return ProductResource::collection($product);
+    }
+
+    public function showDesserts()
+    {
+        $product = Product::where('type','dessert')->get();
+        return ProductResource::collection($product);
+    }
+
+    public function createProduct(ProductRequest $request)
+    {
+        try{
+            DB::beginTransaction();
+
+            $product = new Product;
+
+            $product->name = $request->input('name');
+            $product->type = $request->input('type');
+            $product->description = $request->input('description');
+            $product->photo_url = $request->input('photo_url');
+            $product->price = $request->input('price');
+
+            $product->save();
+
+            DB::commit();
+
+        } catch(\Throwable $error){
+            DB::rollback();
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+
+        return new ProductResource($product);
+    }
+
+    public function editProduct(ProductRequest $request, $id)
+    {
+        try{
+            DB::beginTransaction();
+
+            $product = Product::findOrFail( $request->id );
+            $product->name = $request->input('name');
+            $product->type = $request->input('type');
+            $product->description = $request->input('description');
+            $product->photo_url = $request->input('photo_url');
+            $product->price = $request->input('price');
+
+            $product->save();
+
+            DB::commit();
+        }
+        catch(\Throwable $error){
+            DB::rollback();
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+
+        return new ProductResource($product);
+    }
+
+    public function deleteProduct($id)
     {
         $product = Product::findOrFail( $id );
         if( $product->delete() ){

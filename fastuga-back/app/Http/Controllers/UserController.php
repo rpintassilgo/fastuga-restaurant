@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
 
-class UserController extends Controller
+class UserController extends Controller // falta adicionar try and catch e DB neste
 {
 
     public function showAllUsers()
