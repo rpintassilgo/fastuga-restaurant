@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ProductResource;
 
 class OrderItemResource extends JsonResource
 {
@@ -17,11 +18,11 @@ class OrderItemResource extends JsonResource
         return [
             'id' => $this->id,
             'order_local_number' => $this->order_local_number,
-            'product_id' => $this->product_id,
             'status' => $this->status,
             'price' => $this->price,
             'preparation_by' => $this->preparation_by,
-            'notes' => $this->notes
+            'notes' => $this->notes,
+            'product' => $this->whenLoaded('product')
         ];
     }
 }

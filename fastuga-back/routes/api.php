@@ -59,6 +59,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api')
 |--------------------------------------------------------------------------
 */
 Route::get('orders', [OrderController::class, 'showAllOrders']);
+Route::get('orders/customer/{id}', [OrderController::class, 'showAllOrdersFromCustomer']);
 Route::get('order/{id}', [OrderController::class, 'showOrder']);
 Route::post('order', [OrderController::class, 'createOrder']);
 Route::put('order/{id}/ready', [OrderController::class, 'setOrderToReady']);

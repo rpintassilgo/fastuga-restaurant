@@ -14,7 +14,8 @@ class OrderController extends Controller
 
     public function showAllOrders()
     {
-        return Order::with('orderItems')->get();
+        return Order::all();
+        //return Order::with('orderItems')->get();
         // return OrderResource::collection(Order::with('orderItems')->get());   (isto aqui nem sei bem oq é, só sei que crashou a api e o postman)
         // ver isto amanha, o primeiro n conseguia pq atingia o limite maximo do tamanho do pedido
         // era fixer conseguir enviar todos os pedidos com todos os items
@@ -22,10 +23,15 @@ class OrderController extends Controller
         // isto no frontend
     }
 
+    public function showAllOrdersFromCustomer($id)
+    {
+        $order = Order::with('orderItems.product')->where('customer_id',$id)->get();
+        return new OrderResource($order);
+    }
+
     public function showOrder($id)
     {
-        //$order = Order::findOrFail($id)->with('orderItems');
-        $order = Order::findOrFail($id);
+        $order = Order::with('orderItems.product')->findOrFail($id);
         return new OrderResource($order);
     }
 
@@ -40,8 +46,7 @@ class OrderController extends Controller
         try{
             DB::beginTransaction();
 
-            $order = new Order;
-            //$order->ticket_number = $request->input('t'); // o ticket number gira de 1 a 99; ver como fazer isto mais tarde
+            $order = new Order; 
 
             $order->status = "P";
             $order->customer_id = $request->has('customer_id') ? $request->input('customer_id') : null; //

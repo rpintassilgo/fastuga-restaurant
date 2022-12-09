@@ -16,6 +16,7 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'ticket_number' => $this->ticket_number,
@@ -30,7 +31,7 @@ class OrderResource extends JsonResource
             'payment_reference' => $this->payment_reference,
             'date' => $this->date,
             'delivery_by' => $this->delivery_by,
-            'order_items' => OrderItemResource::collection($this->order_items)
+            'order_items' => OrderItemResource::collection($this->whenLoaded('orderItems'))
             //'order_items' => OrderItemResource::collection(OrderItem::where('order_id',$this->id)->get())
             // isto funciona mas nao precisamos de dar load manualmente, podemos dar load no controlador
         ];
