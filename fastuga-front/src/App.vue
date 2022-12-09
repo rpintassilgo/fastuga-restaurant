@@ -45,6 +45,10 @@ const clickMenuOption = () => {
           <img src="@/assets/fastuga-logo.png" alt="" width="95" height="80" class=" logo d-inline-block align-text-top" style="margin-left: 50px;"/>
         </router-link>
 
+        <router-link :to="{ name: 'Menu' }" @click="clickMenuOption">
+            <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
+          </router-link>
+
       <button
         id="buttonSidebarExpandId"
         ref="buttonSidebarExpand"
@@ -64,11 +68,12 @@ const clickMenuOption = () => {
           <router-link :to="{ name: 'home' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-letras.png" alt="" width="230" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 300px;"/>
           </router-link>
-
-          <router-link :to="{ name: 'Menu' }" @click="clickMenuOption">
-            <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
+          <li class="nav-item" v-show="(userStore.user?.type == 'A' || userStore.user?.type == 'M')">
+            <!-- Mudar A e M pelos corretos da base de dados -->
+          <router-link :to="{ name: 'Carrinho' }" @click="clickMenuOption">
+            <img src="@/assets/fastuga-carrinho.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
-
+          </li>
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
             :to="{ name: 'Register' }" @click="clickMenuOption">
@@ -181,6 +186,7 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
+               <!-- Mudar A pelos corretos da base de dados -->
               <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'Users' }"
@@ -192,6 +198,7 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
+                <!-- Mudar A pelos corretos da base de dados -->
               <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
                 :to="{ name: 'Reports' }" @click="clickMenuOption">
                 <i class="bi bi-bar-chart-line"></i>
