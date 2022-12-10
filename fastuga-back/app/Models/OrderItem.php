@@ -13,6 +13,7 @@ class OrderItem extends Model
 
     protected $table = 'order_items';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
     protected $fillable = [
         'order_id',
@@ -25,7 +26,6 @@ class OrderItem extends Model
     ];
 
     protected $nullable = [ 
-        'order_id',
         'notes',
         'preparation_by'
     ];

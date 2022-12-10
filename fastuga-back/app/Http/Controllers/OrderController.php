@@ -9,6 +9,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Product;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -54,39 +55,22 @@ class OrderController extends Controller
 
             $order = new Order; 
 
-            $order->status = "P";
-            $order->customer_id = $request->has('customer_id') ? $request->input('customer_id') : null; //
-            $order->total_paid = $request->input('total_paid');
-            $order->total_paid_with_points = $request->input('total_paid_with_points');
-            $order->points_gained = $request->input('points_gained');
-            $order->points_used_to_pay = $request->input('points_used_to_pay');
-            $order->payment_type = $request->input('payment_type');
-            $order->payment_reference = $request->input('payment_reference');
-            //$order->date = now()->toDateTimeString('Y-m-d');
-            $order->delivered_by = null;
-
-            $order->save(); // save order to create an "id for order_id" and "id to check the ticket number from the order with id-1"
-
-            dd($order->id-1);
-
             // get ticket number from previous order
-            $previousOrder = Order::findOrFail($order->id-1);
+            $previousTicketNumber = Order::find(DB::table('orders')->max('id'))->ticket_number;
+            //dd($previousTicketNumber);
+
             $ticketNumber = null;
-            if($previousOrder->ticket_number == 99){
+            if($previousTicketNumber == 99){
                 $ticketNumber = 1;
             } else{
-                $ticketNumber = ($previousOrder->ticket_number) + 1;
+                $ticketNumber = ($previousTicketNumber) + 1;
             }
 
-            $order->ticket_number = $ticketNumber;
-
-            $order->save(); // save again to save ticket_number
-
-            
             // criar itens do pedido e adicioná-los ao pedido
             $items = $request->input('order_items');
             $orderLocalNumber = 1;
             $totalPrice = 0;
+            $orderItemsToSave = [];
             foreach ($items as $item){
                 $orderItem = new OrderItem();
 
@@ -94,22 +78,39 @@ class OrderController extends Controller
                 $orderLocalNumber = $orderLocalNumber + 1;
                 
                 // all products were verified inside orderItemRule (however if it fails, it will enter "catch")
-                $product = Product::findOrFail( $item->product_id );
+                $product = Product::findOrFail( $item['product_id'] );
 
-                $orderItem->product_id = $item->product_id;
+                $orderItem->product_id = $item['product_id'];
                 $orderItem->status = "W"; // the inicial status of an item order is Waiting
                 $orderItem->price = $product->price;
-                $orderItem->notes =  !is_null($item->notes) ? $item->notes : null;
+                $orderItem->notes =  array_key_exists('notes',$item) ? $item['notes'] : null;
 
                 $totalPrice = $totalPrice + $product->price;
-        
-                $order->orderItem()->save($orderItem);
+
+                array_push($orderItemsToSave,$orderItem); // we cant save it rn, because there is no order_id
             }
 
+
+            $order->status = "P";
+            $order->ticket_number = $ticketNumber;
+            $order->customer_id = $request->has('customer_id') ? $request->input('customer_id') : null; //
             $order->total_price = $totalPrice;
+            $order->total_paid = $request->input('total_paid');
+            $order->total_paid_with_points = $request->input('total_paid_with_points');
+            $order->points_gained = $request->input('points_gained');
+            $order->points_used_to_pay = $request->input('points_used_to_pay');
+            $order->payment_type = $request->input('payment_type');
+            $order->payment_reference = $request->input('payment_reference');
+            $order->date = Carbon::now()->format('Y-m-d');
+            $order->delivered_by = null;
 
-            $order->save(); // save again to save total price
 
+            $order->save(); // save to create id for order_id
+            
+            foreach($orderItemsToSave as $orderItem){
+                $order->orderItems()->save($orderItem);
+            }
+            
 
             DB::commit();
 
