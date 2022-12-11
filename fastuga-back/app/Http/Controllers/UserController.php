@@ -22,6 +22,11 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return new UserResource($user);
     }
 
+    public function showMe(Request $request) // maybe use a specific request later
+    {
+        return new UserResource($request->user());
+    }
+
     // this function cannot be used to sign up customers 
     public function signUpUser(UserRequest $request)
     {

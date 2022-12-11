@@ -28,11 +28,13 @@ class CustomerController extends Controller
         try{
             DB::beginTransaction();
 
+            //dd($request);
+
             $user = new User;
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             $user->password = bcrypt($request->input('password'));
-            $user->type = $request->input('type');
+            $user->type = "C";
             $user->blocked = 0;
             $user->photo_url = $request->input('photo_url');
             $user->save(); // save user to create an id for user_id

@@ -38,7 +38,7 @@ class PaymentReferenceRule implements Rule
         $paymentType = request()->has('default_payment_type') ? 
                        request()->get('default_payment_type') : request()->get('payment_type');
 
-        //dd($paymentType);
+       // dd($paymentType);
 
         switch($paymentType){
             case('VISA'):
