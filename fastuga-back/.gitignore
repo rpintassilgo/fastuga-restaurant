@@ -24,4 +24,6 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+.rnd
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Laravel

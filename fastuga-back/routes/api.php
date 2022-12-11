@@ -1,39 +1,71 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\TaskController;
-use App\Http\Controllers\api\ProjectController;
-use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\api\AuthController;
 
-Route::post('login', [AuthController::class, 'login']);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('users/me', [UserController::class, 'show_me']);
 
-    Route::get('users', [UserController::class, 'index']);
-    Route::get('users/{user}', [UserController::class, 'show'])
-        ->middleware('can:view,user');
-    Route::put('users/{user}', [UserController::class, 'update'])
-        ->middleware('can:update,user');
-    Route::patch('users/{user}/password', [UserController::class, 'update_password'])
-        ->middleware('can:updatePassword,user');
-
-    Route::get('users/{user}/tasks', [TaskController::class, 'getTasksOfUser']);
-    Route::get('tasks/{task}', [TaskController::class, 'show']);
-    Route::post('tasks', [TaskController::class, 'store']);
-    Route::delete('tasks/{task}', [TaskController::class, 'destroy']);
-    Route::put('tasks/{task}', [TaskController::class, 'update']);
-    Route::patch('tasks/{task}/completed', [TaskController::class, 'update_completed']);
-
-    Route::get('projects', [ProjectController::class, 'index']);
-    Route::get('projects/{project}', [ProjectController::class, 'show']);
-    Route::get('projects/{project}/tasks', [ProjectController::class, 'showWithTasks']);
-    Route::post('projects', [ProjectController::class, 'store']);
-    Route::delete('projects/{project}', [ProjectController::class, 'destroy']);
-    Route::put('projects/{project}', [ProjectController::class, 'update']);
-    Route::get('users/{user}/projects', [ProjectController::class, 'getProjectsOfUser']);
-    Route::get('users/{user}/projects/inprogress', [ProjectController::class, 'getProjectsInProgressOfUser']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });
+*/
 
+/* PRODUCTS - rotas CRUD dos produtos
+|--------------------------------------------------------------------------
+*/
+
+Route::get('products', [ProductController::class, 'showAllProducts']);
+Route::get('product/{id}', [ProductController::class, 'showProduct']);
+Route::get('products/hotdishes', [ProductController::class, 'showHotDishes']);
+Route::get('products/colddishes', [ProductController::class, 'showColdDishes']);
+Route::get('products/drinks', [ProductController::class, 'showDrinks']);
+Route::get('products/desserts', [ProductController::class, 'showDesserts']);
+Route::post('product', [ProductController::class, 'createProduct']);
+Route::put('product/{id}', [ProductController::class, 'editProduct']);
+Route::delete('product/{id}', [ProductController::class,'deleteProduct']);
+
+/* USERS - rotas CRUD dos users
+|--------------------------------------------------------------------------
+*/
+Route::get('users', [UserController::class, 'showAllUsers']);
+Route::get('user/{id}', [UserController::class, 'showUser']);
+Route::post('user', [UserController::class, 'signUpUser']);
+Route::put('user/{id}', [UserController::class, 'editUserProfile']);
+Route::delete('user/{id}', [UserController::class,'deleteUserAccount']);
+
+Route::get('customers', [CustomerController::class, 'showAllCustomers']);
+Route::get('customer/{id}', [CustomerController::class, 'showCustomer']);
+Route::post('customer', [CustomerController::class, 'signUpCustomer']);
+Route::put('customer/{id}', [CustomerController::class, 'editCustomerProfile']);
+Route::delete('customer/{id}', [CustomerController::class,'deleteCustomerAccount']);
+
+/* AUTH
+|--------------------------------------------------------------------------
+*/
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+
+/* ORDERS - rotas CRUD dos users
+|--------------------------------------------------------------------------
+*/
+Route::get('orders', [OrderController::class, 'showAllOrders']);
+Route::get('orders/customer/{id}', [OrderController::class, 'showAllOrdersFromCustomer']);
+Route::get('order/{id}', [OrderController::class, 'showOrder']);
+Route::post('order', [OrderController::class, 'createOrder']);
+Route::put('order/{id}/ready', [OrderController::class, 'setOrderToReady']);
+Route::put('order/{id}/deliver', [OrderController::class, 'deliverOrder']);
+Route::put('order/{id}/cancel', [OrderController::class, 'cancelOrder']);
