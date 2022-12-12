@@ -2,12 +2,10 @@
 import { useRouter, RouterLink, RouterView } from "vue-router"
 import { ref, inject } from "vue"
 import { useUserStore } from "./stores/user.js"
-import { useProjectsStore } from "./stores/projects.js"
 
 const router = useRouter()  
 const toast = inject("toast")
 const userStore = useUserStore()
-const projectsStore = useProjectsStore()
 
 const buttonSidebarExpand = ref(null)
 
@@ -155,7 +153,7 @@ const clickMenuOption = () => {
                 Dashboard
               </router-link>
             </li>
-            <li class="nav-item">
+          <!--  <li class="nav-item">
               <router-link
                 class="nav-link"
                 :class="{ active: $route.name === 'CurrentTasks' }"
@@ -165,27 +163,27 @@ const clickMenuOption = () => {
                 <i class="bi bi-list-stars"></i>
                 Pedidos Atuais
               </router-link>
-            </li>
+            </li>-->
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
               <router-link
                 class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'Tasks' }"
-                :to="{ name: 'Tasks' }"
+                :class="{ active: $route.name === 'Products' }"
+                :to="{ name: 'Products' }"
                 @click="clickMenuOption"
               >
-                <i class="bi bi-list-check"></i>
-                Pedidos
+                <i class="bi bi-bag"></i>
+                Products
               </router-link>
               <router-link
                 class="link-secondary"
-                :to="{ name: 'NewTask' }"
-                aria-label="Add a new task"
+                :to="{ name: 'NewProduct' }"
+                aria-label="Add a new product"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'A'">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
                <!-- Mudar A pelos corretos da base de dados -->
               <router-link
                 class="nav-link"
@@ -194,7 +192,7 @@ const clickMenuOption = () => {
                 @click="clickMenuOption"
               >
                 <i class="bi bi-people"></i>
-                Utilizadores
+                Users
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'A'">
@@ -207,7 +205,7 @@ const clickMenuOption = () => {
             </li>
           </ul>
 
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+      <!--    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
               v-if="userStore.user">
             <span>Meus Pedidos</span>
             <router-link
@@ -219,7 +217,7 @@ const clickMenuOption = () => {
               <i class="bi bi-xs bi-plus-circle"></i>
             </router-link>
           </h6>
-          <ul class="nav flex-column mb-2">
+       <ul class="nav flex-column mb-2">
             <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
               <router-link
                 class="nav-link w-100 me-3"
@@ -233,7 +231,7 @@ const clickMenuOption = () => {
                 {{ prj.name }}
               </router-link>
             </li>
-          </ul>
+          </ul>-->   
 
           <div class="d-block d-md-none">
             <h6

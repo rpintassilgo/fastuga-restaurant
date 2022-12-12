@@ -16,7 +16,7 @@
   const loadUsers = () => {
     axios.get('users')
         .then((response) => {
-          users.value = response.data.data
+          users.value = response.data
         })
         .catch((error) => {
           console.log(error)
@@ -33,7 +33,7 @@
 </script>
 
 <template>
-  <h3 class="mt-5 mb-3">Utilizadores</h3>
+  <h3 class="mt-5 mb-3">Users</h3>
   <hr>
   <user-table
     :users="users"

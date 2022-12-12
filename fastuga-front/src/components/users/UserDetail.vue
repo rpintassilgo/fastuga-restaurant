@@ -109,7 +109,7 @@ const cancel = () => {
                 v-model="editingUser.gender"
                 id="inputGenderM"
               />
-              <label class="form-check-label" for="inputGenderM">Masculino</label>
+              <label class="form-check-label" for="inputGenderM">Male</label>
             </div>
             <div class="form-check form-check-inline">
               <input
@@ -120,7 +120,7 @@ const cancel = () => {
                 v-model="editingUser.gender"
                 id="inputGenderF"
               />
-              <label class="form-check-label" for="inputGenderF">Feminino</label>
+              <label class="form-check-label" for="inputGenderF">Female</label>
             </div>
             <field-error-message :errors="errors" fieldName="gender"></field-error-message>
           </div>
@@ -134,7 +134,7 @@ const cancel = () => {
           </div>
           <div class="form-control text-center">
           <input type="file" id="actual-btn" hidden/>
-          <label for="actual-btn" class="btn-new-one" @click="changing">Escolhe a Foto</label>
+          <label for="actual-btn" class="btn-new-one" @click="changing">Upload a photo</label>
           
         
           
@@ -143,7 +143,7 @@ const cancel = () => {
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Guardar</button>
+      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>

@@ -19,7 +19,8 @@
         id: null,
         name: '',
         email: '',
-        gender: 'M',
+        type: '',
+        blocked: null,
         photo_url: null
       }
   }
@@ -30,12 +31,12 @@
       errors.value = null
       if (!id || (id < 0)) {
         user.value = newUser()
-        originalValueStr = dataAsString()
+        originalValueStr = dataString()
       } else {
         axios.get('users/' + id)
           .then((response) => {
             user.value = response.data.data
-            originalValueStr = dataAsString()
+            originalValueStr = dataString()
           })
           .catch((error) => {
             console.log(error)
@@ -48,7 +49,7 @@
       axios.put('users/' + props.id, user.value)
         .then((response) => {
           user.value = response.data.data
-          originalValueStr = dataAsString()
+          originalValueStr = dataString()
           toast.success('User #' + user.value.id + ' was updated successfully.')
           router.back()
         })
@@ -63,11 +64,11 @@
   }
 
   const cancel = () => {
-    originalValueStr = dataAsString()
+    originalValueStr = dataString()
     router.back()
   }
 
-  const dataAsString = () => {
+  const dataString = () => {
       return JSON.stringify(user.value)
   }
 
@@ -80,7 +81,7 @@
 
   onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
-    let newValueStr = dataAsString()
+    let newValueStr = dataString()
     if (originalValueStr != newValueStr) {
       nextCallBack = next
       confirmationLeaveDialog.value.show()
@@ -106,8 +107,8 @@
 <template>
   <confirmation-dialog
     ref="confirmationLeaveDialog"
-    confirmationBtn="Descartar mudanças e sair"
-    msg="Deseja mesmo sair? Tem mudanças que não foram guardadas!"
+    confirmationBtn="Discard changes and leave"
+    msg="Do you really wish to leave? You have unsaved changes!"
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  

@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import { useRouter } from "vue-router";
 
-import TaskTable from "../tasks/TaskTable.vue";
+//import TaskTable from "../tasks/TaskTable.vue";
 
 const router = useRouter();
 

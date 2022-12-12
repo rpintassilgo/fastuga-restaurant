@@ -1,45 +1,41 @@
 <script setup>
   import { ref, watch, computed, onMounted, inject } from 'vue'
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
-  import { useUserStore } from "../../stores/user.js"
-  import { useProjectsStore } from "../../stores/projects.js"
+  import { useProductStore } from "../../stores/product.js"
   
-  import TaskDetail from "./TaskDetail.vue"
+  import ProductDetail from "./ProductDetail.vue"
 
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
-  const userStore = useUserStore()
-  const projectsStore = useProjectsStore()
+  const productStore = useProductStore()
 
-  const newTask = () => {
+  const newProduct = () => {
       return {
         id: null,
-        owner_id: userStore.userId,  
-        project_id: null,
-        completed: false,
+        type: '',  
         description: '',
-        notes: '',
-        total_hours: null
+        photo_url: '',
+        price: null
       }
   }
 
-  const task = ref(newTask())
+  const product = ref(newProduct())
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
   let originalValueStr = ''
-  const loadTask = (id) => {
+  const loadProduct = (id) => {
       originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
-        task.value = newTask()
-        originalValueStr = dataAsString()
+        product.value = newProduct()
+        originalValueStr = dataString()
       } else {
-        axios.get('tasks/' + id)
+        axios.get('products/' + id)
           .then((response) => {
-            task.value = response.data.data
-            originalValueStr = dataAsString()
+            product.value = response.data.data
+            originalValueStr = dataString()
           })
           .catch((error) => {
             console.log(error)
@@ -50,47 +46,47 @@
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post('tasks', task.value)
+        axios.post('products', product.value)
           .then((response) => {
-            task.value = response.data.data
-            originalValueStr = dataAsString()
-            toast.success('Task #' + task.value.id + ' was created successfully.')
+            product.value = response.data.data
+            originalValueStr = dataString()
+            toast.success('Product #' + product.value.id + ' was created successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Task was not created due to validation errors!')
+              toast.error('Product was not created due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Task was not created due to unknown server error!')
+              toast.error('Product was not created due to unknown server error!')
             }
           })
       } else {
-        axios.put('tasks/' + props.id, task.value)
+        axios.put('products/' + props.id, products.value)
           .then((response) => {
-            task.value = response.data.data
-            originalValueStr = dataAsString()
-            toast.success('Task #' + task.value.id + ' was updated successfully.')
+            product.value = response.data.data
+            originalValueStr = dataString()
+            toast.success('Product #' + product.value.id + ' was updated successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Task #' + props.id + ' was not updated due to validation errors!')
+              toast.error('Product #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Task #' + props.id + ' was not updated due to unknown server error!')
+              toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
             }
           })
       }
     }
     
   const cancel = () => {
-    originalValueStr = dataAsString()
+    originalValueStr = dataString()
     router.back()
   }
 
-  const dataAsString = () => {
-      return JSON.stringify(task.value)
+  const dataString = () => {
+      return JSON.stringify(product.value)
   }
 
   let nextCallBack = null
@@ -102,7 +98,7 @@
 
   onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
-    let newValueStr = dataAsString()
+    let newValueStr = dataString()
     if (originalValueStr != newValueStr) {
       nextCallBack = next
       confirmationLeaveDialog.value.show()
@@ -115,10 +111,6 @@
     id: {
       type: Number,
       default: null
-    },
-    fixedProject: {
-      type: Number,
-      default: null
     }
   })
 
@@ -129,7 +121,7 @@
   watch(
     () => props.id,
     (newValue) => {
-        loadTask(newValue)
+        loadProduct(newValue)
       }, 
     { immediate: true}
   )
@@ -144,13 +136,11 @@
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  
-  <task-detail
+  <product-detail
     :operationType="operation"
-    :task="task"
+    :product="product"
     :errors="errors"
-    :projects="projectsStore.projects"
-    :fixedProject="fixedProject"
     @save="save"
     @cancel="cancel"
-  ></task-detail>
+  ></product-detail>
 </template>

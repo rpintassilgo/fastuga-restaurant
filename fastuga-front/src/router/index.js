@@ -10,13 +10,13 @@ import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import Register from "../components/auth/Register.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
-import Tasks from "../components/tasks/Tasks.vue"
-import Projects from "../components/projects/Projects.vue"
+import Products from "../components/products/Products.vue"
+//import Projects from "../components/projects/Projects.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
-import ProjectTasks from "../components/projects/ProjectTasks.vue"
-import Task from "../components/tasks/Task.vue"
-import Project from "../components/projects/Project.vue"
+
+import Product from "../components/products/Product.vue"
+//import Project from "../components/projects/Project.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,17 +63,17 @@ const router = createRouter({
       component: ProdutosMenu
     },
     {
-      path: '/tasks',
-      name: 'Tasks',
-      component: Tasks,
+      path: '/products',
+      name: 'Products',
+      component: Products,
     },
-    {
-      path: '/tasks/current',
-      name: 'CurrentTasks',
-      component: Tasks,
+    /*{
+      path: '/products/current',
+      name: 'CurrentProducts',
+      component: ,
       props: { onlyCurrentTasks: true, tasksTitle: 'Pedidos Atuais' }
-    },
-    {
+    },*/
+    /*{
       path: '/projects',
       name: 'Projects',
       component: Projects,
@@ -89,7 +89,7 @@ const router = createRouter({
       name: 'Project',
       component: Project,
       props: route => ({ id: parseInt(route.params.id) })     
-    },
+    },*/
     {
       path: '/users',
       name: 'Users',
@@ -103,7 +103,7 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
     }, 
-    {
+   /* {
       path: '/projects/:id/tasks',
       name: 'ProjectTasks',
       component: ProjectTasks,
@@ -114,17 +114,17 @@ const router = createRouter({
       name: 'NewTaskOfProject',
       component: Task,
       props: route => ({ id:-1, fixedProject:  parseInt(route.params.id) })
-    },
+    },*/
     {
-      path: '/tasks/new',
-      name: 'NewTask',
-      component: Task,
+      path: '/products/new',
+      name: 'NewProduct',
+      component: Product,
       props: { id: -1 }
     },
     {
-      path: '/tasks/:id',
-      name: 'Task',
-      component: Task,
+      path: '/products/:id',
+      name: 'Product',
+      component: Product,
       props: route => ({ id: parseInt(route.params.id) })    
     },
     {

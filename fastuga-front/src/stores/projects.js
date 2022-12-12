@@ -39,9 +39,9 @@ export const useProjectsStore = defineStore('projects', () => {
 
     async function loadProjects() {
         try {
-            const response = await axios.get('projects')
+           /* const response = await axios.get('projects')
             projects.value = response.data.data
-            return projects.value
+            return projects.value*/
         } catch (error) {
             clearProjects()
             throw error

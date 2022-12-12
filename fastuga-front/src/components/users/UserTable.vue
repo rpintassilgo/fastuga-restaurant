@@ -19,13 +19,13 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showAdmin: {
+  showType: {
     type: Boolean,
     default: true,
   },
-  showGender: {
+  showBlocked: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   showPhoto: {
     type: Boolean,
@@ -53,20 +53,21 @@ const canViewUserDetail  = (userId) => {
   if (!userStore.user) {
     return false
   }
-  return userStore.user.type == 'A' || userStore.user.id == userId
+  return userStore.user.type == 'EM' || userStore.user.id == userId
 }
 </script>
 
 <template>
+  <!-- meter aqui um filtro por tipo de utilizador -->
   <table class="table">
     <thead>
       <tr>
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
-        <th class="align-middle">Nome</th>
+        <th class="align-middle">Name</th>
         <th v-if="showEmail" class="align-middle">Email</th>
-        <th v-if="showAdmin" class="align-middle">Admin?</th>
-        <th v-if="showGender" class="align-middle">Sexo</th>
+        <th v-if="showBlocked" class="align-middle">Blocked?</th>
+        <th v-if="showType" class="align-middle">Type</th>
       </tr>
     </thead>
     <tbody>
@@ -77,8 +78,8 @@ const canViewUserDetail  = (userId) => {
         </td>
         <td class="align-middle">{{ user.name }}</td>
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
-        <td v-if="showAdmin" class="align-middle">{{ user.type == "A" ? "Sim" : "" }}</td>
-        <td v-if="showGender" class="align-middle">{{ user.gender_name }}</td>
+        <td v-if="showBlocked" class="align-middle">{{ user.blocked == 1 ? "Yes" : "No" }}</td>
+                <td v-if="showType" class="align-middle">{{ user.type }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
@@ -89,6 +90,13 @@ const canViewUserDetail  = (userId) => {
       </tr>
     </tbody>
   </table>
+  <paginate
+    :page-count="10"
+    :prev-text="Prev"
+    :next-text="Next"
+    :container-class="'pagination'"
+    >
+  </paginate>
 </template>
 
 <style scoped>

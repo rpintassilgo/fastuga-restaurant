@@ -20,10 +20,7 @@ class Product extends Model
         'type',
         'description',
         'photo_url',
-        'price',
-        'custom',
-        'name',
-        'type',
+        'price'
     ];
 
     protected $nullable = [ // será que todos os campos são mandatórios ??

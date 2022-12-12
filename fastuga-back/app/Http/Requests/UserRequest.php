@@ -37,7 +37,6 @@ class UserRequest extends FormRequest
             ], */
             'password' => 'required|string',
             'type' => 'required|in:EC,ED,EM',
-            'blocked' => 'required|boolean',
             'photo_url' => 'nullable|image|max:8192'
         ];
     }

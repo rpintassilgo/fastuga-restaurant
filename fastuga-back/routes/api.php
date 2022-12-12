@@ -9,7 +9,12 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\api\AuthController;
 
 Route::post('login', [AuthController::class, 'login']);
+
+// temporario enquanto nao tenho o middleware feito
 Route::post('customers', [CustomerController::class, 'signUpCustomer']);
+Route::post('users', [UserController::class, 'signUpUser']);
+Route::get('products', [ProductController::class, 'showAllProducts']);
+Route::get('users', [UserController::class, 'showAllUsers']);
 
 Route::middleware('auth:api')->group(function (){
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
@@ -17,7 +22,7 @@ Route::middleware('auth:api')->group(function (){
     // adicionar o middleware especifico para cada endpoint com as policies
 
     // PRODUCTS
-    Route::get('products', [ProductController::class, 'showAllProducts']);
+    //Route::get('products', [ProductController::class, 'showAllProducts']);
     Route::get('products/{id}', [ProductController::class, 'showProduct']);
     Route::get('products/hotdishes', [ProductController::class, 'showHotDishes']);
     Route::get('products/colddishes', [ProductController::class, 'showColdDishes']);
@@ -29,9 +34,9 @@ Route::middleware('auth:api')->group(function (){
 
     // USERS
     Route::get('users/me', [UserController::class, 'showMe']);
-    Route::get('users', [UserController::class, 'showAllUsers']);
+    //Route::get('users', [UserController::class, 'showAllUsers']);
     Route::get('users/{id}', [UserController::class, 'showUser']);
-    Route::post('users', [UserController::class, 'signUpUser']);
+    //Route::post('users', [UserController::class, 'signUpUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
     Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
 
