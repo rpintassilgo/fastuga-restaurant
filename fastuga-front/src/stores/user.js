@@ -55,9 +55,7 @@ export const useUserStore = defineStore('user', () => {
 
     async function register (credentials) {
         try {
-            const response = await axios.post('register', credentials)
-            axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
-            sessionStorage.setItem('token', response.data.access_token)  
+            await axios.post('users', credentials)
             return true       
         } 
         catch(error) {
