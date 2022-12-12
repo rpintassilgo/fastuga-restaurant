@@ -1,6 +1,8 @@
 <script setup>
+import avatarNoneUrl from '@/assets/avatar-none.png'
 import { ref, watch, watchEffect, computed, inject } from "vue"
 
+const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject("axios")
 const toast = inject("toast")
 
@@ -23,9 +25,13 @@ const props = defineProps({
   },
   showDescription: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   showPrice: {
+    type: Boolean,
+    default: true,
+  },
+  showPhoto: {
     type: Boolean,
     default: true,
   },
@@ -71,12 +77,19 @@ const dialogConfirmedDelete = () => {
   axios
     .delete("products/" + productToDelete.value.id)
     .then((response) => {
-      emit("deleted", response.data.data)
+      emit("deleted", response.data)
       toast.info("Product " + productToDeleteDescription.value + " was deleted")
     })
     .catch((error) => {
       console.log(error)
     })
+}
+
+const photoFullUrl = (product) => {
+  console.log(product)
+  return product.photo_url
+    ? serverBaseUrl + "/storage/products/" + product.photo_url
+    : avatarNoneUrl
 }
 
 const deleteClick = (product) => {
@@ -98,21 +111,23 @@ const deleteClick = (product) => {
     <thead>
       <tr>
         <th v-if="showId">ID</th>
+        <th v-if="showPhoto">Photo</th>
         <th v-if="showName">Name</th>
         <th class="text-center" v-if="showType">Type</th>
-        <th v-if="showName">Description</th>
-        <!--<th v-if="showPhoto">Photo</th>  mete foto aqui possivelmente -->
+        <th v-if="showDescription">Description</th>
         <th v-if="showPrice">Price</th>
         <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="product in editingProducts" :key="product.id">
+        <td v-if="showPhoto" class="align-middle">
+          <img :src="photoFullUrl(product)" class="rounded img_photo" />
+        </td>
         <td v-if="showId">{{ product.id }}</td>
         <td v-if="showName">{{ product.name }}</td>
         <td v-if="showType">{{ product.type }}</td>
         <td v-if="showDescription">{{ product.description }}</td>
-        <!-- meter foto aqui possivelmente-->
         <td v-if="showPrice">{{ product.price }}</td>
         <td
           class="text-end"
@@ -149,5 +164,10 @@ const deleteClick = (product) => {
 button {
   margin-left: 3px;
   margin-right: 3px;
+}
+
+.img_photo {
+  width: 3.2rem;
+  height: 3.2rem;
 }
 </style>

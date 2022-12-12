@@ -93,7 +93,6 @@
   <product-table
     :products="products"
     :showId="false"
-    :showDescription="false"
     @edit="editProduct"
     @deleted="deletedProduct"
   ></product-table>

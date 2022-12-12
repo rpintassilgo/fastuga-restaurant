@@ -195,12 +195,12 @@ const clickMenuOption = () => {
                 Users
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'A'">
+            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
                 <!-- Mudar A pelos corretos da base de dados -->
-              <router-link class="nav-link" :class="{ active: $route.name === 'Reports' }"
-                :to="{ name: 'Reports' }" @click="clickMenuOption">
-                <i class="bi bi-bar-chart-line"></i>
-                Reports
+              <router-link class="nav-link" :class="{ active: $route.name === 'Orders' }"
+                :to="{ name: 'Orders' }" @click="clickMenuOption">
+                <i class="bi bi-file-text"></i>
+                Orders
               </router-link>
             </li>
           </ul>

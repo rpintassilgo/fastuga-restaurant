@@ -2,7 +2,7 @@
   import { ref, watch, computed } from 'vue'
   
   const props = defineProps({
-    project: {
+    order: {
       type: Object,
       required: true
     },
@@ -22,28 +22,28 @@
 
   const emit = defineEmits(['save', 'cancel'])
 
-  const editingProject = ref(props.project)
+  const editingOrder = ref(props.order)
 
   watch(
-    () => props.project, 
-    (newProject) => { 
-      editingProject.value = newProject 
+    () => props.order, 
+    (newOrder) => { 
+      editingOrder.value = newOrder 
     }
   )
 
-  const projectTitle = computed(()=>{
-    if (!editingProject.value) {
+  const orderTitle = computed(()=>{
+    if (!editingOrder.value) {
         return ''
       }
-      return props.operationType == 'insert' ? 'New Project' : 'Project #' + editingProject.value.id
+      return props.operationType == 'insert' ? 'New Order' : 'Order #' + editingOrder.value.id
   })
 
   const save = () => {
-      emit('save', editingProject.value)
+      emit('save', editingOrder.value)
   }
 
   const cancel = () => {
-      emit('cancel', editingProject.value)
+      emit('cancel', editingOrder.value)
   }
 
 </script>
@@ -54,7 +54,7 @@
     novalidate
     @submit.prevent="save"
   >
-    <h3 class="mt-5 mb-3">{{ projectTitle }}</h3>
+    <h3 class="mt-5 mb-3">{{ orderTitle }}</h3>
     <hr>
 
     <div class="mb-3">
@@ -105,11 +105,10 @@
           v-model="editingProject.status"
         >
           <option :value="null"></option>
-          <option value="P">Pending</option>
-          <option value="W">Work In Progress</option>
-          <option value="C">Completed</option>
-          <option value="I">Interrupted</option>
-          <option value="D">Discarded</option>
+          <option value="P">Preparing</option>
+          <option value="R">Ready</option>
+          <option value="D">Delivered</option>
+          <option value="C">Cancelled</option>
         </select>
         <field-error-message :errors="errors" fieldName="status"></field-error-message>
       </div>

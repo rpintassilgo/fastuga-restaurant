@@ -2,9 +2,10 @@
   import { ref, watch, computed, onMounted, inject} from 'vue'
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
   import { useUserStore } from "../../stores/user.js"
-  import { useProjectsStore } from "../../stores/projects.js"
+  // ainda tenho de ver se isto vai ser preciso aqui
+  //import { useProductStore } from "../../stores/product.js" 
 
-  import ProjectDetail from "./ProjectDetail.vue"
+  import OrderDetail from "./OrderDetail.vue"
 
   const router = useRouter()  
   const axios = inject('axios')
@@ -13,34 +14,36 @@
   const projectsStore = useProjectsStore()
   
 
-  const newProject = () => { 
+  const newOrder = () => { 
     return {
       id: null,
-      name: '',
-      responsible_id: userStore.userId,  
-      status: 'P',
-      preview_start_date: null,
-      preview_end_date: null,
-      real_start_date: null,
-      real_end_date: null,
-      total_hours: null,
-      billed: false,
+      ticket_number: null,
+      status: '',  
+      customer_id: userStore.userId,
       total_price: null,
+      total_paid: null,
+      total_paid_with_points: null,
+      points_gained: null,
+      points_used_to_pay: null,
+      payment_type: '',
+      payment_reference: '',
+      date: '',
+      delivered_by: null
     }
   }
 
   let originalValueStr = ''
-  const loadProject = (id) => {
+  const loadOrder = (id) => {
       originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
-        project.value = newProject()
-        originalValueStr = dataAsString()
+        order.value = newOrder()
+        originalValueStr = dataString()
       } else {
-        axios.get('projects/' + id)
+        axios.get('orders/' + id)
           .then((response) => {
-            project.value = response.data.data
-            originalValueStr = dataAsString()
+            order.value = response.data
+            originalValueStr = dataString()
           })
           .catch((error) => {
             console.log(error)
@@ -48,51 +51,51 @@
       }
     }
 
-  /* Change this function */
+  // *
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        projectsStore.insertProject(project.value)
-          .then((insertedProject) => {
-            project.value = insertedProject
-            originalValueStr = dataAsString()
-            toast.success('Project #' + project.value.id + ' was created successfully.')
+        ordersStore.insertProject(order.value)
+          .then((insertedOrder) => {
+            order.value = insertedOrder
+            originalValueStr = dataString()
+            toast.success('Order #' + order.value.id + ' was created successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Project was not created due to validation errors!')
+              toast.error('Order was not created due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Project was not created due to unknown server error!')
+              toast.error('Order was not created due to unknown server error!')
             }
           })
       } else {
-        projectsStore.updateProject(project.value)
-        .then((updatedProject) => {
-            project.value = updatedProject
-            originalValueStr = dataAsString()
-            toast.success('Project #' + project.value.id + ' was updated successfully.')
+        ordersStore.updateOrder(project.value)
+        .then((updatedOrder) => {
+            order.value = updatedOrder
+            originalValueStr = dataString()
+            toast.success('Order #' + order.value.id + ' was updated successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Project #' + props.id + ' was not updated due to validation errors!')
+              toast.error('Order #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Project #' + props.id + ' was not updated due to unknown server error!')
+              toast.error('Order #' + props.id + ' was not updated due to unknown server error!')
             }
           })
       }
     }
 
   const cancel = () => {
-    originalValueStr = dataAsString()
+    originalValueStr = dataString()
     router.back()
   }
 
-  const dataAsString = () => {
-      return JSON.stringify(project.value)
+  const dataString = () => {
+      return JSON.stringify(order.value)
   }
 
   let nextCallBack = null
@@ -104,7 +107,7 @@
 
   onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
-    let newValueStr = dataAsString()
+    let newValueStr = dataString()
     if (originalValueStr != newValueStr) {
       nextCallBack = next
       confirmationLeaveDialog.value.show()
@@ -120,8 +123,7 @@
       }
     })
 
-  const project = ref(newProject())  
-  const users = ref([])  
+  const order = ref(newOrder())   
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
@@ -132,22 +134,11 @@
   watch(
     () => props.id, 
     (newValue) => {
-          loadProject(newValue)
+          loadOrder(newValue)
     }, {
       immediate: true,
     }
   )
-
-  onMounted (() => {
-    users.value = []
-    axios.get('users')
-      .then((response) => {
-        users.value = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
 </script>
 
 <template>
@@ -159,12 +150,11 @@
   >
   </confirmation-dialog>  
 
-  <ProjectDetail
+  <OrderDetail
     :operationType="operation"
-    :project="project"
-    :users="users"
+    :order="order"
     :errors="errors"
     @save="save"
     @cancel="cancel"
-  ></ProjectDetail>
+  ></OrderDetail>
 </template>

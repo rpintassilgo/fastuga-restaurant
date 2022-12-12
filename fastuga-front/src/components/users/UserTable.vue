@@ -35,9 +35,30 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showDeleteButton: {
+    type: Boolean,
+    default: true,
+  }
 })
 
-const emit = defineEmits(["edit"])
+const emit = defineEmits(["edit","deleted"])
+
+const editingUsers = ref(props.users)
+const userToDelete = ref(null)
+const deleteConfirmationDialog = ref(null)
+
+const userToDeleteDescription = computed(() => {
+  return productToDelete.value
+    ? `#${productToDelete.value.id} `
+    : ""
+})
+
+watch(
+  () => props.users,
+  (newUsers) => {
+    editingUsers.value = newUsers
+  }
+)
 
 const photoFullUrl = (user) => {
   return user.photo_url
@@ -55,6 +76,23 @@ const canViewUserDetail  = (userId) => {
   }
   return userStore.user.type == 'EM' || userStore.user.id == userId
 }
+
+const dialogConfirmedDelete = () => {
+  axios
+    .delete("users/" + userToDelete.value.id)
+    .then((response) => {
+      emit("deleted", response.data)
+      toast.info("User " + userToDeleteDescription.value + " was deleted")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const deleteClick = (user) => {
+  userToDelete.value = user
+  deleteConfirmationDialog.value.show()
+}
 </script>
 
 <template>
@@ -68,6 +106,7 @@ const canViewUserDetail  = (userId) => {
         <th v-if="showEmail" class="align-middle">Email</th>
         <th v-if="showBlocked" class="align-middle">Blocked?</th>
         <th v-if="showType" class="align-middle">Type</th>
+        <th v-if="showEditButton || showDeleteButton"></th>
       </tr>
     </thead>
     <tbody>
@@ -80,10 +119,18 @@ const canViewUserDetail  = (userId) => {
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
         <td v-if="showBlocked" class="align-middle">{{ user.blocked == 1 ? "Yes" : "No" }}</td>
                 <td v-if="showType" class="align-middle">{{ user.type }}</td>
-        <td class="text-end align-middle" v-if="showEditButton">
+        <td class="text-end align-middle" v-if="showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
             <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
+            </button>
+
+            <button
+              class="btn btn-xs btn-light"
+              @click="deleteClick(product)"
+              v-if="showDeleteButton"
+            >
+              <i class="bi bi-xs bi-x-square-fill"></i>
             </button>
           </div>
         </td>

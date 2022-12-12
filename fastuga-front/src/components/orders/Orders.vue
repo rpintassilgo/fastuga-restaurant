@@ -1,82 +1,65 @@
 <script setup>
   import { ref, computed, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
-  import ProjectTable from "./ProjectTable.vue"
-  import { useProjectsStore } from "../../stores/projects.js"
+  import OrderTable from "./OrderTable.vue"
+  import { useOrdersStore } from "../../stores/orders.js"
 
   const router = useRouter()
 
   const axios = inject("axios")
   const toast = inject("toast")
-  const projectsStore = useProjectsStore()
+  const ordersStore = useOrdersStore()
 
-  const projectToDelete = ref(null)
-  const users = ref([])
-  const filterByResponsibleId = ref(null)
-  const filterByStatus = ref('W')
+  const orderToDelete = ref(null)
+  const filterByStatus = ref('')
   const deleteConfirmationDialog = ref(null)  
   
   /* Change this function */
-  const loadProjects = () => {
-    projectsStore.loadProjects()
+  const loadOrders = () => {
+    orders.loadProjects()
       .catch((error) => {
         console.log(error)
       })
   }
 
-  const loadUsers = () => {
-      axios.get('users')
-        .then((response) => {
-          users.value = response.data.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-  }
-
-  const addProject = () => {
-    router.push({ name: 'NewProject'})
+  const addOrder = () => {
+    router.push({ name: 'NewOrder'})
   }
   
-  const editProject = (project) => {
-    router.push({ name: 'Project', params: { id: project.id } })
+  const editOrder = (order) => {
+    router.push({ name: 'Order', params: { id: order.id } })
   }
 
   /* Change this function */
-  const deleteProjectConfirmed = () => {
-    projectsStore.deleteProject(projectToDelete.value)
-      .then((deletedProject) => {
-        toast.info("Project " + projectToDeleteDescription.value + " was deleted")
+  const deleteOrderConfirmed = () => {
+    ordersStore.deleteOrder(orderToDelete.value)
+      .then((deletedOrder) => {
+        toast.info("Order " + orderToDeleteDescription.value + " was deleted")
       })
       .catch(() => {
-        toast.error("It was not possible to delete Project " + projectToDeleteDescription.value + "!")
+        toast.error("It was not possible to delete Order " + orderToDeleteDescription.value + "!")
       })
   }
 
-  const clickToDeleteProject = (project) => {
-    projectToDelete.value = project
+  const clickToDeleteOrder = (order) => {
+    orderToDelete.value = order
     deleteConfirmationDialog.value.show()
   }
 
 
   /* Change this function */
-  const filteredProjects = computed(()=>{
-    return projectsStore.getProjectsByFilter(filterByResponsibleId.value, filterByStatus.value)
+  const filteredOrders = computed(()=>{
+    return ordersStore.getOrdersByFilter(filterByStatus.value)
   })
 
-  /* Change this function */
-  const totalProjects = computed(()=>{
-    return projectsStore.getProjectsByFilterTotal(filterByResponsibleId.value, filterByStatus.value)
-  })
 
-  const projectToDeleteDescription = computed(() => {
-    return projectToDelete.value
-    ? `#${projectToDelete.value.id} (${projectToDelete.value.name})`
+  const orderToDeleteDescription = computed(() => {
+    return orderToDelete.value
+    ? `#${orderToDelete.value.id} (${orderToDelete.value.name})`
     : ""
   })
 
   onMounted(() => {
-    loadUsers()
     // Calling loadProjects refresh the list of projects from the API
     loadProjects()
   })
@@ -86,15 +69,15 @@
 <template>
   <confirmation-dialog
     ref="deleteConfirmationDialog"
-    confirmationBtn="Delete task"
-    :msg="`Quer mesmo Apagar o Pedido ${projectToDeleteDescription}?`"
-    @confirmed="deleteProjectConfirmed"
+    confirmationBtn="Delete order"
+    :msg="`Do you really want to delete order ${orderToDeleteDescription}?`"
+    @confirmed="deleteOrderConfirmed"
   >
   </confirmation-dialog>
 
   <div class="d-flex justify-content-between">
     <div class="mx-2">
-      <h3 class="mt-4">Projects</h3>
+      <h3 class="mt-4">Orders</h3>
     </div>
     <div class="mx-2 total-filtro">
       <h5 class="mt-4">Total: {{ totalProjects }}</h5>
