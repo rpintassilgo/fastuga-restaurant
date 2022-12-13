@@ -10,13 +10,17 @@
   const toast = inject("toast")
   const ordersStore = useOrdersStore()
 
+  const orders = ref([])
   const orderToDelete = ref(null)
   const filterByStatus = ref('')
   const deleteConfirmationDialog = ref(null)  
   
   /* Change this function */
   const loadOrders = () => {
-    orders.loadProjects()
+    axios.get('orders')
+      .then((response) => {
+        orders.value = response.data
+      })
       .catch((error) => {
         console.log(error)
       })
@@ -26,24 +30,26 @@
     router.push({ name: 'NewOrder'})
   }
   
+  /* nao sei se vai ser possivel editar um pedido
   const editOrder = (order) => {
     router.push({ name: 'Order', params: { id: order.id } })
   }
+  */
 
   /* Change this function */
-  const deleteOrderConfirmed = () => {
-    ordersStore.deleteOrder(orderToDelete.value)
-      .then((deletedOrder) => {
-        toast.info("Order " + orderToDeleteDescription.value + " was deleted")
+  const cancelOrderConfirmed = () => {
+    ordersStore.changeStatusOrder(orderToCancel.value,"cancel")
+      .then((cancelledOrder) => {
+        toast.info("Order " + orderToCancelDescription.value + " was cancelled")
       })
       .catch(() => {
-        toast.error("It was not possible to delete Order " + orderToDeleteDescription.value + "!")
+        toast.error("It was not possible to cancel Order " + orderToCancelDescription.value + "!")
       })
   }
 
-  const clickToDeleteOrder = (order) => {
-    orderToDelete.value = order
-    deleteConfirmationDialog.value.show()
+  const clickToCancelOrder = (order) => {
+    orderToCancel.value = order
+    cancelConfirmationDialog.value.show()
   }
 
 
@@ -53,89 +59,35 @@
   })
 
 
-  const orderToDeleteDescription = computed(() => {
-    return orderToDelete.value
-    ? `#${orderToDelete.value.id} (${orderToDelete.value.name})`
+  const orderToCancelDescription = computed(() => {
+    return orderToCancel.value
+    ? `#${orderToCancel.value.id} (${orderToCancel.value.date})`
     : ""
   })
 
   onMounted(() => {
     // Calling loadProjects refresh the list of projects from the API
-    loadProjects()
+    loadOrders()
   })
 
 </script>
 
 <template>
   <confirmation-dialog
-    ref="deleteConfirmationDialog"
-    confirmationBtn="Delete order"
-    :msg="`Do you really want to delete order ${orderToDeleteDescription}?`"
-    @confirmed="deleteOrderConfirmed"
+    ref="cancelConfirmationDialog"
+    confirmationBtn="Cancel order"
+    :msg="`Do you really want to cancel order ${orderToCancelDescription}?`"
+    @confirmed="cancelOrderConfirmed"
   >
   </confirmation-dialog>
 
-  <div class="d-flex justify-content-between">
-    <div class="mx-2">
-      <h3 class="mt-4">Orders</h3>
-    </div>
-    <div class="mx-2 total-filtro">
-      <h5 class="mt-4">Total: {{ totalProjects }}</h5>
-    </div>
-  </div>
-  <hr>
-  <div class="mb-3 d-flex justify-content-between flex-wrap">
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label
-        for="selectStatus"
-        class="form-label"
-      >Filter by status:</label>
-      <select
-        class="form-select"
-        id="selectStatus"
-        v-model="filterByStatus"
-      >
-        <option :value="null"></option>
-        <option value="P">Pending</option>
-        <option value="W">Work In Progress</option>
-        <option value="C">Completed</option>
-        <option value="I">Interrupted</option>
-        <option value="D">Discarded</option>
-      </select>
-    </div>
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label
-        for="selectOwner"
-        class="form-label"
-      >Filter by owner:</label>
-      <select
-        class="form-select"
-        id="selectOwner"
-        v-model="filterByResponsibleId"
-      >
-        <option :value="null"></option>
-        <option
-          v-for="user in users"
-          :key="user.id"
-          :value="user.id"
-        >{{user.name}}</option>
-      </select>
-    </div>
-    <div class="mx-2 mt-2">
-      <button
-        type="button"
-        class="btn btn-success px-4 btn-addprj"
-        @click="addProject"
-      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Project</button>
-    </div>
-  </div>
-  <project-table
-    :projects="filteredProjects"
+  <order-table
+    :orders="orders"
     :showId="true"
     :showDates="true"
     @edit="editProject"
     @delete="clickToDeleteProject"
-  ></project-table>
+  ></order-table>
 </template>
 
 <style scoped>

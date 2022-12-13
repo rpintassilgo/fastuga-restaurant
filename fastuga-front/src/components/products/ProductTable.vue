@@ -86,7 +86,7 @@ const dialogConfirmedDelete = () => {
 }
 
 const photoFullUrl = (product) => {
-  console.log(product)
+  //console.log(product)
   return product.photo_url
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : avatarNoneUrl

@@ -1,10 +1,10 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
-import { useProjectsStore } from "./projects.js"
+import { useOrdersStore } from "./orders.js"
 
 export const useUserStore = defineStore('user', () => {
-    const projectsStore = useProjectsStore()
+    const ordersStore = useOrdersStore()
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
     
@@ -83,7 +83,7 @@ export const useUserStore = defineStore('user', () => {
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
-            await projectsStore.loadProjects()
+            await ordersStore.loadAllOrders()
             return true
         }
         clearUser()

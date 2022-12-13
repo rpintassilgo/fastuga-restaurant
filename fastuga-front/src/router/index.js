@@ -11,12 +11,12 @@ import Login from "../components/auth/Login.vue"
 import Register from "../components/auth/Register.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Products from "../components/products/Products.vue"
-//import Projects from "../components/projects/Projects.vue"
+import Orders from "../components/orders/Orders.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 
 import Product from "../components/products/Product.vue"
-//import Project from "../components/projects/Project.vue"
+import Order from "../components/orders/Order.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,23 +73,23 @@ const router = createRouter({
       component: ,
       props: { onlyCurrentTasks: true, tasksTitle: 'Pedidos Atuais' }
     },*/
-    /*{
-      path: '/projects',
-      name: 'Projects',
-      component: Projects,
+    {
+      path: '/orders',
+      name: 'Orders',
+      component: Orders,
     },
     {
-      path: '/projects/new',
-      name: 'NewProject',
-      component: Project,
+      path: '/orders/new', // isto aqui possivelmente vai ser o carrinho
+      name: 'NewOrder',
+      component: Order,
       props: { id: -1 }
     },
     {
-      path: '/projects/:id',
-      name: 'Project',
-      component: Project,
+      path: '/orders/:id',
+      name: 'Order',
+      component: Order,
       props: route => ({ id: parseInt(route.params.id) })     
-    },*/
+    },
     {
       path: '/users',
       name: 'Users',

@@ -2,8 +2,7 @@
   import { ref, watch, computed, onMounted, inject} from 'vue'
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
   import { useUserStore } from "../../stores/user.js"
-  // ainda tenho de ver se isto vai ser preciso aqui
-  //import { useProductStore } from "../../stores/product.js" 
+  import { useOrdersStore } from "../../stores/orders.js" 
 
   import OrderDetail from "./OrderDetail.vue"
 
@@ -11,7 +10,7 @@
   const axios = inject('axios')
   const toast = inject('toast')
   const userStore = useUserStore()
-  const projectsStore = useProjectsStore()
+  const ordersStore = useOrdersStore()
   
 
   const newOrder = () => { 
@@ -28,7 +27,8 @@
       payment_type: '',
       payment_reference: '',
       date: '',
-      delivered_by: null
+      delivered_by: null,
+      orderItems: []
     }
   }
 

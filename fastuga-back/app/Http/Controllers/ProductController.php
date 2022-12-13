@@ -13,7 +13,7 @@ class ProductController extends Controller
   
     public function showAllProducts()
     {
-        return Product::all();
+        return ProductResource::collection(Product::paginate(10));
     }
 
     public function showProduct($id)

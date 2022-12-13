@@ -1,6 +1,6 @@
 <script setup>
   const props = defineProps({
-    projects: {
+    orders: {
       type: Array,
       default: () => [],
     },
@@ -65,20 +65,20 @@
     </thead>
     <tbody>
       <tr
-        v-for="project in projects"
-        :key="project.id"
+        v-for="order in orders"
+        :key="order.id"
       >
-        <td v-if="showId">{{ project.id }}</td>
-        <td>{{ project.name }}</td>
-        <td>{{ project.status_name }}</td>
-        <td v-if="showResponsible">{{ project.responsible_name }}</td>
-        <td v-if="showDates">{{ project.preview_start_date }}</td>
-        <td v-if="showDates">{{ project.preview_end_date }}</td>
-        <td v-if="showDates">{{ project.real_start_date }}</td>
-        <td v-if="showDates">{{ project.real_end_date }}</td>
-        <td v-if="showTotalHours">{{ project.total_hours }}</td>
-        <td v-if="showBillInformation">{{ project.billed }}</td>
-        <td v-if="showBillInformation">{{ project.total_price }}</td>
+        <td v-if="showId">{{ order.id }}</td>
+        <td>{{ order.name }}</td>
+        <td>{{ order.status_name }}</td>
+        <td v-if="showResponsible">{{ order.responsible_name }}</td>
+        <td v-if="showDates">{{ order.preview_start_date }}</td>
+        <td v-if="showDates">{{ order.preview_end_date }}</td>
+        <td v-if="showDates">{{ order.real_start_date }}</td>
+        <td v-if="showDates">{{ order.real_end_date }}</td>
+        <td v-if="showTotalHours">{{ order.total_hours }}</td>
+        <td v-if="showBillInformation">{{ order.billed }}</td>
+        <td v-if="showBillInformation">{{ order.total_price }}</td>
         <td
           class="text-end"
           v-if="showEditButton || showDeleteButton"

@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from "vue"
+import { ref, computed, watch, inject } from "vue"
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
@@ -48,8 +48,8 @@ const userToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
 const userToDeleteDescription = computed(() => {
-  return productToDelete.value
-    ? `#${productToDelete.value.id} `
+  return userToDelete.value
+    ? `#${userToDelete.value.id} `
     : ""
 })
 
@@ -137,13 +137,13 @@ const deleteClick = (user) => {
       </tr>
     </tbody>
   </table>
-  <paginate
+  <!-- <paginate
     :page-count="10"
     :prev-text="Prev"
     :next-text="Next"
     :container-class="'pagination'"
     >
-  </paginate>
+  </paginate> -->
 </template>
 
 <style scoped>

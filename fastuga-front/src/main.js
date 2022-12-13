@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
-import Toaster from "@meforma/vue-toaster";
-import Paginate from "vuejs-paginate-next";
+import Toaster from "@meforma/vue-toaster"
+import Pagination from "v-pagination-3"
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
 
@@ -36,9 +36,9 @@ app.provide('toast', app.config.globalProperties.$toast);
 
 app.use(createPinia())
 app.use(router)
-app.use(Paginate)
 
 app.component('FieldErrorMessage', FieldErrorMessage)
 app.component('ConfirmationDialog', ConfirmationDialog)
+app.component('pagination', Pagination)
 
 app.mount('#app')

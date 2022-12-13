@@ -13,7 +13,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
 
     public function showAllUsers()
     {
-        return User::all();
+        return UserResource::collection(User::paginate(20));
     }
 
     public function showUser($id)

@@ -7,16 +7,20 @@
   const router = useRouter()
 
   const products = ref([])
+  const paginationData = ref(null)
+  const page = ref(1)
   const filterByType = ref(-1)
 
   const loadProducts = () => {
-    axios.get('products')
+    axios.get('products?page=' + page.value)
       .then((response) => {
         //console.log(response.data)
-        products.value = response.data
+        products.value = response.data.data
+        paginationData.value = response.data.meta
         //console.log(products.value)
       })
       .catch((error) => {
+        products.value = []
         console.log(error)
       })
   }
@@ -96,6 +100,15 @@
     @edit="editProduct"
     @deleted="deletedProduct"
   ></product-table>
+  <template class="paginator">
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadProducts"
+      :options="{hideCount: true}">
+    </pagination>
+  </template>
 </template>
 
 
@@ -108,5 +121,10 @@
 }
 .btn-addtask {
   margin-top: 1.85rem;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>
