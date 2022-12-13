@@ -1,4 +1,25 @@
 <script setup>
+import { useRouter, RouterLink, RouterView } from "vue-router"
+import { ref, inject } from "vue"
+import { useUserStore } from "c:/laragon/www/fastuga/fastuga-front/src/stores/user"
+
+const router = useRouter()  
+const toast = inject("toast")
+const userStore = useUserStore()
+
+
+const Pontos = () => {
+  let confirmAction = confirm("Desenha gastar 10 pontos para receber 5 euros em desconto?");
+        if (confirmAction && userStore.user?.points > 10) {
+          alert("A realizar operação");
+          
+        } else {
+          alert("Operação cancelada");
+        }
+        
+}
+
+
 
 
 </script>
@@ -38,16 +59,28 @@
    
 </table>
 
-
 <div class="container">
       <div class="center">
             <button
             type="button"
-            class="btn btn-primary px-5"
+            class="btn btn-primary btn1 px-4"
+            @click="Pagar"
 
             >Pagar</button>
-      </div>
+          
+            <button
+            id="botao"
+            type="button"
+            class="btn btn-primary btn1 px-4"
+            @click="Pontos"
+          
+            
+            >Usar Pontos</button>
+          </div>
 </div>
+
+
+
 </template>
 
 <style>
@@ -78,19 +111,19 @@ table{
   text-align: center;
 }
 
-.center {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
 .container {
   height: 100px;
   position: relative;
 
+  
+}
 
+.btn1{
+margin-right: 25px;
+}
+
+.btn2{
+margin-left: 25px;
 }
 
 </style>
