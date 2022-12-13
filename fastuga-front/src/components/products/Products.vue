@@ -9,10 +9,11 @@
   const products = ref([])
   const paginationData = ref(null)
   const page = ref(1)
-  const filterByType = ref(-1)
+  const filterByType = ref("all")
 
   const loadProducts = () => {
-    axios.get('products?page=' + page.value)
+    const getProductsUrl = filterByType.value == "all" ? `products?page=${page.value}` : `products/${filterByType.value}?page=${page.value}`
+    axios.get(getProductsUrl)
       .then((response) => {
         //console.log(response.data)
         products.value = response.data.data
@@ -23,6 +24,11 @@
         products.value = []
         console.log(error)
       })
+  }
+
+  const resetPage = () => {
+    page.value = 1
+    loadProducts()
   }
 
   const addProduct = () => {
@@ -45,12 +51,21 @@
       type: String,
       default: 'Products'
     }
-  })*/
+  })
 
   const filteredProducts = computed( () => {
    // console.log(products.value)
+   switch (filterByType.value) {
+     case value:
+       
+       break;
+   
+     default:
+       break;
+   }
+    if(filterByType.value == "all") return products.value
     return products.value.filter((product) => (filterByType.value == product.type))
-  })
+  })*/
   
   onMounted (() => {
     loadProducts()
@@ -58,17 +73,8 @@
 </script>
 
 <template>
-  <div class="d-flex justify-content-between">
-    <div class="mx-2">
-      <!--  <h3 class="mt-4">{{ productsTitle }}</h3>  -->
-      <h3 class="mt-4">Products</h3>
-    </div>
-  </div>
-  <hr>
-  <div
-    class="mb-3 d-flex justify-content-between flex-wrap"
-  >
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+      <h3 class="mt-5 mb-3">Products</h3>
+      <div class="mx-2 mt-2 flex-grow-1">
       <label
         for="selectType"
         class="form-label"
@@ -77,23 +83,16 @@
         class="form-select"
         id="selectType"
         v-model="filterByType"
+        @change="resetPage"
       >
-        <option value="-1">All</option>
-        <option value="0">Hot dishes</option>
-        <option value="1">Cold dishes</option>
-        <option value="2">Drinks</option>
-        <option value="3">Desserts</option>
+        <option value="all">All</option>
+        <option value="hotdishes">Hot dishes</option>
+        <option value="colddishes">Cold dishes</option>
+        <option value="drinks">Drinks</option>
+        <option value="desserts">Desserts</option>
       </select>
     </div>
-
-    <div class="mx-2 mt-2">
-      <button
-        type="button"
-        class="btn btn-success px-4"
-        @click="addProduct"
-      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp;Add Product</button>
-    </div>
-  </div>
+  <hr>
   <product-table
     :products="products"
     :showId="false"

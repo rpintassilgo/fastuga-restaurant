@@ -55,7 +55,7 @@
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        ordersStore.insertProject(order.value)
+        ordersStore.insertOrder(order.value)
           .then((insertedOrder) => {
             order.value = insertedOrder
             originalValueStr = dataString()
@@ -71,7 +71,7 @@
             }
           })
       } else {
-        ordersStore.updateOrder(project.value)
+        ordersStore.updateOrder(order.value)
         .then((updatedOrder) => {
             order.value = updatedOrder
             originalValueStr = dataString()

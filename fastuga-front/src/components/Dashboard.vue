@@ -1,4 +1,5 @@
 <script setup>
+     // verificar o user logado e mostrar dashboards diferentes
 </script>
 
 <template>

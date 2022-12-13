@@ -14,7 +14,8 @@ class CustomerController extends Controller
 
     public function showAllCustomers() // nao tou a dar load aqui tbm acho eu
     {
-        return User::where('type','C')->get();
+        $customers = User::where('type','C')->paginate(20);
+        return UserResource::collection($customers);
     }
 
     public function showCustomer($id)

@@ -24,25 +24,25 @@ class ProductController extends Controller
 
     public function showHotDishes()
     {
-        $product = Product::where('type','hot dish')->get();
+        $product = Product::where('type','hot dish')->paginate(10);
         return ProductResource::collection($product);
     }
 
     public function showColdDishes()
     {
-        $product = Product::where('type','cold dish')->get();
+        $product = Product::where('type','cold dish')->paginate(10);
         return ProductResource::collection($product);
     }
 
     public function showDrinks()
     {
-        $product = Product::where('type','drink')->get();
+        $product = Product::where('type','drink')->paginate(10);
         return ProductResource::collection($product);
     }
 
     public function showDesserts()
     {
-        $product = Product::where('type','dessert')->get();
+        $product = Product::where('type','dessert')->paginate(10);
         return ProductResource::collection($product);
     }
 

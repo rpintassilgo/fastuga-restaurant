@@ -16,6 +16,25 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return UserResource::collection(User::paginate(20));
     }
 
+    public function showAllChefEmployees() 
+    {
+        $chefEmployees = User::where('type','EC')->paginate(20);
+        return UserResource::collection($chefEmployees);
+    }
+
+    public function showAllDeliveryEmployees() 
+    {
+        $deliveryEmployees = User::where('type','ED')->paginate(20);
+        return UserResource::collection($deliveryEmployees);
+    }
+
+    public function showAllManagerEmployees() 
+    {
+        $managerEmployees = User::where('type','em')->paginate(20);
+        return UserResource::collection($managerEmployees);
+    }
+
+
     public function showUser($id)
     {
         $user = User::findOrFail($id);

@@ -183,16 +183,24 @@ const clickMenuOption = () => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-show="userStore.user?.type == 'EM'">
                <!-- Mudar A pelos corretos da base de dados -->
               <router-link
-                class="nav-link"
+                class="nav-link w-100 me-3"
                 :class="{ active: $route.name === 'Users' }"
                 :to="{ name: 'Users' }"
                 @click="clickMenuOption"
               >
                 <i class="bi bi-people"></i>
                 Users
+              </router-link>
+              <router-link
+                class="link-secondary"
+                :to="{ name: 'NewUser' }"
+                aria-label="Add a new user"
+                @click="clickMenuOption"
+              >
+                <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
             <li class="nav-item" v-show="userStore.user?.type == 'EM'">

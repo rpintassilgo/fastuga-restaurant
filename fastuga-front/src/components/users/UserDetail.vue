@@ -57,12 +57,12 @@ const cancel = () => {
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
-          <label for="inputName" class="form-label">Nome</label>
+          <label for="inputName" class="form-label">Name</label>
           <input
             type="text"
             class="form-control"
             id="inputName"
-            placeholder="Nome de utilizador"
+            placeholder="Name"
             required
             v-model="editingUser.name"
           />
@@ -81,50 +81,35 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-        <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
-          <div class="mb-3 me-3 flex-grow-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                true-value="A"
-                false-value="M"
-                v-model="editingUser.type"
-                id="inputType"
-              />
-              <label class="form-check-label" for="inputType">
-                O Utilizador é Administrador
-              </label>
-              <field-error-message :errors="errors" fieldName="type"></field-error-message>
-            </div>
-          </div>
-          <div class="mb-3 ms-xs-3 flex-grow-1">
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="M"
-                required
-                v-model="editingUser.gender"
-                id="inputGenderM"
-              />
-              <label class="form-check-label" for="inputGenderM">Male</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="F"
-                v-model="editingUser.gender"
-                id="inputGenderF"
-              />
-              <label class="form-check-label" for="inputGenderF">Female</label>
-            </div>
-            <field-error-message :errors="errors" fieldName="gender"></field-error-message>
-          </div>
+
+        <div class="mb-3 px-1">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            placeholder="Password"
+            required
+            v-model="editingUser.email"
+          />
+          <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
+
+        <div class="mb-3">
+            <label
+              for="selectType"
+              class="form-label"
+            >Type:</label>
+            <select
+              class="form-select"
+              id="selectType"
+              v-model="editingUser.type"
+            >
+              <option value="EC">Employee Chef</option>
+              <option value="ED">Employee Delivery</option>
+              <option value="EM">Employee Manager</option>
+            </select>
+          </div>
       </div>
       <div class="w-25">
         <div class="mb-3">

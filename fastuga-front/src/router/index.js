@@ -31,7 +31,7 @@ const router = createRouter({
       name: 'Login',
       component: Login
     },
-    {
+    { // customer
       path: '/register',
       name: 'Register',
       component: Register
@@ -103,6 +103,12 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
     }, 
+    { // admin and employees
+      path: '/users/new',
+      name: 'NewUser',
+      component: User,
+      props: { id: -1 }
+    },
    /* {
       path: '/projects/:id/tasks',
       name: 'ProjectTasks',

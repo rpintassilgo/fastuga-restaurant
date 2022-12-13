@@ -11,17 +11,21 @@
   const ordersStore = useOrdersStore()
 
   const orders = ref([])
-  const orderToDelete = ref(null)
+  const paginationData = ref(null)
+  const page = ref(1)
+  const orderToCancel = ref(null)
   const filterByStatus = ref('')
   const deleteConfirmationDialog = ref(null)  
   
   /* Change this function */
   const loadOrders = () => {
-    axios.get('orders')
+    axios.get('orders?page=' + page.value)
       .then((response) => {
-        orders.value = response.data
+        orders.value = response.data.data
+        paginationData.value = response.data.meta
       })
       .catch((error) => {
+        orders.value = []
         console.log(error)
       })
   }
@@ -85,9 +89,18 @@
     :orders="orders"
     :showId="true"
     :showDates="true"
-    @edit="editProject"
-    @delete="clickToDeleteProject"
+    @edit="editOrder"
+    @delete="clickToDeleteOrder"
   ></order-table>
+  <template class="paginator">
+    <pagination
+      v-model="page"
+      :records="paginationData ? paginationData.total : 0"
+      :per-page="paginationData ? paginationData.per_page : 0"
+      @paginate="loadOrders"
+      :options="{hideCount: true}">
+    </pagination>
+  </template>
 </template>
 
 <style scoped>
@@ -99,5 +112,10 @@
 }
 .btn-addprj {
   margin-top: 1.85rem;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
 }
 </style>

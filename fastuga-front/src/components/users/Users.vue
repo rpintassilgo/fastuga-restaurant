@@ -10,13 +10,16 @@
   const users = ref([])
   const paginationData = ref(null)
   const page = ref(1)
+  const filterByType = ref("all")
 
   const totalUsers = computed(() => {
     return paginationData ? paginationData.total : 0
   })
 
   const loadUsers = () => {
-    axios.get('users?page=' + page.value)
+    const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
+                        (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
+    axios.get(getUsersUrl)
         .then((response) => {
           console.log(response)
          // users.value.splice(0)
@@ -27,7 +30,17 @@
           users.value = []
           console.log(error)
         })
-    }
+  }
+
+  const resetPage = () => {
+    page.value = 1
+    loadUsers()
+  }
+
+  // add admin or employee
+  const addUser = () => {
+    router.push({ name: 'NewUser'})
+  }
 
   const editUser = (user) => {
     router.push({ name: 'User', params: { id: user.id } })
@@ -40,6 +53,25 @@
 
 <template>
   <h3 class="mt-5 mb-3">Users</h3>
+      <div class="mx-2 mt-2 flex-grow-1 ">
+      <label
+        for="selectType"
+        class="form-label"
+      >Filter by user type:</label>
+      <select
+        class="form-select"
+        id="selectType"
+        v-model="filterByType"
+        @change="resetPage"
+      >
+        <option value="all">All</option>
+        <option value="customer">C (Customer)</option>
+        <option value="chef">EC (Employee Chef)</option>
+        <option value="delivery">ED (Employee Delivery)</option>
+        <option value="manager">EM (Employee Manager)</option>
+      </select>
+    </div>
+
   <hr>
   <user-table
     :users="users"
