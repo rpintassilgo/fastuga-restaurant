@@ -11,6 +11,7 @@
   const paginationData = ref(null)
   const page = ref(1)
   const filterByType = ref("all")
+  const searchQuery = ref("")
 
   const totalUsers = computed(() => {
     return paginationData ? paginationData.total : 0
@@ -46,6 +47,10 @@
     router.push({ name: 'User', params: { id: user.id } })
   }
 
+  const ordersCustomer = (customer) => {
+    router.push({ name: 'OrdersFromCustomer', params: { id: customer.id } })
+  }
+
   onMounted (() => {
     loadUsers()
   })
@@ -53,7 +58,12 @@
 
 <template>
   <h3 class="mt-5 mb-3">Users</h3>
-      <div class="mx-2 mt-2 flex-grow-1 ">
+    <div class="row">
+      <div class="search-wrapper panel-heading col-sm-12">
+          <input class="form-control" type="text" v-model="searchQuery" placeholder="Search user by email" />
+      </div>                        
+    </div>
+    <div class="mx-2 mt-2 flex-grow-1 ">
       <label
         for="selectType"
         class="form-label"
@@ -77,6 +87,7 @@
     :users="users"
     :showId="false"
     @edit="editUser"
+    @orders="ordersCustomer"
   ></user-table>
   <template class="paginator">
     <pagination

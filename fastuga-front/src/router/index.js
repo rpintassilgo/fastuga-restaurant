@@ -12,6 +12,7 @@ import Register from "../components/auth/Register.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Products from "../components/products/Products.vue"
 import Orders from "../components/orders/Orders.vue"
+import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 
@@ -77,6 +78,12 @@ const router = createRouter({
       path: '/orders',
       name: 'Orders',
       component: Orders,
+    },
+    {
+      path: '/orders/customer/:id',
+      name: 'OrdersFromCustomer',
+      component: OrdersFromCustomer,
+      props: route => ({ id: parseInt(route.params.id) })   // customer id
     },
     {
       path: '/orders/new', // isto aqui possivelmente vai ser o carrinho

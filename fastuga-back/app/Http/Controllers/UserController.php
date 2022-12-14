@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller // falta adicionar try and catch e DB neste
 {
@@ -41,10 +42,17 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return new UserResource($user);
     }
 
-    public function showMe(Request $request) // maybe use a specific request later
+    
+    public function showMe(Request $request) 
     {
-        return new UserResource($request->user());
+        //return new UserResource($request->user());
+        /*return response()->json(
+            ['msg' => 'test'],
+            400
+        );*/
+        return new UserResource(Auth::user());
     }
+    
 
     // this function cannot be used to sign up customers 
     public function signUpUser(UserRequest $request)

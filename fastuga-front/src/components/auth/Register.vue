@@ -6,11 +6,15 @@
   const toast = inject('toast')
 
   const credentials = ref({
-        username: '',
         name: '',
+        email: '',
         password: '',
-        password1: '',
-        gender: '',
+        confirmPassword: '',
+        phone: '',
+        nif: '',
+        defaultPaymentType: '',
+        defaultPaymentReference: '',
+        photo_url: null
     })
 
   const userStore = useUserStore()     
@@ -20,21 +24,21 @@
   const register = async () => {
 
     if (await userStore.register(credentials.value)) {
-      toast.success('Registo Bem sucedido')
+      toast.success('Account created')
       emit('register')
       //router.back()
       router.push('/login')
-    } else if (credentials.value.password != credentials.value.password1 || credentials.value.password == '' || credentials.value.password1 == '') {
+    } else if (credentials.value.password != credentials.value.confirmPassword || credentials.value.password == '' || credentials.value.confirmPassword == '') {
       credentials.value.password = ''
-      credentials.value.password1 = ''
-      toast.error('password do not match')
+      credentials.value.confirmPassword = ''
+      toast.error('Password do not match')
     }
     else if (credentials.value.name == ''){
       credentials.value.name  = ''
-      toast.error('name not valid')
+      toast.error('Invalid name')
   }else{
-      credentials.value.username = ''
-      toast.error('username not valid')
+      credentials.value.email = ''
+      toast.error('Invalid email')
       }
     }
 </script>
@@ -46,19 +50,32 @@
       novalidate
       @submit.prevent="register"
     >
-      <h3 class="mt-5 mb-3">Registar</h3>
+      <h3 class="mt-5 mb-3">Sign up</h3>
       <hr>
       <div class="mb-3">
           <label
-            for="inputUsername"
+            for="inputName"
+            class="form-label"
+          >Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputName"
+            required
+            v-model="credentials.name"
+      >
+      </div>
+      <div class="mb-3">
+          <label
+            for="inputEmail"
             class="form-label"
           >Email</label>
           <input
             type="text"
             class="form-control"
-            id="inputUsername"
+            id="inputEmail"
             required
-            v-model="credentials.username"
+            v-model="credentials.email"
           >
       </div>
       <div class="mb-3">
@@ -76,46 +93,77 @@
       </div>
       <div class="mb-3">
           <label
-            for="inputPassword1"
+            for="inputConfirmPassword"
             class="form-label"
-          >Confirmação da Password</label>
+          >Confirm Password</label>
           <input
             type="password"
             class="form-control"
-            id="inputPassword1"
+            id="inputConfirmPassword"
             required
-            v-model="credentials.password1"
+            v-model="credentials.confirmPassword"
           >
       </div>
       <div class="mb-3">
         <div class="mb-3">
           <label
-            for="inputName"
+            for="inputPhone"
             class="form-label"
-          >Nome</label>
+          >Phone number</label>
           <input
             type="text"
             class="form-control"
-            id="inputName"
+            id="inputPhone"
             required
-            v-model="credentials.name"
+            v-model="credentials.phone"
           >
         </div>
       </div>
-
-      <select name="gender">
-        <option value="M">M</option>
-        <option value="F">F</option>
-
-        <input
+      <div class="mb-3">
+        <div class="mb-3">
+          <label
+            for="inputNif"
+            class="form-label"
+          >NIF</label>
+          <input
             type="text"
             class="form-control"
-            id="inputGender"
+            id="inputNif"
             required
-            v-model="credentials.gender"
+            v-model="credentials.nif"
           >
+        </div>
+      </div>
+      <div class="mb-3">
+            <label
+              for="selectType"
+              class="form-label"
+            >Default Payment Type:</label>
+            <select
+              class="form-select"
+              id="selectDefaultPaymentType"
+              v-model="credentials.defaultPaymentType"
+            >
+              <option value="VISA">Visa</option>
+              <option value="PAYPAL">Paypal</option>
+              <option value="MBWAY">MBWay</option>
+            </select>
+      </div>
+      <div class="mb-3">
+          <label
+            for="inputDefaultPaymentReference"
+            class="form-label"
+          >Default Payment Reference</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputDefaultPaymentReference"
+            required
+            v-model="credentials.defaultPaymentReference"
+          >
+       </div>
 
-      </select>
+      <!-- meter o upload da foto aqui depois, ou senao se a pessoa quiser q vá ao perfil e troque-->
   
       <div class="mb-3 d-flex justify-content-center">
         <button

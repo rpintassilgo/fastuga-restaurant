@@ -42,10 +42,38 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
+    public function showStatusOrdersFromCustomer($id,$status)
+    {
+        $orders = null;
+        switch ($status) {
+            case 'preparing':
+                $matchThese = ['status' => 'P', 'customer_id' => $id];
+                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                break;
+            case 'ready':
+                $matchThese = ['status' => 'R', 'customer_id' => $id];
+                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                break;
+            case 'delivered':
+                $matchThese = ['status' => 'D', 'customer_id' => $id];
+                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                break;
+            case 'cancelled':
+                $matchThese = ['status' => 'C', 'customer_id' => $id];
+                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                break;
+            default:
+                return response()->json(['message' => 'Invalid order status!'],400);
+                break;
+        }
+        return OrderResource::collection($orders);
+    }
+
+
     public function showAllOrdersFromCustomer($id)
     {
-        $order = Order::with('orderItems.product')->where('customer_id',$id)->get();
-        return OrderResource::collection($order);
+        $orders = Order::with('orderItems.product')->where('customer_id',$id)->paginate(20);
+        return OrderResource::collection($orders);
     }
 
     public function showOrder($id)

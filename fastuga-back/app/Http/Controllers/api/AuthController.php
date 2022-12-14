@@ -45,7 +45,7 @@ class AuthController extends Controller
                 $errorCode
             );
         }
-    }
+    } 
 
     public function logout(Request $request)
     {

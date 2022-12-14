@@ -24,8 +24,12 @@ export const useUserStore = defineStore('user', () => {
     async function loadUser () {
         try {
             const response = await axios.get('users/me')
-            user.value = response.data.data
+            console.log("response from users/me get: " + response.data)
+            user.value = response.data
+            console.log()
+           // console.log("loadUser: " + response.data.data)
         } catch (error) {
+            console.log("error from loadUser: " + error.message)
             clearUser () 
             throw error
         }
@@ -40,18 +44,40 @@ export const useUserStore = defineStore('user', () => {
     async function login (credentials) {
         try {
             const response = await axios.post('login', credentials)
+            console.log("response from login post: " + response.data.access_token)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
-            //await projectsStore.loadProjects()
             return true       
         } 
         catch(error) {
             clearUser()
+            console.log("error from login in store: " + error.message)
             //projectsStore.clearProjects()
             return false
         }
     }
+
+    /* 
+        async login(context, credentials) {
+      try {
+        let response = await axios.post("login", credentials)
+        axios.defaults.headers.common.Authorization =
+          "Bearer " + response.data.access_token
+        sessionStorage.setItem("token", response.data.access_token)
+      } catch (error) {
+        delete axios.defaults.headers.common.Authorization
+        sessionStorage.removeItem("token")
+        context.commit("resetUser", null)
+        throw error
+      }
+      await context.dispatch("refresh")
+    },
+    
+    
+    
+    
+    */
 
     async function register (credentials) {
         try {
@@ -62,7 +88,7 @@ export const useUserStore = defineStore('user', () => {
         } 
         catch(error) {
             clearUser()
-            projectsStore.clearProjects()
+            //projectsStore.clearProjects()
             return false
         }
     }
@@ -71,7 +97,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             await axios.post('logout')
             clearUser()
-            projectsStore.clearProjects()
+            //projectsStore.clearProjects()
             return true
         } catch (error) {
             return false
@@ -87,9 +113,8 @@ export const useUserStore = defineStore('user', () => {
             return true
         }
         clearUser()
-        projectsStore.clearProjects()
         return false
     }
     
-    return { user, userId, userPhotoUrl, login, register, logout, restoreToken }
+    return { user, userId, userPhotoUrl, login, register, loadUser, logout, restoreToken }
 })

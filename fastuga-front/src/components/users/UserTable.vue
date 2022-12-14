@@ -49,7 +49,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["edit","deleted"])
+const emit = defineEmits(["edit","deleted","orders"])
 
 const editingUsers = ref(props.users)
 const userToDelete = ref(null)
@@ -76,6 +76,10 @@ const photoFullUrl = (user) => {
 
 const editClick = (user) => {
   emit("edit", user)
+}
+
+const ordersClick = (customer) => {
+  emit("orders", customer)
 }
 
 const canViewUserDetail  = (userId) => {
@@ -159,6 +163,7 @@ const deleteClick = (user) => {
           <div class="d-flex justify-content-end">
             <button
               v-if="user.type =='C'"
+              @click="ordersClick(user)"
               class="btn btn-xs btn-success"
             >Orders
             </button>

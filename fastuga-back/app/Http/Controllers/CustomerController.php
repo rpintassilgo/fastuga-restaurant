@@ -24,6 +24,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
+
     public function signUpCustomer(CustomerRequest $request)
     {
         try{
