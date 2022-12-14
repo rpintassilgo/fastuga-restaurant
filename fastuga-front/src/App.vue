@@ -39,11 +39,11 @@ const clickMenuOption = () => {
   >
     <div class="container-fluid ">
 
-        <router-link :to="{ name: 'home' }" @click="clickMenuOption">
+        <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
           <img src="@/assets/fastuga-logo.png" alt="" width="95" height="80" class=" logo d-inline-block align-text-top" style="margin-left: 50px;"/>
         </router-link>
 
-        <router-link :to="{ name: 'Menu' }" @click="clickMenuOption">
+        <router-link :to="{ name: 'Menu' }" @click="clickMenuOption" v-if="userStore.type == 'C'">
             <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
 

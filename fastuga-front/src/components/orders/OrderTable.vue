@@ -112,7 +112,7 @@
             <button
               class="btn btn-xs btn-danger"
               @click="cancelClick(order)"
-              v-if="showCancelButton"
+              v-if="showCancelButton && !(order.status == 'C')"
             >Cancel
             </button>
           </div>

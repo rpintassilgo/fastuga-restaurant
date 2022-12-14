@@ -99,8 +99,6 @@ const router = createRouter({
       path: '/users/:id',
       name: 'User',
       component: User,
-      //props: true
-      // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
     }, 
     { // admin and employees
@@ -172,7 +170,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   if (to.name == 'User') {
-    if ((userStore.user.type == 'A') || (userStore.user.id == to.params.id)) {
+    if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
       next()
       return
     }

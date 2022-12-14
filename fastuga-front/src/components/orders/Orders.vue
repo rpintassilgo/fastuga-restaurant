@@ -14,20 +14,28 @@
   const paginationData = ref(null)
   const page = ref(1)
   const orderToCancel = ref(null)
-  const filterByStatus = ref('')
+  const filterByStatus = ref('all')
   const deleteConfirmationDialog = ref(null)  
   
   /* Change this function */
-  const loadOrders = () => {
-    axios.get('orders?page=' + page.value)
-      .then((response) => {
-        orders.value = response.data.data
-        paginationData.value = response.data.meta
-      })
-      .catch((error) => {
-        orders.value = []
-        console.log(error)
-      })
+ const loadOrders = () => {
+    const getUsersUrl = filterByStatus.value == "all" ? `orders?page=${page.value}` : `orders/${filterByStatus.value}?page=${page.value}`
+    axios.get(getUsersUrl)
+        .then((response) => {
+          console.log(response)
+         // users.value.splice(0)
+          orders.value = response.data.data
+          paginationData.value = response.data.meta
+        })
+        .catch((error) => {
+          orders.value = []
+          console.log(error)
+        })
+  }
+
+  const resetPage = () => {
+    page.value = 1
+    loadOrders()
   }
 
   const addOrder = () => {
@@ -84,6 +92,26 @@
     @confirmed="cancelOrderConfirmed"
   >
   </confirmation-dialog>
+        <h3 class="mt-5 mb-3">Orders</h3>
+      <div class="mx-2 mt-2 flex-grow-1">
+      <label
+        for="selectType"
+        class="form-label"
+      >Filter by order status:</label>
+      <select
+        class="form-select"
+        id="selectType"
+        v-model="filterByStatus"
+        @change="resetPage"
+      >
+        <option value="all">All</option>
+        <option value="preparing">Preparing</option>
+        <option value="ready">Ready</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+  <hr>
 
   <order-table
     :orders="orders"

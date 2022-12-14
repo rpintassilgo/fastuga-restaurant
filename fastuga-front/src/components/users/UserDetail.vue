@@ -135,9 +135,6 @@ const cancel = () => {
 </template>
 
 <style scoped>
-.total_hours {
-  width: 26rem;
-}
 
 .btn-new-one {
   background-color: #0d6efd;

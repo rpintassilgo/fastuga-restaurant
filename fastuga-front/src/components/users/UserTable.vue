@@ -42,6 +42,10 @@ const props = defineProps({
   showDeleteButton: {
     type: Boolean,
     default: true,
+  },
+  showOrdersButton: {
+    type: Boolean,
+    default: true,
   }
 })
 
@@ -111,6 +115,7 @@ const deleteClick = (user) => {
         <th v-if="showBlocked" class="align-middle">Blocked?</th>
         <th v-if="showType" class="align-middle">Type</th>
         <th v-if="showEditButton || showDeleteButton"></th>
+        <th v-if="showOrdersButton"></th>
       </tr>
     </thead>
     <tbody>
@@ -122,7 +127,9 @@ const deleteClick = (user) => {
         <td class="align-middle">{{ user.name }}</td>
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
         <td v-if="showBlocked" class="align-middle">{{ user.blocked == 1 ? "Yes" : "No" }}</td>
-                <td v-if="showType" class="align-middle">{{ user.type }}</td>
+        <td v-if="showType" class="align-middle">{{ user.type }}</td>
+        
+        <!-- edit / block / delete buttons -->
         <td class="text-end align-middle" v-if="showEditButton || showBlockButton || showDeleteButton">
           <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
 
@@ -140,22 +147,26 @@ const deleteClick = (user) => {
 
             <button
               class="btn btn-xs btn-light"
-              @click="deleteClick(product)" v-if="showDeleteButton">
+              @click="deleteClick(user)" v-if="showDeleteButton">
               <i class="bi bi-xs bi-trash3"></i>
             </button>
 
           </div>
         </td>
+
+        <!-- orders buttons -->
+        <td class="text-end" v-if="showOrdersButton">
+          <div class="d-flex justify-content-end">
+            <button
+              v-if="user.type =='C'"
+              class="btn btn-xs btn-success"
+            >Orders
+            </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
-  <!-- <paginate
-    :page-count="10"
-    :prev-text="Prev"
-    :next-text="Next"
-    :container-class="'pagination'"
-    >
-  </paginate> -->
 </template>
 
 <style scoped>

@@ -24,6 +24,7 @@ Route::get('users/chef', [UserController::class, 'showAllChefEmployees']);
 Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees']);
 Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
 Route::get('orders', [OrderController::class, 'showAllOrders']);
+Route::get('orders/{status}', [OrderController::class, 'showStatusOrders']);
 
 
 Route::middleware('auth:api')->group(function (){
@@ -60,6 +61,7 @@ Route::middleware('auth:api')->group(function (){
     // ORDERS
     //Route::get('orders', [OrderController::class, 'showAllOrders']);
     Route::get('orders/customer/{id}', [OrderController::class, 'showAllOrdersFromCustomer']);
+    //Route::get('orders/{status}', [OrderController::class, 'showStatusOrder']);
     Route::get('orders/{id}', [OrderController::class, 'showOrder']);
     Route::post('orders', [OrderController::class, 'createOrder']);
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']);

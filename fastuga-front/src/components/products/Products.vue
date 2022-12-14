@@ -35,7 +35,7 @@
     router.push({ name: 'NewProduct'})
   }
   
-  const editProduct = (task) => {
+  const editProduct = (product) => {
     router.push({ name: 'Product', params: { id: product.id } })
   }
 
