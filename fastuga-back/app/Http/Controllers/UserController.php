@@ -43,7 +43,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
     }
 
     
-    public function showMe(Request $request) 
+    public function showMyself(Request $request) 
     {
         //return new UserResource($request->user());
         /*return response()->json(

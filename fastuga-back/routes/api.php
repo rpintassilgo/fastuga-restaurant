@@ -32,11 +32,12 @@ Route::get('users/{id}', [UserController::class, 'showUser']);
 
 
 Route::post('login', [AuthController::class, 'login']);
-Route::get('users/me', [UserController::class, 'showMe']);
+
 
 Route::middleware('auth:api')->group(function (){
     //Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('users/me', [UserController::class, 'showMyself']);
 
 
     // adicionar o middleware especifico para cada endpoint com as policies

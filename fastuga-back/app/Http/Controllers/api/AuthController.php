@@ -10,40 +10,36 @@ use Illuminate\Support\Facades\Route;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
-        $user = User::where('email',$request->email)->first();
-        //dd($user);
-        if ($user != null && ($user->blocked == "1" || $user->deleted_at != null)) {
-            return response()->json(
-                ['msg' => 'User is blocked'],
-                403
-            );
-        }
-
-        request()->request->add([
+    private function passportAuthData($email,$password){
+        return [
             'grant_type' => 'password',
             'client_id' => env('PASSPORT_CLIENT_ID'),
             'client_secret' => env('PASSPORT_CLIENT_SECRET'),
-            'username' => (string)$request->email,
-            'password' => (string)$request->password,
-            'scope'         => '',
-        ]);
+            'username' => (string)$email,
+            'password' => (string)$password,
+            'scope'         => ''
+        ];
+    }
 
-        $url = env('PASSPORT_SERVER_URL') . '/oauth/token';
+    public function login(Request $request)
+    {
+        try {
+            // check if user is blocked
+            $user = User::where('email',$request->email)->first();
+            if ($user != null && ($user->blocked == "1" || $user->deleted_at != null)) {
+                return response()->json(['msg' => 'User is blocked'],403);
+            }
 
-        $request = Request::create($url, 'POST');
-        $response = Route::dispatch($request);
+            request()->request->add($this->passportAuthData($request->email,$request->password));
+            $url = env('PASSPORT_SERVER_URL') . '/oauth/token';
+            $request = Request::create($url, 'POST');
+            $response = Route::dispatch($request);
+            $errorCode = $response->getStatusCode();
+            $auth_server_response = json_decode((string) $response->content(), true);
+            return response()->json($auth_server_response, $errorCode);
 
-        $errorCode = $response->getStatusCode();
-
-        if ($errorCode == '200') {
-            return json_decode((string) $response->content(), true);
-        } else {
-            return response()->json(
-                ['msg' => 'User credentials are invalid'],
-                $errorCode
-            );
+        } catch (\Exception $e){
+            return response()->json('Authentication has failed!', 401);
         }
     } 
 
