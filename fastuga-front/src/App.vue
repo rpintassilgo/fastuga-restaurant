@@ -101,7 +101,9 @@ const clickMenuOption = () => {
               <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }} </span>
 
             </a>
+            <li class="nav-item" v-show="(userStore.user?.type == 'C')">
             <span class="points-text">{{ "Pontos " + userStore.user?.points ?? "Anonymous" }}</span>
+            </li>
             <ul
               class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
