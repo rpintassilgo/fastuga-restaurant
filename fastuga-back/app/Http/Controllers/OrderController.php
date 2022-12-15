@@ -9,6 +9,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Product;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -221,7 +222,7 @@ class OrderController extends Controller
     public function cancelOrder($id)
     {
         // quem cancela? gerente
-        if (Auth::user()->user_type != "EM"){
+        if ( Auth::user()->type != "EM"){
             return response()->json(['message' => 'The current logged user is not an employee manager'],400);
         }
 

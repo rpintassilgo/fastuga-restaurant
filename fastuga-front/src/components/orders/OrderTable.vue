@@ -66,9 +66,12 @@
     }
   })
 
-  const cancelClick = () => {
+  const emit = defineEmits(["cancel"]);
 
+  const cancelClick = (order) => {
+    emit("cancel", order)
   }
+
 </script>
 
 <template>

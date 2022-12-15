@@ -29,11 +29,11 @@
   
   /* Change this function */
   const loadOrders = () => {
-    const getUsersUrl = filterByStatus.value == "all" ? `orders/customer/${user_id.value}?page=${page.value}` : 
-                                                `orders/customer/${user_id.value}/${filterByStatus.value}?page=${page.value}`
+    const getUsersUrl = filterByStatus.value == "all" ? `orders/customer/${props.id}?page=${page.value}` : 
+                                                `orders/customer/${props.id}/${filterByStatus.value}?page=${page.value}`
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log(response)
+          console.log("loadOrders: " + response)
          // users.value.splice(0)
           orders.value = response.data.data
           paginationData.value = response.data.meta
@@ -46,10 +46,10 @@
 
   // get customer from user_id
   const loadCustomer = () => {
-    console.log(user_id.value)
-      axios.get(`customers/${user_id.value}`)
+    console.log("user_id.value (loadCustomer): " + user_id.value)
+      axios.get(`customers/${props.id}`)
           .then((response) => {
-            console.log(response)
+            console.log("then get customer: " + response)
             customer.value = response.data
           })
           .catch((error) => {
@@ -60,11 +60,8 @@
 
   const resetPage = () => {
     page.value = 1
+    loadCustomer()
     loadOrders()
-  }
-
-  const addOrder = () => {
-    router.push({ name: 'NewOrder'})
   }
 
 
@@ -85,11 +82,6 @@
   }
 
 
-  /* Change this function */
-  const filteredOrders = computed(()=>{
-    return ordersStore.getOrdersByFilter(filterByStatus.value)
-  })
-
 
   const orderToCancelDescription = computed(() => {
     return orderToCancel.value
@@ -98,7 +90,7 @@
   })
 
   onMounted(() => {
-   // loadCustomer()
+    loadCustomer()
     // Calling loadProjects refresh the list of projects from the API
     loadOrders()
   })

@@ -78,8 +78,8 @@ const editClick = (user) => {
   emit("edit", user)
 }
 
-const ordersClick = (customer) => {
-  emit("orders", customer)
+const ordersClick = (user) => {
+  emit("orders", user)
 }
 
 const canViewUserDetail  = (userId) => {

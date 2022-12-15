@@ -16,11 +16,17 @@ import "bootstrap"
 
 const app = createApp(App)
 
-const serverBaseUrl = 'http://fastuga-back.test'
+const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
 app.provide('axios', axios.create({
     baseURL: serverBaseUrl + '/api',
     headers: {
       'Content-type': 'application/json',
+    },
+  }))
+app.provide('axiosImage', axios.create({
+    baseURL: serverBaseUrl + '/api',
+    headers: {
+      'Content-type': 'multipart/form-data',
     },
   }))
 app.provide('serverBaseUrl', serverBaseUrl)  

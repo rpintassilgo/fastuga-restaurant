@@ -47,8 +47,8 @@
     router.push({ name: 'User', params: { id: user.id } })
   }
 
-  const ordersCustomer = (customer) => {
-    router.push({ name: 'OrdersFromCustomer', params: { id: customer.id } })
+  const ordersCustomer = (user) => {
+    router.push({ name: 'OrdersFromCustomer', params: { id: user.id } })
   }
 
   onMounted (() => {

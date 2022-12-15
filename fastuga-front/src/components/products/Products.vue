@@ -15,14 +15,14 @@
     const getProductsUrl = filterByType.value == "all" ? `products?page=${page.value}` : `products/${filterByType.value}?page=${page.value}`
     axios.get(getProductsUrl)
       .then((response) => {
-        //console.log(response.data)
+        console.log(response.data)
         products.value = response.data.data
         paginationData.value = response.data.meta
         //console.log(products.value)
       })
       .catch((error) => {
         products.value = []
-        console.log(error)
+        console.log(error.message)
       })
   }
 

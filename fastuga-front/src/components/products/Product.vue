@@ -16,6 +16,7 @@
         type: '',  
         description: '',
         photo_url: '',
+        photo_file: null,
         price: null
       }
   }
@@ -42,6 +43,24 @@
           })
       }
   }
+
+  /*const imageUpload = () => {
+      if(product.value.photo_file == null){
+        //toast.error("Photo not found.")
+      } else{
+          try {
+            let formData = new FormData()
+            formData.append('photo_file',editingProduct.photo_file)
+            axiosImage.defaults.common.Authorization = "Bearer " + sessionStorage.getItem('token')
+
+            axiosImage.post(`products/${photo.value.id}/image`,formData)
+                      .then(() => toast.success("Photo uploaded successfully!"))
+          } catch (error) {
+            toast.error("Internal server error. Selected photo not uploaded!")
+            console.log(error)
+          }
+      }
+  }*/
 
   const save = () => {
       errors.value = null

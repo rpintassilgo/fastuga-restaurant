@@ -41,17 +41,11 @@
   const addOrder = () => {
     router.push({ name: 'NewOrder'})
   }
-  
-  /* nao sei se vai ser possivel editar um pedido
-  const editOrder = (order) => {
-    router.push({ name: 'Order', params: { id: order.id } })
-  }
-  */
 
-  /* Change this function */
+  
   const cancelOrderConfirmed = () => {
-    ordersStore.changeStatusOrder(orderToCancel.value,"cancel")
-      .then((cancelledOrder) => {
+    ordersStore.changeStatusOrder(orderToCancel.value.id,"cancel")
+      .then(() => {
         toast.info("Order " + orderToCancelDescription.value + " was cancelled")
       })
       .catch(() => {
@@ -59,9 +53,9 @@
       })
   }
 
-  const clickToCancelOrder = (order) => {
+  const cancelOrder = (order) => {
     orderToCancel.value = order
-    cancelConfirmationDialog.value.show()
+    cancelOrderConfirmed()
   }
 
 
@@ -117,8 +111,7 @@
     :orders="orders"
     :showId="true"
     :showDates="true"
-    @edit="editOrder"
-    @delete="clickToDeleteOrder"
+    @cancel="cancelOrder"
   ></order-table>
   <template class="paginator">
     <pagination

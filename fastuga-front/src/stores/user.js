@@ -24,8 +24,8 @@ export const useUserStore = defineStore('user', () => {
     async function loadUser () {
         try {
             const response = await axios.get('users/me')
-            console.log("response from users/me get: " + response.data)
-            user.value = response.data
+            console.log("logged user: " + JSON.stringify(response.data.data))
+            user.value = response.data.data
             console.log()
            // console.log("loadUser: " + response.data.data)
         } catch (error) {
@@ -58,26 +58,6 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    /* 
-        async login(context, credentials) {
-      try {
-        let response = await axios.post("login", credentials)
-        axios.defaults.headers.common.Authorization =
-          "Bearer " + response.data.access_token
-        sessionStorage.setItem("token", response.data.access_token)
-      } catch (error) {
-        delete axios.defaults.headers.common.Authorization
-        sessionStorage.removeItem("token")
-        context.commit("resetUser", null)
-        throw error
-      }
-      await context.dispatch("refresh")
-    },
-    
-    
-    
-    
-    */
 
     async function register (credentials) {
         try {
@@ -97,7 +77,6 @@ export const useUserStore = defineStore('user', () => {
         try {
             await axios.post('logout')
             clearUser()
-            //projectsStore.clearProjects()
             return true
         } catch (error) {
             return false

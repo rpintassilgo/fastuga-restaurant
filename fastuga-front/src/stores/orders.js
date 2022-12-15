@@ -58,15 +58,14 @@ export const useOrdersStore = defineStore('orders', () => {
         return response.data
     }
 
-    async function changeStatusOrder(changeStatusOrder,status) {
+    async function changeStatusOrder(id,status) {
         // Note that when an error occours, the exception should be
         // catch by the function that called the changeStatusOrder
-        const response = await axios.put('orders/' + cancelOrder.id + '/' + status)
-        let idx = orders.value.findIndex((o) => o.id === response.data.id)
-        if (idx >= 0) {
-            orders.value[idx] = response.data
-        }
-        return response.data
+            const response = await axios.put('orders/' + id + '/' + status)
+            let idx = orders.value.data.findIndex((o) => o.id === response.data.data.id)
+            if (idx >= 0) {
+                orders.value.data[idx] = response.data.data
+            }
     }
 
     

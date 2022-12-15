@@ -45,12 +45,13 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
     
     public function showMyself(Request $request) 
     {
-        //return new UserResource($request->user());
+        //dd("Odeio esta merdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        return new UserResource($request->user());
         /*return response()->json(
             ['msg' => 'test'],
             400
         );*/
-        return new UserResource(Auth::user());
+        //return new UserResource(Auth::user());
     }
     
 

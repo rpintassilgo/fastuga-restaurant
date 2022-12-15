@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ImageRequest;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -101,5 +103,17 @@ class ProductController extends Controller
         if( $product->delete() ){
             return new ProductResource( $product );
         }
+    }
+
+    public function uploadProductImage(ImageRequest $request, Product $product){
+        // i'm using validate() because validate() returns validated() or exception if it fails (maybe less prone to break ??)
+        $requestData = $request->validate();
+        $path = 'storage/products/';
+
+        if($requestData['photo_file']){
+            $nameString = Carbon::now()->format('Ymd_His') . $requestData['photo_file']->getClientOriginalExtension();
+            $product->photo_url = $nameString;
+        }
+        $product->save();
     }
 }

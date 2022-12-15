@@ -28,7 +28,7 @@ class CustomerRequest extends FormRequest
             'name' => 'required|alpha|max:255',
             'email' => 'required|email',
             'password' => 'required|string',
-            'photo_url' => 'nullable|image|max:8192',
+            'photo_url' => 'nullable|string',
             'phone' => 'required|digits:9', // nao sei se convem verificar o segundo digito tbm pq n existe numeros começados por 99, 90 etc
             'nif' => 'required|digits:9',
             'default_payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
