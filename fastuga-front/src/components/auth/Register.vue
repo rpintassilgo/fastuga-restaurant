@@ -86,7 +86,7 @@
             v-model="credentials.password"
           >
       </div>
-      <!--
+      
       <div class="mb-3">
           <label
             for="inputPassword1"
@@ -100,7 +100,7 @@
             v-model="credentials.password1"
           >
       </div>
-      -->
+    
       <!-- 
      <label>Tipo de Utilizador</label>
       <select name="type">

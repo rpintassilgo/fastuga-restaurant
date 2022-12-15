@@ -9,7 +9,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\api\AuthController;
 
 Route::post('login', [AuthController::class, 'login']);
-
 // temporario enquanto nao tenho o middleware feito
 Route::post('customers', [CustomerController::class, 'signUpCustomer']);
 Route::post('users', [UserController::class, 'signUpUser']);
@@ -17,7 +16,8 @@ Route::get('products', [ProductController::class, 'showAllProducts']);
 Route::get('users', [UserController::class, 'showAllUsers']);
 
 Route::middleware('auth:api')->group(function (){
-    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    
+    Route::post('logout', [AuthController::class, 'logout']);
 
     // adicionar o middleware especifico para cada endpoint com as policies
 
