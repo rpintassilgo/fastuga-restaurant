@@ -236,6 +236,14 @@ const clickMenuOption = () => {
                 Orders <!-- Orders do cliente -->
               </router-link>
             </li>
+            <li class="nav-item" v-if="userStore.user?.type == 'C'">
+                <!-- Mudar A pelos corretos da base de dados -->
+              <router-link class="nav-link" :class="{ active: $route.name === 'ProductsCart' }"
+                :to="{ name: 'ProductsCart' }" @click="clickMenuOption">
+                <i class="bi bi-cart2"></i>
+                Cart <!-- Orders do cliente -->
+              </router-link>
+            </li>
           </ul>  
           <div class="d-block d-md-none">
             <h6

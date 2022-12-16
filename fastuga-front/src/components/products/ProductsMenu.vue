@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, onMounted, inject } from 'vue'
+  import { ref, watch, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
@@ -8,6 +8,7 @@
   const router = useRouter()
 
   const products = ref([])
+  const cart = ref([])
   const paginationData = ref(null)
   const page = ref(1)
   const filterByType = ref("all")
@@ -17,7 +18,7 @@
     const getProductsUrl = filterByType.value == "all" ? `products?page=${page.value}` : `products/${filterByType.value}?page=${page.value}`
     axios.get(getProductsUrl)
       .then((response) => {
-        console.log(response.data)
+        //console.log(response.data)
         products.value = response.data.data
         paginationData.value = response.data.meta
         //console.log(products.value)
@@ -34,8 +35,24 @@
   }
 
   const addProductToCart = (product) => {
-    //router.push({ name: 'ProductsCart', params: { id: product.id } })
+    //localStorage.clear();
+    //console.log("Add product button (menu): test")
+    //console.log( JSON.parse(JSON.stringify(product)) )
+    // parse and stringify used here to convert proxy object
+    
+    let currentItems = JSON.parse(localStorage.getItem(userStore.user.id))
+    let newProduct = JSON.parse(JSON.stringify(product))
+    console.log("currentItems: " + Array.isArray(currentItems) + "\nnewItems: " + Array.isArray(newProduct))
+    console.log("currentItems value: " + JSON.stringify(currentItems))
+    currentItems == null ? cart.value.push(JSON.parse(JSON.stringify(product))) :
+                 cart.value.push(currentItems.push(newProduct)) 
+           
   }
+
+  watch(cart.value,(newCart) => {
+    //console.log("novo carrinho: " + JSON.stringify(newCart) )
+    localStorage.setItem(userStore.user.id,JSON.stringify(newCart))
+  })
   
   onMounted (() => {
     loadProducts()
@@ -69,8 +86,7 @@
     :showEditButton="false"
     :showDeleteButton="false"
     :showAddToCartButton="true"
-    @edit="editProduct"
-    @deleted="deletedProduct"
+    @cart="addProductToCart"
   ></product-table>
   <template class="paginator">
     <pagination

@@ -3,12 +3,14 @@
   import {useRouter} from 'vue-router'
   import OrderTable from "./OrderTable.vue"
   import { useOrdersStore } from "../../stores/orders.js"
+  import { useUserStore } from "../../stores/user.js"
 
   const router = useRouter()
 
   const axios = inject("axios")
   const toast = inject("toast")
   const ordersStore = useOrdersStore()
+  const userStore = useUserStore()
 
   const ordersFromCustomer = ref([])
   const paginationData = ref(null)
@@ -83,6 +85,10 @@
     cancelConfirmationDialog.value.show()
   }
 
+  const goBack = () => { // ajustar o css deste botao
+    router.push({ name: 'Users'})
+  }
+
 
 
   const orderToCancelDescription = computed(() => {
@@ -111,6 +117,14 @@
     @confirmed="cancelOrderConfirmed"
   >
   </confirmation-dialog>
+
+        <div v-if="userStore.user?.type !='C'">
+                  <button
+                    class="btn btn-xs btn-success"
+                    @click="goBack()"
+                    >Back</button>
+        </div>
+
         <h3 class="mt-5 mb-3">Orders from {{customer?.name}}</h3>
 
         <h1 v-if="(ordersFromCustomer.length === 0)  && (firstLoad === 1)" class="mt-5 mb-3">No orders</h1>

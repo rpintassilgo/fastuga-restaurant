@@ -10,6 +10,7 @@ import Login from "../components/auth/Login.vue"
 import Register from "../components/auth/Register.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Products from "../components/products/Products.vue"
+import ProductsCart from "../components/products/ProductsCart.vue"
 import Orders from "../components/orders/Orders.vue"
 import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
 import Users from "../components/users/Users.vue"
@@ -62,12 +63,11 @@ const router = createRouter({
       name: 'Products',
       component: Products,
     },
-    /*{
-      path: '/products/current',
-      name: 'CurrentProducts',
-      component: ,
-      props: { onlyCurrentTasks: true, tasksTitle: 'Pedidos Atuais' }
-    },*/
+    {
+      path: '/cart',
+      name: 'ProductsCart',
+      component: ProductsCart,
+    },
     {
       path: '/orders',
       name: 'Orders',
