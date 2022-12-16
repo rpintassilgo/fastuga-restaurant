@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function (){
     Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
+    Route::put('users/{id}/block', [UserController::class, 'blockUserAccount']); // isto podia ser query parameter
     Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
 
     // CUSTOMERS
@@ -80,5 +81,8 @@ Route::middleware('auth:api')->group(function (){
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
+    
+    
     
 });

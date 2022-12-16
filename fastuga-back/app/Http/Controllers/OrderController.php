@@ -91,7 +91,7 @@ class OrderController extends Controller
         // check if logged user is customer or if it is not logged (customer without account) 
         // isto devia ser middleware depois e secalhar toda a gente pode criar order
         /*
-        if (Auth::user()->user_type != "C" || !Auth::check()){
+        if (Auth::user()->type != "C" || !Auth::check()){
             return response()->json(['message' => 'The user is not a customer'],400);
         }
         */
@@ -172,7 +172,7 @@ class OrderController extends Controller
     public function setOrderToReady($id)
     {
         // sera q é o ED q diz q tá ready? se sim, verificar se o user logado é do tipo ED
-        if (Auth::user()->user_type != "ED"){
+        if (Auth::user()->type != "ED"){
             return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
         }
 
@@ -197,7 +197,7 @@ class OrderController extends Controller
     public function deliverOrder($id)
     {
         // verificar se o user logado é do tipo ED
-        if (Auth::user()->user_type != "ED"){
+        if (Auth::user()->type != "ED"){
             return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
         }
 

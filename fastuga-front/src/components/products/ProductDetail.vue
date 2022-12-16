@@ -15,10 +15,12 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  /*
   operationType: {
     type: String,
     default: "insert", // insert / update
   }
+  */
 });
 
 const emit = defineEmits(["save", "cancel"]);

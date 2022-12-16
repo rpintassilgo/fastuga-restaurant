@@ -81,7 +81,7 @@
             }
           })
       } else {
-        axios.put('products/' + props.id, products.value)
+        axios.put('products/' + props.id, product.value)
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataString()

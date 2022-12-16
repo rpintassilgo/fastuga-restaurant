@@ -3,8 +3,11 @@ import { ref, computed, watch, inject } from "vue"
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
+
 const serverBaseUrl = inject("serverBaseUrl")
 const userStore = useUserStore()
+const axios = inject("axios")
+const toast = inject("toast")
 
 const props = defineProps({
   users: {
@@ -49,17 +52,28 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["edit","deleted","orders"])
+const emit = defineEmits(["edit","deleted","orders","block"])
 
 const editingUsers = ref(props.users)
 const userToDelete = ref(null)
+const userToBlock = ref(null)
 const deleteConfirmationDialog = ref(null)
+//const blockConfirmationDialog = ref(null)
+
 
 const userToDeleteDescription = computed(() => {
   return userToDelete.value
     ? `#${userToDelete.value.id} `
     : ""
 })
+
+
+const userBlock = computed(() => {
+  return userToBlock.value
+    ? `#${userToBlock.value.id} `
+    : ""
+})
+
 
 watch(
   () => props.users,
@@ -82,6 +96,8 @@ const ordersClick = (user) => {
   emit("orders", user)
 }
 
+
+
 const canViewUserDetail  = (userId) => {
   if (!userStore.user) {
     return false
@@ -101,13 +117,65 @@ const dialogConfirmedDelete = () => {
     })
 }
 
+/*
+const dialogConfirmedblock = () => {
+  axios
+    .put("users/" + userToBlock.value.id + "/block")
+    .then((response) => {
+      emit("blocked", response.data)
+      toast.info("User " + userBlock.value + " was blocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+*/
+
+
 const deleteClick = (user) => {
   userToDelete.value = user
   deleteConfirmationDialog.value.show()
 }
+
+
+const blockClick = (user) => {
+  userToBlock.value = user
+  //blockConfirmationDialog.value.show()
+  axios
+    .put("users/" + userToBlock.value.id + "/block")
+    .then((response) => {
+      emit("blocked", response.data)
+      toast.info("User " + userBlock.value + " was blocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  
+}
+
 </script>
 
 <template>
+
+  <!-- 
+<confirmation-dialog
+    ref="blockConfirmationDialog"
+    confirmationBtn="Block user"
+    :msg="`Do you really want to block user ${userBlock}?`"
+    @confirmed="dialogConfirmedblock"
+  >
+  </confirmation-dialog>
+-->
+   <confirmation-dialog
+    ref="deleteConfirmationDialog"
+    confirmationBtn="Delete user"
+    :msg="`Do you really want to delete user ${userToDeleteDescription}?`"
+    @confirmed="dialogConfirmedDelete"
+  >
+  </confirmation-dialog>
+
+  
+
   <!-- meter aqui um filtro por tipo de utilizador -->
   <table class="table">
     <thead>
@@ -143,11 +211,20 @@ const deleteClick = (user) => {
               <i class="bi bi-xs bi-pencil"></i>
             </button>
 
+            <!-- 
             <button 
               class="btn btn-xs btn-light" 
-               v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+              @click="blockClick(user)" v-if="showBlockButton">
               <i class="bi bi-xs bi-lock"></i>
             </button>
+          -->
+
+            <button 
+              class="btn btn-xs btn-light" 
+              @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+              <i class="bi bi-xs bi-lock"></i>
+            </button>
+            
 
             <button
               class="btn btn-xs btn-light"
