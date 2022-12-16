@@ -12,8 +12,8 @@
         confirmPassword: '',
         phone: '',
         nif: '',
-        defaultPaymentType: '',
-        defaultPaymentReference: '',
+        default_payment_type: '',
+        default_payment_reference: '',
         photo_url: null
     })
 
@@ -23,7 +23,9 @@
 
   const register = async () => {
 
-    if (await userStore.register(credentials.value)) {
+    console.log(JSON.stringify(credentials.value))
+
+    if (await userStore.signUpCustomer(credentials.value)) {
       toast.success('Account created')
       emit('register')
       //router.back()
@@ -142,7 +144,7 @@
             <select
               class="form-select"
               id="selectDefaultPaymentType"
-              v-model="credentials.defaultPaymentType"
+              v-model="credentials.default_payment_type"
             >
               <option value="VISA">Visa</option>
               <option value="PAYPAL">Paypal</option>
@@ -159,7 +161,7 @@
             class="form-control"
             id="inputDefaultPaymentReference"
             required
-            v-model="credentials.defaultPaymentReference"
+            v-model="credentials.default_payment_reference"
           >
        </div>
 

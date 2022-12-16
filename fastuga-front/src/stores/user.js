@@ -59,9 +59,10 @@ export const useUserStore = defineStore('user', () => {
     }
 
 
-    async function register (credentials) {
+    async function signUpCustomer (credentials) {
         try {
-            const response = await axios.post('register', credentials)
+           // console.log("")
+            const response = await axios.post('customers', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)  
             return true       
@@ -95,5 +96,5 @@ export const useUserStore = defineStore('user', () => {
         return false
     }
     
-    return { user, userId, userPhotoUrl, login, register, loadUser, logout, restoreToken }
+    return { user, userId, userPhotoUrl, login, signUpCustomer, loadUser, logout, restoreToken }
 })

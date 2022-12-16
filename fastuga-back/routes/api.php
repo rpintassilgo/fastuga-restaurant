@@ -30,7 +30,7 @@ Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatus
 Route::get('customers/{id}', [CustomerController::class, 'showCustomer']); */
 
 
-
+Route::post('customers', [CustomerController::class, 'signUpCustomer']);
 Route::post('login', [AuthController::class, 'login']);
 
 
@@ -67,7 +67,6 @@ Route::middleware('auth:api')->group(function (){
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'showAllCustomers']);
     Route::get('customers/{id}', [CustomerController::class, 'showCustomer']);
-    Route::post('customers', [CustomerController::class, 'signUpCustomer']);
     Route::put('customers/{id}', [CustomerController::class, 'editCustomerProfile']);
     Route::delete('customers/{id}', [CustomerController::class,'deleteCustomerAccount']);
 
