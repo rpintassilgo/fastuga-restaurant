@@ -43,9 +43,13 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showAddToCartButton: {
+    type: Boolean,
+    default: false,
+  }
 })
 
-const emit = defineEmits(["edit", "deleted"])
+const emit = defineEmits(["edit", "deleted","cart"])
 
 const editingProducts = ref(props.products)
 const productToDelete = ref(null)
@@ -71,6 +75,10 @@ watch(
 
 const editClick = (product) => {
   emit("edit", product)
+}
+
+const addToCartClick = (product) => {
+  emit("cart", product)
 }
 
 const dialogConfirmedDelete = () => {
@@ -131,7 +139,7 @@ const deleteClick = (product) => {
         <td v-if="showPrice">{{ product.price }}</td>
         <td
           class="text-end"
-          v-if="showEditButton || showDeleteButton"
+          v-if="showEditButton || showDeleteButton || showAddToCartButton"
         >
           <div class="d-flex justify-content-end">
             <button
@@ -148,6 +156,14 @@ const deleteClick = (product) => {
               v-if="showDeleteButton"
             >
               <i class="bi bi-xs bi-x-square-fill"></i>
+            </button>
+
+            <button
+              class="btn btn-xs btn-success"
+              @click="addToCartClick(product)"
+              v-if="showAddToCartButton"
+            >
+              Add to cart
             </button>
           </div>
         </td>

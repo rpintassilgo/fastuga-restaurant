@@ -42,6 +42,7 @@
     router.push({ name: 'NewOrder'})
   }
 
+
   
   const cancelOrderConfirmed = () => {
     ordersStore.changeStatusOrder(orderToCancel.value.id,"cancel")

@@ -33,41 +33,9 @@
     loadProducts()
   }
 
-  const addProduct = () => {
-    router.push({ name: 'NewProduct'})
+  const addProductToCart = (product) => {
+    //router.push({ name: 'ProductsCart', params: { id: product.id } })
   }
-  
-  const editProduct = (product) => {
-    router.push({ name: 'Product', params: { id: product.id } })
-  }
-
-  const deletedProduct = (deletedProduct) => {
-      let idx = products.value.findIndex((p) => p.id === deletedProduct.id)
-      if (idx >= 0) {
-        products.value.splice(idx, 1)
-      }
-  }
-
-  /*const props = defineProps({
-    productsTitle: {
-      type: String,
-      default: 'Products'
-    }
-  })
-
-  const filteredProducts = computed( () => {
-   // console.log(products.value)
-   switch (filterByType.value) {
-     case value:
-       
-       break;
-   
-     default:
-       break;
-   }
-    if(filterByType.value == "all") return products.value
-    return products.value.filter((product) => (filterByType.value == product.type))
-  })*/
   
   onMounted (() => {
     loadProducts()
@@ -75,7 +43,7 @@
 </script>
 
 <template>
-      <h3 class="mt-5 mb-3">Products</h3>
+      <h3 class="mt-5 mb-3">{{ userStore.user?.type == "C" ? "Menu" : "Products" }}</h3>
       <div class="mx-2 mt-2 flex-grow-1">
       <label
         for="selectType"
@@ -98,6 +66,9 @@
   <product-table
     :products="products"
     :showId="false"
+    :showEditButton="false"
+    :showDeleteButton="false"
+    :showAddToCartButton="true"
     @edit="editProduct"
     @deleted="deletedProduct"
   ></product-table>

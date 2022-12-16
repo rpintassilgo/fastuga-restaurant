@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, onMounted, inject } from 'vue'
+  import { ref, computed, onBeforeMount, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import OrderTable from "./OrderTable.vue"
   import { useOrdersStore } from "../../stores/orders.js"
@@ -17,6 +17,7 @@
   const filterByStatus = ref('all')
   const deleteConfirmationDialog = ref(null) 
   const customer = ref(null)
+  const firstLoad = ref(1)
 
   const props = defineProps({
       id: { //user id from customer
@@ -25,7 +26,7 @@
       }
   })
 
-  const user_id = ref(props.id)
+  //const user_id = ref(props.id)
   
   /* Change this function */
   const loadOrders = () => {
@@ -33,10 +34,11 @@
                                                 `orders/customer/${props.id}/${filterByStatus.value}?page=${page.value}`
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log("loadOrders: " + response)
+          //console.log("loadOrders: " + response)
          // users.value.splice(0)
-          orders.value = response.data.data
+          ordersFromCustomer.value = response.data.data
           paginationData.value = response.data.meta
+          firstLoad.value = firstLoad.value + 1
         })
         .catch((error) => {
           orders.value = []
@@ -44,23 +46,23 @@
         })
   }
 
-  // get customer from user_id
+  // get customer from id
   const loadCustomer = () => {
-    console.log("user_id.value (loadCustomer): " + user_id.value)
+    console.log("props.id (loadCustomer): " + props.id)
       axios.get(`customers/${props.id}`)
           .then((response) => {
-            console.log("then get customer: " + response)
-            customer.value = response.data
+            console.log("then get customer: " + JSON.stringify(response.data.data))
+            customer.value = response.data.data
           })
           .catch((error) => {
             customer.value = null
-            console.log(error)
+            console.log("loadCustomer error: " + error.message)
           })
   }
 
   const resetPage = () => {
     page.value = 1
-    loadCustomer()
+    //loadCustomer()
     loadOrders()
   }
 
@@ -89,11 +91,15 @@
     : ""
   })
 
-  onMounted(() => {
+  onBeforeMount(() => {
     loadCustomer()
-    // Calling loadProjects refresh the list of projects from the API
+  })
+
+  onMounted(() => {
     loadOrders()
   })
+
+
 
 </script>
 
@@ -105,43 +111,49 @@
     @confirmed="cancelOrderConfirmed"
   >
   </confirmation-dialog>
-        <h3 class="mt-5 mb-3">Orders from User #{{customer.user_id}} ({{customer.name}})</h3>
-      <div class="mx-2 mt-2 flex-grow-1">
-      <label
-        for="selectType"
-        class="form-label"
-      >Filter by order status:</label>
-      <select
-        class="form-select"
-        id="selectType"
-        v-model="filterByStatus"
-        @change="resetPage"
-      >
-        <option value="all">All</option>
-        <option value="preparing">Preparing</option>
-        <option value="ready">Ready</option>
-        <option value="delivered">Delivered</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-    </div>
-  <hr>
+        <h3 class="mt-5 mb-3">Orders from {{customer?.name}}</h3>
 
-  <order-table
-    :orders="ordersFromCustomer"
-    :showId="true"
-    :showDates="true"
-    @edit="editOrder"
-    @delete="clickToDeleteOrder"
-  ></order-table>
-  <template class="paginator">
-    <pagination
-      v-model="page"
-      :records="paginationData ? paginationData.total : 0"
-      :per-page="paginationData ? paginationData.per_page : 0"
-      @paginate="loadOrders"
-      :options="{hideCount: true}">
-    </pagination>
-  </template>
+        <h1 v-if="(ordersFromCustomer.length === 0)  && (firstLoad === 1)" class="mt-5 mb-3">No orders</h1>
+        <div v-if="!((ordersFromCustomer.length === 0) && (firstLoad === 1))">
+            <div class="mx-2 mt-2 flex-grow-1">
+              <label
+                for="selectType"
+                class="form-label"
+              >Filter by order status:</label>
+              <select
+                class="form-select"
+                id="selectType"
+                v-model="filterByStatus"
+                @change="resetPage"
+              >
+                <option value="all">All</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <hr>
+            <order-table
+              :orders="ordersFromCustomer"
+              :showId="true"
+              :showDates="true"
+              :showCustomerId="false"
+              :showCancelButton="false"
+              @edit="editOrder"
+              @delete="clickToDeleteOrder"
+            ></order-table>
+            <template class="paginator">
+              <pagination
+                v-model="page"
+                :records="paginationData ? paginationData.total : 0"
+                :per-page="paginationData ? paginationData.per_page : 0"
+                @paginate="loadOrders"
+                :options="{hideCount: true}">
+              </pagination>
+            </template>
+
+          </div>
 </template>
 
 <style scoped>

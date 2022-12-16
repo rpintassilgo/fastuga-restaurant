@@ -43,7 +43,7 @@ const clickMenuOption = () => {
           <img src="@/assets/fastuga-logo.png" alt="" width="95" height="80" class=" logo d-inline-block align-text-top" style="margin-left: 50px;"/>
         </router-link>
 
-        <router-link :to="{ name: 'Menu' }" @click="clickMenuOption" v-if="userStore.type == 'C'">
+        <router-link :to="{ name: 'ProductsMenu' }" @click="clickMenuOption" v-if="userStore.user?.type == 'C'">
             <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
 
@@ -63,12 +63,12 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-          <router-link :to="{ name: 'home' }" @click="clickMenuOption">
+          <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-letras.png" alt="" width="230" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 300px;"/>
           </router-link>
           <li class="nav-item" v-show="(userStore.user?.type == 'A' || userStore.user?.type == 'M')">
             <!-- Mudar A e M pelos corretos da base de dados -->
-          <router-link :to="{ name: 'Carrinho' }" @click="clickMenuOption">
+          <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-carrinho.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
           </li>
@@ -141,7 +141,7 @@ const clickMenuOption = () => {
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="margin-top: 5%;">
         <div class="position-sticky pt-3">
-          <ul class="nav flex-column" v-if="userStore.user">
+          <ul class="nav flex-column" >
             <li class="nav-item">
               <router-link
                 class="nav-link"
@@ -164,26 +164,41 @@ const clickMenuOption = () => {
                 Pedidos Atuais
               </router-link>
             </li>-->
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{ active: $route.name === 'Products' }"
-                :to="{ name: 'Products' }"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-bag"></i>
-                Products
-              </router-link>
-              <router-link
-                class="link-secondary"
-                :to="{ name: 'NewProduct' }"
-                aria-label="Add a new product"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-xs bi-plus-circle"></i>
-              </router-link>
-            </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-show="userStore.user?.type == 'EM'">
+            <div v-if="userStore.user?.type != 'C'">
+              <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                <router-link
+                  class="nav-link w-100 me-3"
+                  :class="{ active: $route.name === 'Products' }"
+                  :to="{ name: 'Products' }"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-bag"></i>
+                  {{userStore.user?.type == 'C' ? "Menu" : "Products"}}
+                </router-link>
+                <router-link
+                  class="link-secondary"
+                  :to="{ name: 'NewProduct' }"
+                  aria-label="Add a new product"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-xs bi-plus-circle"></i>
+                </router-link>
+              </li>
+            </div>
+            <div v-if="userStore.user?.type == 'C'">
+              <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                <router-link
+                  class="nav-link w-100 me-3"
+                  :class="{ active: $route.name === 'ProductsMenu' }"
+                  :to="{ name: 'ProductsMenu' }"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-bag"></i>
+                  {{userStore.user?.type == 'C' ? "Menu" : "Products"}}
+                </router-link>
+              </li>
+            </div>
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3" v-if="userStore.user?.type == 'EM'">
                <!-- Mudar A pelos corretos da base de dados -->
               <router-link
                 class="nav-link w-100 me-3"
@@ -203,44 +218,25 @@ const clickMenuOption = () => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-            <li class="nav-item" v-show="userStore.user?.type == 'EM'">
+            <li class="nav-item" v-if="userStore.user?.type == 'EM'">
                 <!-- Mudar A pelos corretos da base de dados -->
-              <router-link class="nav-link" :class="{ active: $route.name === 'Orders' }"
-                :to="{ name: 'Orders' }" @click="clickMenuOption">
+              <router-link class="nav-link" 
+                :class="{ active: $route.name === 'Orders' }"
+                :to="{ name: 'Orders'  }" 
+                @click="clickMenuOption">
                 <i class="bi bi-file-text"></i>
                 Orders
               </router-link>
             </li>
-          </ul>
-
-      <!--    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
-              v-if="userStore.user">
-            <span>Meus Pedidos</span>
-            <router-link
-              class="link-secondary"
-              :to="{ name: 'NewProject' }"
-              aria-label="Add a new project"
-              @click="clickMenuOption"
-            >
-              <i class="bi bi-xs bi-plus-circle"></i>
-            </router-link>
-          </h6>
-       <ul class="nav flex-column mb-2">
-            <li class="nav-item" v-for="prj in projectsStore.myInprogressProjects" :key="prj.id">
-              <router-link
-                class="nav-link w-100 me-3"
-                :class="{
-                  active: $route.name == 'ProjectTasks' && $route.params.id == prj.id,
-                }"
-                :to="{ name: 'ProjectTasks', params: { id: prj.id } }"
-                @click="clickMenuOption"
-              >
-                <i class="bi bi-file-ruled"></i>
-                {{ prj.name }}
+            <li class="nav-item" v-if="userStore.user?.type == 'C'">
+                <!-- Mudar A pelos corretos da base de dados -->
+              <router-link class="nav-link" :class="{ active: $route.name === 'OrdersFromCustomer' }"
+                :to="{ name: 'OrdersFromCustomer', params: { id: userStore.user?.id } }" @click="clickMenuOption">
+                <i class="bi bi-file-text"></i>
+                Orders <!-- Orders do cliente -->
               </router-link>
             </li>
-          </ul>-->   
-
+          </ul>  
           <div class="d-block d-md-none">
             <h6
               class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
