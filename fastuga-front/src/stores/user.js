@@ -114,7 +114,7 @@ export const useUserStore = defineStore('user', () => {
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
-            await ordersStore.loadAllOrders()
+            //await ordersStore.loadAllOrders()
             return true
         }
         clearUser()

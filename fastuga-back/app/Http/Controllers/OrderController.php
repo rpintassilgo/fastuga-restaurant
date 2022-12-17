@@ -197,7 +197,7 @@ class OrderController extends Controller
     public function deliverOrder($id)
     {
         // verificar se o user logado é do tipo ED
-        if (Auth::user()->user_type != "ED"){
+        if (Auth::user()->type != "ED"){
             return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
         }
 

@@ -63,13 +63,21 @@
     showCancelButton: {
       type: Boolean,
       default: true,
+    },
+    showDeliverButton: {
+      type: Boolean,
+      default: false,
     }
   })
 
-  const emit = defineEmits(["cancel"]);
+  const emit = defineEmits(["cancel","deliver"]);
 
   const cancelClick = (order) => {
     emit("cancel", order)
+  }
+
+    const deliverClick = (order) => {
+    emit("deliver", order)
   }
 
 </script>
@@ -92,7 +100,7 @@
         <th v-if="showDate">Date</th>
         <th v-if="showDeliveryBy">Deliver #</th>
         <th v-if="showOrderItems">Order Items</th>
-        <th v-if="showEditButton || showDeleteButton"></th>
+        <th v-if="showCancelButton || showDeliverButton"></th>
       </tr>
     </thead>
     <tbody>
@@ -109,7 +117,7 @@
         <td v-if="showDate">{{ order.date }}</td>
         <td
           class="text-end"
-          v-if="showCancelButton"
+          v-if="showCancelButton || showDeliverButton"
         >
           <div class="d-flex justify-content-end">
             <button
@@ -117,6 +125,14 @@
               @click="cancelClick(order)"
               v-if="showCancelButton && !(order.status == 'C')"
             >Cancel
+            </button>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button
+              class="btn btn-xs btn-info"
+              @click="deliverClick(order)"
+              v-if="showDeliverButton && order.status == 'R'"
+            >Deliver
             </button>
           </div>
         </td>

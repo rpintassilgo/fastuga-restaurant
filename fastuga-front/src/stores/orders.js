@@ -6,6 +6,18 @@ export const useOrdersStore = defineStore('orders', () => {
     const userStore = useUserStore()
 
     const axios = inject('axios')
+
+
+    // verificar se depois como tou a fazer é uma boa pratica
+    // ou se devo tentar menos menos codigo nos componentes order e tudo aqui
+    // e depois chamar as funcoes
+    // no entanto neste caso da mais jeito ter a vars orders la 
+    // ha mts coisas q se pode alterar para tornar o codigo mais clean
+
+
+
+
+    /*
     
     const orders = ref([])
 
@@ -26,35 +38,13 @@ export const useOrdersStore = defineStore('orders', () => {
 
     function clearOrders() {
         orders.value = []
-    }
-
-    async function loadAllOrders() {
-        try {
-            const response = await axios.get('orders')
-            orders.value = response.data
-            return orders.value
-        } catch (error) {
-            clearOrders()
-            throw error
-        }
-    }
-
-    async function loadCustomerOrders(customerId) {
-        try {
-            const response = await axios.get('orders/customer' + customerId)
-            orders.value = response.data
-            return orders.value
-        } catch (error) {
-            clearOrders()
-            throw error
-        }
-    }
+    }*/
     
     async function insertOrder(newOrder) {
         // Note that when an error occours, the exception should be
         // catch by the function that called the insertOrder
         const response = await axios.post('orders', newOrder)
-        orders.value.push(response.data)
+        //orders.value.push(response.data)
         return response.data
     }
 
@@ -62,13 +52,16 @@ export const useOrdersStore = defineStore('orders', () => {
         // Note that when an error occours, the exception should be
         // catch by the function that called the changeStatusOrder
             const response = await axios.put('orders/' + id + '/' + status)
+
+            /* nao sei se vale a pena fazer isto ja q faço um pedido quando acedo à pagina
             let idx = orders.value.data.findIndex((o) => o.id === response.data.data.id)
             if (idx >= 0) {
                 orders.value.data[idx] = response.data.data
             }
+            */
     }
 
     
-    return { orders, totalOrders, getOrdersByFilter, getOrdersByFilterTotal, 
-        loadAllOrders, loadCustomerOrders, clearOrders, insertOrder, changeStatusOrder }
+    return { /*orders, totalOrders, getOrdersByFilter, getOrdersByFilterTotal, 
+        clearOrders,*/ insertOrder, changeStatusOrder }
 })

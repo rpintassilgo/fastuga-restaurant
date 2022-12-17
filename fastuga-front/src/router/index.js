@@ -11,7 +11,9 @@ import Register from "../components/auth/Register.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Products from "../components/products/Products.vue"
 import ProductsCart from "../components/products/ProductsCart.vue"
+import ProductsVisualization from "../components/products/ProductsVisualization.vue"
 import Orders from "../components/orders/Orders.vue"
+import OrdersDelivery from "../components/orders/OrdersDelivery.vue"
 import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
@@ -69,9 +71,19 @@ const router = createRouter({
       component: ProductsCart,
     },
     {
+      path: '/items',
+      name: 'ProductsVisualization',
+      component: ProductsVisualization,
+    },
+    {
       path: '/orders',
       name: 'Orders',
       component: Orders,
+    },
+    {
+      path: '/orders-delivery',
+      name: 'OrdersDelivery',
+      component: OrdersDelivery,
     },
     {
       path: '/orders/customer/:id',
