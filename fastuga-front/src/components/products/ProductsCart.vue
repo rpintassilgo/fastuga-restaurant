@@ -11,8 +11,15 @@
   const userStore = useUserStore()
 
   const loadCart = () => {
-      cart.value = JSON.parse(localStorage.getItem(userStore.user.id))
-      console.log("cart in productsCart: " + cart.value)
+      cart.value = userStore.loadCartFromLocalStorage()
+  }
+
+  const removeProduct = (product) => {
+    userStore.removeProductFromCart(product)
+  }
+
+  const emptyCart = () => {
+   userStore.emptyCart()
   }
   
   onMounted (() => {
@@ -21,6 +28,12 @@
 </script>
 
 <template>
+  <div>
+    <button
+      class="btn btn-xs btn-danger"
+      @click="emptyCart"
+    >Empty cart</button>
+  </div>
   <h3 class="mt-5 mb-3">Cart</h3>
   <hr>
   <product-table
@@ -28,13 +41,15 @@
     :showId="false"
     :showEditButton="false"
     :showDeleteButton="false"
+    :showRemoveFromCartButton="true"
+    @remove="removeProduct"
   ></product-table>
   <template class="paginator">
     <pagination
       v-model="page"
       :records="paginationData ? paginationData.total : 0"
       :per-page="paginationData ? paginationData.per_page : 0"
-      @paginate="loadProducts"
+      @paginate="loadCart"
       :options="{hideCount: true}">
     </pagination>
   </template>
