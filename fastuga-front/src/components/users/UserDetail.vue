@@ -1,8 +1,10 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { ref, watch, computed, inject, toDisplayString } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
+const axiosImage = inject('axiosImage')
+const toast = inject('toast')
 
 const props = defineProps({
   user: {
@@ -18,35 +20,41 @@ const props = defineProps({
 const emit = defineEmits(["save", "cancel"]);
 
 const editingUser = ref(props.user)
+const photoUrl = ref("");
 
 watch(
   () => props.user,
   (newUser) => {
     editingUser.value = newUser
   },
-  { immediate: true }
+  /*
+  { immediate: true 
+  }
+  */
 )
 
 const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
+  return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
-    : avatarNoneUrl
+    : avatarNoneUrl) : photoUrl.value
+ 
 })
 
-const save = () => {
-  emit("save", editingUser.value);
-}
 
-const changing = (input) => {
+
+
+const imageChange = (event) => {
+editingUser.value.photo_file = event.target.files[0];
 //FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
 
 }
 
-
+const save = () => {
+  emit("save", editingUser.value);
+}
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
-
 
 </script>
 
@@ -118,8 +126,7 @@ const cancel = () => {
             <img :src="photoFullUrl" class="w-100" />
           </div>
           <div class="form-control text-center">
-          <input type="file" id="actual-btn" hidden/>
-          <label for="actual-btn" class="btn-new-one" @click="changing">Upload a photo</label>
+          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
           
         
           

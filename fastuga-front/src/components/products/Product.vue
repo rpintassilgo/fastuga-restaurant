@@ -44,7 +44,8 @@
       }
   }
 
-  /*const imageUpload = () => {
+  /*
+  const imageUpload = () => {
       if(product.value.photo_file == null){
         //toast.error("Photo not found.")
       } else{
@@ -60,7 +61,8 @@
             console.log(error)
           }
       }
-  }*/
+  }
+*/
 
   const save = () => {
       errors.value = null

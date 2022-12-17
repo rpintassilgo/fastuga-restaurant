@@ -12,7 +12,9 @@ export const useUserStore = defineStore('user', () => {
     
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
+            //console.log(!user.value?.photo_url);
             return avatarNoneUrl
+            
         }
         return serverBaseUrl + '/storage/fotos/' + user.value.photo_url
     })

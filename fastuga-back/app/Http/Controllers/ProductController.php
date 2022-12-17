@@ -109,7 +109,7 @@ class ProductController extends Controller
         // i'm using validate() because validate() returns validated() or exception if it fails (maybe less prone to break ??)
         $requestData = $request->validate();
         $path = 'storage/products/';
-
+        
         if($requestData['photo_file']){
             $nameString = Carbon::now()->format('Ymd_His') . $requestData['photo_file']->getClientOriginalExtension();
             $product->photo_url = $nameString;

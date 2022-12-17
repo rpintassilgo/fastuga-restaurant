@@ -37,7 +37,7 @@ class UserRequest extends FormRequest
             ], */
             'password' => 'required|string',
             'type' => 'required|in:EC,ED,EM',
-            'photo_url' => 'nullable|image|max:8192'
+            'photo_url' => 'nullable|string'
         ];
     }
 

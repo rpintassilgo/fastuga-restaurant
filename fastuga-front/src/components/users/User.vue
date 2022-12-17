@@ -21,7 +21,8 @@
         email: '',
         type: '',
         blocked: null,
-        photo_url: null
+        photo_url: '',
+        photo_file: null,
       }
   }
 
