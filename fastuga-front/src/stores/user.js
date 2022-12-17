@@ -1,4 +1,4 @@
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, watch } from 'vue'
 import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useOrdersStore } from "./orders.js"
@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
     const serverBaseUrl = inject('serverBaseUrl')
     
     const user = ref(null)
+    const cart = ref([])
     
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
@@ -20,6 +21,30 @@ export const useUserStore = defineStore('user', () => {
     const userId = computed(() => {
         return user.value?.id ?? -1
     })
+
+    const loadCartFromLocalStorage = () => {
+        return localStorage.getItem(userId) != null ? JSON.parse(localStorage.getItem(userId)) : []
+    }
+
+    const addProductToCart = (product) =>{
+        cart.value = loadCartFromLocalStorage()
+        cart.value.push(product)
+        localStorage.setItem(userId,JSON.stringify(cart.value))
+    }
+
+    const removeProductFromCart = (product) =>{
+        cart.value = loadCartFromLocalStorage()
+        console.log("cart before remove: " + JSON.stringify(cart.value))
+        console.log("product that im trying to remove: " + JSON.stringify(product.id))
+        let r = cart.value.splice(cart.value.findIndex((p) => p.id == product.id),1)
+        console.log("cart after remove: " + JSON.stringify(cart.value))
+        if(r.length != 0) localStorage.setItem(userId,JSON.stringify(cart.value))
+    }
+
+    const emptyCart = () => { // this one is not being used rn
+        cart.value = []
+        localStorage.clear()
+    }
 
     async function loadUser () {
         try {
@@ -96,5 +121,5 @@ export const useUserStore = defineStore('user', () => {
         return false
     }
     
-    return { user, userId, userPhotoUrl, login, signUpCustomer, loadUser, logout, restoreToken }
+    return { user, userId, userPhotoUrl, login, signUpCustomer, loadCartFromLocalStorage, addProductToCart, removeProductFromCart, emptyCart, loadUser, logout, restoreToken }
 })

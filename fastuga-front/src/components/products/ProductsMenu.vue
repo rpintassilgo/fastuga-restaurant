@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watch, onMounted, inject } from 'vue'
+  import { ref, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
@@ -8,7 +8,6 @@
   const router = useRouter()
 
   const products = ref([])
-  const cart = ref([])
   const paginationData = ref(null)
   const page = ref(1)
   const filterByType = ref("all")
@@ -35,25 +34,9 @@
   }
 
   const addProductToCart = (product) => {
-    //localStorage.clear();
-    //console.log("Add product button (menu): test")
-    //console.log( JSON.parse(JSON.stringify(product)) )
-    // parse and stringify used here to convert proxy object
-    
-    let currentItems = JSON.parse(localStorage.getItem(userStore.user.id))
-    let newProduct = JSON.parse(JSON.stringify(product))
-    console.log("currentItems: " + Array.isArray(currentItems) + "\nnewItems: " + Array.isArray(newProduct))
-    console.log("currentItems value: " + JSON.stringify(currentItems))
-    currentItems == null ? cart.value.push(JSON.parse(JSON.stringify(product))) :
-                 cart.value.push(currentItems.push(newProduct)) 
-           
+    userStore.addProductToCart(product)          
   }
 
-  watch(cart.value,(newCart) => {
-    //console.log("novo carrinho: " + JSON.stringify(newCart) )
-    localStorage.setItem(userStore.user.id,JSON.stringify(newCart))
-  })
-  
   onMounted (() => {
     loadProducts()
   })
