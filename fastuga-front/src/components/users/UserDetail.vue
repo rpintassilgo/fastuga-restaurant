@@ -3,6 +3,8 @@ import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
+const axiosImage = inject('axiosImage')
+const toast = inject('toast')
 
 const props = defineProps({
   user: {
@@ -33,20 +35,44 @@ const photoFullUrl = computed(() => {
     : avatarNoneUrl
 })
 
-const save = () => {
-  emit("save", editingUser.value);
-}
 
 const changing = (input) => {
 //FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
 
+  //file.value = input.target.files[0];
+  //editingUser.value.photo_file = input.target.files[0];
+
+}
+
+
+// const imageUpload = (e) => {
+
+//   if(editingProduct.value.photo_file == null){
+//     toast.error("Photo not found.")
+//   } else{
+//       try {
+//         let formData = new FormData()
+//         formData.append('photo_file',editingProduct.photo_file)
+//         axiosImage.defaults.common.Authorization = "Bearer " + sessionStorage.getItem('token')
+
+//         axiosImage.post(`products/${editingProduct.value.id}/image`,formData)
+//                   .then(() => toast.success("Photo uploaded successfully!"))
+//       } catch (error) {
+//         toast.error("Internal server error. Selected photo not uploaded!")
+//         console.log(error)
+//       }
+//   }
+// }
+
+
+const save = () => {
+  emit("save", editingUser.value);
 }
 
 
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
-
 
 </script>
 
@@ -66,7 +92,10 @@ const cancel = () => {
             required
             v-model="editingUser.name"
           />
-          <field-error-message :errors="errors" fieldName="nome"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="nome"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -79,7 +108,10 @@ const cancel = () => {
             required
             v-model="editingUser.email"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="email"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -92,24 +124,24 @@ const cancel = () => {
             required
             v-model="editingUser.email"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="email"
+          ></field-error-message>
         </div>
 
         <div class="mb-3">
-            <label
-              for="selectType"
-              class="form-label"
-            >Type:</label>
-            <select
-              class="form-select"
-              id="selectType"
-              v-model="editingUser.type"
-            >
-              <option value="EC">Employee Chef</option>
-              <option value="ED">Employee Delivery</option>
-              <option value="EM">Employee Manager</option>
-            </select>
-          </div>
+          <label for="selectType" class="form-label">Type:</label>
+          <select
+            class="form-select"
+            id="selectType"
+            v-model="editingUser.type"
+          >
+            <option value="EC">Employee Chef</option>
+            <option value="ED">Employee Delivery</option>
+            <option value="EM">Employee Manager</option>
+          </select>
+        </div>
       </div>
       <div class="w-25">
         <div class="mb-3">
@@ -118,24 +150,26 @@ const cancel = () => {
             <img :src="photoFullUrl" class="w-100" />
           </div>
           <div class="form-control text-center">
-          <input type="file" id="actual-btn" hidden/>
-          <label for="actual-btn" class="btn-new-one" @click="changing">Upload a photo</label>
-          
-        
-          
-        </div>
+            <input type="file" id="actual-btn" hidden />
+            <label for="actual-btn" class="btn-new-one" @onchange="changing"
+              >Upload a photo</label
+            >
+          </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary px-5" @click="save">
+        Save
+      </button>
+      <button type="button" class="btn btn-light px-5" @click="cancel">
+        Cancel
+      </button>
     </div>
   </form>
 </template>
 
 <style scoped>
-
 .btn-new-one {
   background-color: #0d6efd;
   color: white;

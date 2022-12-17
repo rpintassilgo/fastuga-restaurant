@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
 import Toaster from "@meforma/vue-toaster"
-import Pagination from "v-pagination-3"
+// import Pagination from "v-pagination-3"
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
 
@@ -45,6 +45,6 @@ app.use(router)
 
 app.component('FieldErrorMessage', FieldErrorMessage)
 app.component('ConfirmationDialog', ConfirmationDialog)
-app.component('pagination', Pagination)
+// app.component('pagination', Pagination)
 
 app.mount('#app')
