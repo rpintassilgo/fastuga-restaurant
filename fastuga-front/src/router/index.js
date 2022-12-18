@@ -133,6 +133,12 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })    
     },
     {
+      path: '/products/:id/image',
+      name: 'ImageProduct',
+      component: Product,
+      props: route => ({ id: parseInt(route.params.id) })    
+    },
+    {
       path: '/reports',
       name: 'Reports',
       component: () => import('../views/AboutView.vue')

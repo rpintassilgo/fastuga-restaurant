@@ -9,6 +9,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ImageRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Exception;
 
 class ProductController extends Controller
 {
@@ -105,15 +106,26 @@ class ProductController extends Controller
         }
     }
 
-    public function uploadProductImage(ImageRequest $request, Product $product){
-        // i'm using validate() because validate() returns validated() or exception if it fails (maybe less prone to break ??)
-        $requestData = $request->validate();
-        $path = 'storage/products/';
-        
-        if($requestData['photo_file']){
-            $nameString = Carbon::now()->format('Ymd_His') . $requestData['photo_file']->getClientOriginalExtension();
-            $product->photo_url = $nameString;
-        }
-        $product->save();
+    public function uploadProductImage(ImageRequest $request, Product $product ){
+         
+
+        if ($request->hasFile('photo_url')) {
+            $image = $request->file('photo_url');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            // $image_name = time(). '.' . $image->getClientOriginalName();
+            
+            $image->storeAs('src/assests', $file);
+            // $image->move('src/assests', $image_name); // $image->move(public_path('photo_file'), $image_name);
+           
+            $product->photo_url = $file;
+
+            $product->save();
+            DB::commit();
+
+       }
+
+       return new ProductResource($product);
+       
     }
 }

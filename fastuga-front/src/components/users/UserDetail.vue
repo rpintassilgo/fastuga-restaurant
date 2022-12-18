@@ -150,6 +150,7 @@ const cancel = () => {
         Cancel
       </button>
     </div>
+    </div>
   </form>
 </template>
 

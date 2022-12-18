@@ -1,4 +1,5 @@
 <script setup>
+import axios from 'axios';
 import { ref, watch, computed, inject, toDisplayString } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
@@ -37,28 +38,41 @@ const photoFullUrl = computed(() => {
 })
 
 const imageChange = (event) => {
-  console.log(' evento ' + event.target.files[0]== null);
+  // console.log(' evento ' + event.target.files[0]== null);
   editingProduct.value.photo_file = event.target.files[0];
+  console.log("Selected file: ", editingProduct.value.photo_file)
+
   photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
+  console.log("URL: " + photoUrl);
+  return photoUrl;
 }
 
-const imageUpload = async () => {
+const imageUpload = (e) => {
   if(editingProduct.value.photo_file == null){
     toast.error("Photo not found.")
-  } else{
-      try {
+  } 
+  else{
+    console.log("Entraste aqui")
+
+        console.log("URL: " + photoUrl);
+
+
         let formData = new FormData()
-        formData.append('photo_file',editingProduct.value.photo_file)
-         axiosImage.defaults.headers.common['Authorization'] = "Bearer " + sessionStorage.getItem('token');
-        await axiosImage.post(`products/${editingProduct.value.id}/image`,formData )
-                  
-       console.log('FormData: ' + JSON.stringify(formData));
-       console.log('edittingProduct: ' + JSON.stringify(editingProduct.value.photo_file));
-       console.log('fotofile: ' + JSON.stringify(props.product));
-      } catch (error) {
-        toast.error("Internal server error. Selected photo not uploaded!")
-        console.log(error)
-      }
+        //formData.append('photo_file', editingProduct.value.photo_file)
+        // formData.append('')
+        formData.append('file', editingProduct.value.photo_file) 
+
+        let config = {
+          header: {
+            'Content-Type' : 'multipart/form-data'
+          }
+        }
+        
+        axios.post(`/products/${editingProduct.value.id}/image`, formData, config)
+          .then(res=> {
+            console.log("Response", res.data)
+          })
+          .catch(err=>console.log(err))              
   }
 }
 
@@ -140,16 +154,19 @@ const cancel = () => {
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
           </div>
-          <div class="form-control text-center">
-          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
-          <label class="btn-new-one" @click="imageUpload">Upload a photo</label>    
+
+              <div class="form-group text-center">
+                <form @submit.prevent="imageUpload">
+                <input type="file" accept="image/*" class="form-control-file" id="actual-btn" @change="imageChange"/>
+                <input class="btn-new-one" type="submit" value="Upload">
+                </form>
+              </div>
           
-        </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5"  @click="save">Save</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
