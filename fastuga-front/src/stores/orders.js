@@ -1,9 +1,7 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
-import { useUserStore } from "./user.js"
 
 export const useOrdersStore = defineStore('orders', () => {
-    const userStore = useUserStore()
     const socket = inject("socket")
 
     const axios = inject('axios')
@@ -68,6 +66,8 @@ export const useOrdersStore = defineStore('orders', () => {
             if (idx >= 0) {
                 orders.value.data[idx] = response.data.data
             }
+            socket.emit('changeStatusOrder', response.data.data)
+            
     }
 
     

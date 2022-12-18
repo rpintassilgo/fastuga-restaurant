@@ -15,11 +15,16 @@ io.on('connection', (socket) => {
  socket.on('newOrder', (order) => {
     socket.broadcast.emit('newOrder', order)
 })
+/*
 socket.on('updateOrder', (order) => {
     socket.broadcast.emit('updateOrder', order)
 })
 socket.on('deleteOrder', (order) => {
     socket.broadcast.emit('deleteOrder', order)
+})
+*/
+socket.on('changeStatusOrder', (order) => {
+    socket.broadcast.emit('changeStatusOrder', order)
 })
 socket.on('loggedIn', function (user) {
     socket.join(user.id)

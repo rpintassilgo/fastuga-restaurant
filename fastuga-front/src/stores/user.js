@@ -6,6 +6,7 @@ import { useOrdersStore } from "./orders.js"
 export const useUserStore = defineStore('user', () => {
     const ordersStore = useOrdersStore()
     const axios = inject('axios')
+    const socket = inject("socket")
     const serverBaseUrl = inject('serverBaseUrl')
     
     const user = ref(null)
@@ -50,6 +51,7 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
+            socket.emit('loggedIn', user.value)
             return true       
         } 
         catch(error) {
@@ -79,6 +81,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout () {
         try {
             await axios.post('logout')
+            socket.emit('loggedOut', user.value)
             clearUser()
             return true
         } catch (error) {
@@ -92,11 +95,22 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
             await ordersStore.loadAllOrders()
+            socket.emit('loggedIn', user.value)
             return true
         }
         clearUser()
         return false
     }
+
+    socket.on('updateUser', (updatedUser) => {
+        console.log('Someone else has updated the user #' + updatedUser.id)
+        if (user.value?.id == updatedUser.id) {
+            user.value = updatedUser
+            toast.info('Your user profile has been changed!')
+        } else {
+            toast.info(`User profile #${updatedUser.id} (${updatedUser.name}) has changed!`)
+        }
+    })  
     
     return { user, userId, userPhotoUrl, login, signUpCustomer, loadUser, logout, restoreToken }
 })
