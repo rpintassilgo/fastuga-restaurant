@@ -54,13 +54,18 @@
   onMounted (() => {
     loadUsers()
   })
+
+  
 </script>
 
 <template>
   <h3 class="mt-5 mb-3">Users</h3>
     <div class="row">
       <div class="search-wrapper panel-heading col-sm-12">
+        <div class="input-group">
           <input class="form-control" type="text" v-model="searchQuery" placeholder="Search user by email" />
+          <button type="button" class="btn btn-primary px-5" @click="Search">Search</button>
+        </div>
       </div>                        
     </div>
     <div class="mx-2 mt-2 flex-grow-1 ">
