@@ -24,10 +24,7 @@ app.provide('axios', axios.create({
     },
   }))
 app.provide('axiosImage', axios.create({
-    baseURL: serverBaseUrl + '/api',
-    headers: {
-      'Content-type': 'multipart/form-data',
-    },
+    baseURL: serverBaseUrl + '/api'
   }))
 app.provide('serverBaseUrl', serverBaseUrl)  
 

@@ -105,15 +105,17 @@ class ProductController extends Controller
         }
     }
 
-    public function uploadProductImage(ImageRequest $request, Product $product){
-        // i'm using validate() because validate() returns validated() or exception if it fails (maybe less prone to break ??)
-        $requestData = $request->validate();
-        $path = 'storage/products/';
+    public function uploadProductImage(ImageRequest $request){
+        $requestData = $request->validated();
 
         if($requestData['photo_file']){
-            $nameString = Carbon::now()->format('Ymd_His') . $requestData['photo_file']->getClientOriginalExtension();
-            $product->photo_url = $nameString;
+            $nameString = Carbon::now()->format('Ymd_His') . '_' . $requestData['photo_file']->getClientOriginalName();
+            $path = $requestData['photo_file']->storeAs('public/products/', $nameString);
+           // $product->photo_url = $nameString;
+
         }
-        $product->save();
+        //$product->save();
+
+        return (string) $nameString;
     }
 }

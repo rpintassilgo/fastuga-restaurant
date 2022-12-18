@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\api\AuthController;
 
 //Route::post('login', [AuthController::class, 'login']);
@@ -52,7 +53,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('products', [ProductController::class, 'createProduct']);
     Route::put('products/{id}', [ProductController::class, 'editProduct']);
     Route::delete('products/{id}', [ProductController::class,'deleteProduct']);
-    Route::post('products/{id}/image', [ProductController::class, 'uploadProductPhoto']);
+    Route::post('products/image', [ProductController::class, 'uploadProductImage']);
 
     // USERS
     Route::get('users', [UserController::class, 'showAllUsers']);
@@ -80,5 +81,10 @@ Route::middleware('auth:api')->group(function (){
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
+    // ORDER ITEMS
+    Route::get('orderitems', [OrderItemController::class, 'showOrderItems']);
+    Route::get('orderitems/{status}', [OrderItemController::class, 'showHotDishesByStatus']);
+
     
 });

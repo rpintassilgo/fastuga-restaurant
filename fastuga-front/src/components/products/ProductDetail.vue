@@ -3,7 +3,6 @@ import { ref, watch, computed, inject, toDisplayString } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
-const axiosImage = inject('axiosImage')
 const toast = inject('toast')
 
 const props = defineProps({
@@ -21,7 +20,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","photo"]);
 
 const editingProduct = ref(props.product);
 const photoUrl = ref("");
@@ -44,25 +43,7 @@ const imageChange = (event) => {
   editingProduct.value.photo_file = event.target.files[0];
   //photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
 }
-/*
-const imageUpload = () => {
-  if(editingProduct.value.photo_file == null){
-    toast.error("Photo not found.")
-  } else{
-      try {
-        let formData = new FormData()
-        formData.append('photo_file',editingProduct.photo_file)
-        axiosImage.defaults.common.Authorization = "Bearer " + sessionStorage.getItem('token')
 
-        axiosImage.post(`products/${editingProduct.value.id}/image`,formData)
-                  .then(() => toast.success("Photo uploaded successfully!"))
-      } catch (error) {
-        toast.error("Internal server error. Selected photo not uploaded!")
-        console.log(error)
-      }
-  }
-}
-*/
 
 const save = () => {
   emit("save", editingProduct.value);
@@ -143,7 +124,7 @@ const cancel = () => {
           </div>
           <div class="form-control text-center">
           <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
-          <!-- <label class="btn-new-one" @click="imageUpload">Upload a photo</label> -->       
+          <!--<label class="btn-new-one" @click="imageUpload">Upload a photo</label>      -->
           
         </div>
         </div>

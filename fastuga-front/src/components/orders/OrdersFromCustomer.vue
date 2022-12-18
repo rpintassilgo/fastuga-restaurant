@@ -68,6 +68,28 @@
     loadOrders()
   }
 
+    const cancelOrderConfirmed = () => {
+    ordersStore.changeStatusOrder(orderToCancel.value.id,"cancel")
+      .then(() => {
+        toast.info("Order " + orderToCancelDescription.value + " was cancelled")
+      })
+      .catch(() => {
+        toast.error("It was not possible to cancel Order " + orderToCancelDescription.value + "!")
+      })
+  }
+
+  const cancelOrder = (order) => {
+    orderToCancel.value = order
+    cancelOrderConfirmed()
+  }
+
+
+  const orderToCancelDescription = computed(() => {
+    return orderToCancel.value
+    ? `#${orderToCancel.value.id} (${orderToCancel.value.date})`
+    : ""
+  })
+
   const goBack = () => { // ajustar o css deste botao
     router.push({ name: 'Users'})
   }
@@ -128,7 +150,7 @@
               :showId="true"
               :showDates="true"
               :showCustomerId="false"
-              :showCancelButton="false"
+              @cancel="cancelOrder"
             ></order-table>
             <template class="paginator">
               <pagination
