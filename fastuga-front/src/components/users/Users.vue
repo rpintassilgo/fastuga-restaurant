@@ -17,7 +17,24 @@
     return paginationData ? paginationData.total : 0
   })
 
+  const Search = () => {
+    const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
+                        (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
+    axios.get(getUsersUrl)
+        .then((response) => {
+          console.log(response)
+          users.value = response.data.data
+          paginationData.value = response.data.meta
+        })
+        .catch((error) => {
+          users.value = []
+          console.log(error)
+        })
+  }
+  
+
   const loadUsers = () => {
+
     const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
                         (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
     axios.get(getUsersUrl)

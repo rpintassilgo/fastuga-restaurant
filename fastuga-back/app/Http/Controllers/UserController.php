@@ -35,6 +35,13 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return UserResource::collection($managerEmployees);
     }
 
+    public function showUserEmail($email) 
+    {
+        $user = User::where('email',$email)->firstOrFail();
+        return new UserResource($user);
+    }
+
+
 
     public function showUser($id)
     {

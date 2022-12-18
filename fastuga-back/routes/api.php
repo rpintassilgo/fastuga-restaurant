@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function (){
     Route::get('users/chef', [UserController::class, 'showAllChefEmployees']);
     Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees']);
     Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
+    Route::get('users/{email}', [UserController::class, 'showUserEmail']);
     Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
