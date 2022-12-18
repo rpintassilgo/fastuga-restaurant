@@ -4,6 +4,7 @@ import { useUserStore } from "./user.js"
 
 export const useOrdersStore = defineStore('orders', () => {
     const userStore = useUserStore()
+    const socket = inject("socket")
 
     const axios = inject('axios')
     
@@ -55,6 +56,7 @@ export const useOrdersStore = defineStore('orders', () => {
         // catch by the function that called the insertOrder
         const response = await axios.post('orders', newOrder)
         orders.value.push(response.data)
+        socket.emit('newOrder', response.data.data)
         return response.data
     }
 

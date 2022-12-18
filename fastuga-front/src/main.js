@@ -5,9 +5,11 @@ import Toaster from "@meforma/vue-toaster"
 import Pagination from "v-pagination-3"
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
+import { io } from "socket.io-client"
 
 import App from './App.vue'
 import router from './router'
+
 
 //import './assets/main.css'
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -15,6 +17,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "bootstrap"
 
 const app = createApp(App)
+
 
 const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
 app.provide('axios', axios.create({
@@ -39,6 +42,8 @@ app.use(Toaster, {
 })
 
 app.provide('toast', app.config.globalProperties.$toast);
+
+app.provide('socket', io("http://localhost:8080"))
 
 app.use(createPinia())
 app.use(router)
