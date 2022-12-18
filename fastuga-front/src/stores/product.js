@@ -31,5 +31,5 @@ export const useProductStore = defineStore('product', () => {
     }
     
     
-    return { product, productId, productPhotoUrl }
+    return { product, productId, productPhotoUrl,  loadProduct}
 })

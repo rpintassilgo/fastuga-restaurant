@@ -52,7 +52,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('products', [ProductController::class, 'createProduct']);
     Route::put('products/{id}', [ProductController::class, 'editProduct']);
     Route::delete('products/{id}', [ProductController::class,'deleteProduct']);
-    Route::post('products/{id}/image', [ProductController::class, 'uploadProductPhoto']);
+    Route::post('products/{id}/image', [ProductController::class, 'uploadProductImage']);
 
     // USERS
     Route::get('users', [UserController::class, 'showAllUsers']);

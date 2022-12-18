@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { ref, watch, computed, inject, toDisplayString } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
@@ -20,23 +20,31 @@ const props = defineProps({
 const emit = defineEmits(["save", "cancel"]);
 
 const editingUser = ref(props.user)
+const photoUrl = ref("");
 
 watch(
   () => props.user,
   (newUser) => {
     editingUser.value = newUser
   },
-  { immediate: true }
+  /*
+  { immediate: true 
+  }
+  */
 )
 
 const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
+  return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
-    : avatarNoneUrl
+    : avatarNoneUrl) : photoUrl.value
+ 
 })
 
 
-const changing = (input) => {
+
+
+const imageChange = (event) => {
+editingUser.value.photo_file = event.target.files[0];
 //FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
 
   //file.value = input.target.files[0];
@@ -44,32 +52,9 @@ const changing = (input) => {
 
 }
 
-
-// const imageUpload = (e) => {
-
-//   if(editingProduct.value.photo_file == null){
-//     toast.error("Photo not found.")
-//   } else{
-//       try {
-//         let formData = new FormData()
-//         formData.append('photo_file',editingProduct.photo_file)
-//         axiosImage.defaults.common.Authorization = "Bearer " + sessionStorage.getItem('token')
-
-//         axiosImage.post(`products/${editingProduct.value.id}/image`,formData)
-//                   .then(() => toast.success("Photo uploaded successfully!"))
-//       } catch (error) {
-//         toast.error("Internal server error. Selected photo not uploaded!")
-//         console.log(error)
-//       }
-//   }
-// }
-
-
 const save = () => {
   emit("save", editingUser.value);
 }
-
-
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
@@ -150,11 +135,10 @@ const cancel = () => {
             <img :src="photoFullUrl" class="w-100" />
           </div>
           <div class="form-control text-center">
-            <input type="file" id="actual-btn" hidden />
-            <label for="actual-btn" class="btn-new-one" @onchange="changing"
-              >Upload a photo</label
-            >
-          </div>
+          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
+          
+        
+          
         </div>
       </div>
     </div>
