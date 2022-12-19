@@ -35,16 +35,24 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return UserResource::collection($managerEmployees);
     }
 
+    public function getDataAttribute()
+  {
+    return explode('@', $this->data);
+  }
+
     public function showUserEmail($email) 
     {
-        $user = User::where('email',$email)->firstOrFail();
-        return new UserResource($user);
+       
+        $resultado = explode('@', $email);
+        $user = DB::table('users')->where('email','LIKE','%'.$resultado[0].'%')->paginate(20);
+
+        return UserResource::collection($user);
     }
 
 
 
     public function showUser($id)
-    {
+    {   
         $user = User::findOrFail($id);
         return new UserResource($user);
     }
@@ -52,7 +60,6 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
     
     public function showMyself(Request $request) 
     {
-        //dd("Odeio esta merdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return new UserResource($request->user());
         /*return response()->json(
             ['msg' => 'test'],

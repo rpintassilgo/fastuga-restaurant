@@ -17,12 +17,15 @@
     return paginationData ? paginationData.total : 0
   })
 
+
   const Search = () => {
-    const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
-                        (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
+    console.log (searchQuery.value);
+    console.log (page.value);
+    const getUsersUrl = searchQuery.value == "all" ? `users?page=${page.value}` : (`users/${searchQuery.value}?page=${page.value}`)
+    console.log (getUsersUrl);        
+
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log(response)
           users.value = response.data.data
           paginationData.value = response.data.meta
         })
@@ -37,6 +40,8 @@
 
     const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
                         (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
+                      
+                        console.log(getUsersUrl)
     axios.get(getUsersUrl)
         .then((response) => {
           console.log(response)
@@ -53,6 +58,7 @@
   const resetPage = () => {
     page.value = 1
     loadUsers()
+    Search()
   }
 
   // add admin or employee
@@ -70,6 +76,7 @@
 
   onMounted (() => {
     loadUsers()
+    Search()
   })
 
   
