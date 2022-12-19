@@ -235,6 +235,8 @@ class OrderController extends Controller
             $costumer = Customer::findOrFail($order->customer_id); //obter costumer
             $costumer->points = $costumer->points + $order->points_used_to_pay;
             $costumer->points = $costumer->points - $order->points_gained;
+
+            $costumer->save();
       
             DB::commit();
         } catch (\Throwable $error) {
