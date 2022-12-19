@@ -1,18 +1,44 @@
 <script setup>
-  import { ref } from 'vue'
-  
+   import { ref, inject } from 'vue'
+  import { useUserStore } from '../../stores/user.js'
+  const axios = inject('axios')
+  const userStore = useUserStore()   
+  const toast = inject('toast')  
+
+
   const passwords = ref({
-        current_password: '',
+        //current_password: '',
         password: '',
-        password_confirm: ''
+        //password_confirm: ''
     })
 
   const emit = defineEmits(['changedPassword'])
 
+  const dataString = () => {
+      return JSON.stringify(user.value)
+  }
+
   const changePassword = () => {
-      // FALTA FAZER O LOGIN
+    errors.value = null
+      axios.put('users/' + userStore.userId, passwords.value)
+        .then((response) => {
+          passwords.value = response.data.data
+          originalValueStr = dataString()
+          toast.success('User #' + passwords.value.id + ' was updated successfully.')
+          router.back()
+        })
+        .catch((error) => {
+          if (error.response.status == 422) {
+              toast.error('User #' + userStore.id + ' was not updated due to validation errors!')
+              errors.value = error.response.data.errors
+            } else {
+              toast.error('User #' + userStore.id + ' was not updated due to unknown server error!')
+            }
+        })
       emit('changedPassword')
   }
+
+   const errors = ref(null)
 </script>
 
 <template>
