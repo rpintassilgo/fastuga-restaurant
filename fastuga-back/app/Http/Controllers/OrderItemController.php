@@ -8,9 +8,19 @@ use App\Http\Resources\OrderItemResource;
 
 class OrderItemController extends Controller
 {
+
+    // isto aqui está tudo mal, o order item nao tem tipo, tenho de arranjar maneira de aceder ao produto da order item e assim verificar o tipo do produto
+    // possivelmente nao é necessario dar hardcode, deve dar para fazer isso atraves das relacoes
+
     public function showOrderItems() // logo se vê, são 100 mil :)
     {
-        return OrderItemResource::collection()->paginate(20);
+        $orderItems = OrderItem::where('type','C')->paginate(20);
+        return OrderItemResource::collection($orderItems);
+    }
+
+    public function showHotDishes()
+    {
+        return OrderItemResource::collection(OrderItem::where('type','hot dish')->paginate(20));
     }
 
     public function showHotDishesByStatus($status)

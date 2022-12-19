@@ -89,6 +89,7 @@ Route::middleware('auth:api')->group(function (){
 
     // ORDER ITEMS
     Route::get('orderitems', [OrderItemController::class, 'showOrderItems']);
+    Route::get('orderitems/hotdishes', [OrderItemController::class, 'showOrderItems']);
     Route::get('orderitems/{status}', [OrderItemController::class, 'showHotDishesByStatus']);
 
     
