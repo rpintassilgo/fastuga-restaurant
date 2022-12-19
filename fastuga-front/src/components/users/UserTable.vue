@@ -7,8 +7,6 @@ const axios = inject("axios")
 const serverBaseUrl = inject("serverBaseUrl")
 const toast = inject("toast")
 const userStore = useUserStore()
-const axios = inject("axios")
-const toast = inject("toast")
 
 const props = defineProps({
   users: {
@@ -88,10 +86,6 @@ const editClick = (user) => {
 
 const ordersClick = (user) => {
   emit("orders", user)
-}
-
-const blockClick = (user) => {
-  emit("block", user)
 }
 
 const canViewUserDetail  = (userId) => {
@@ -183,7 +177,7 @@ const blockClick = (user) => {
             <!-- 
             <button 
               class="btn btn-xs btn-light" 
-              @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+              @click="blockClick(user)" v-if="showBlockButton"> 
               <i v-if="user.blocked == 1" class="bi bi-xs bi-lock"></i>
               <i v-else class="bi bi-xs bi-unlock"></i>
             </button>

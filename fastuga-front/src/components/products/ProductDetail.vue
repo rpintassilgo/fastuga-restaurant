@@ -1,10 +1,10 @@
 <script setup>
-import axios from 'axios';
+import axios from "axios";
 import { ref, watch, computed, inject, toDisplayString } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
+import avatarNoneUrl from "@/assets/avatar-none.png";
 
 const serverBaseUrl = inject("serverBaseUrl");
-const toast = inject('toast')
+const toast = inject("toast");
 
 const props = defineProps({
   product: {
@@ -14,10 +14,10 @@ const props = defineProps({
   errors: {
     type: Object,
     required: false,
-  }
+  },
 });
 
-const emit = defineEmits(["save", "cancel","photo"]);
+const emit = defineEmits(["save", "cancel", "photo"]);
 
 const editingProduct = ref(props.product);
 let photoUrl = ref("");
@@ -26,27 +26,27 @@ watch(
   () => props.product,
   (newProduct) => {
     editingProduct.value = newProduct;
-  },
+  }
   //(newPhotoUrl)
 );
 
 const photoFullUrl = computed(() => {
-  return photoUrl.value == "" ? (editingProduct.value.photo_url
-    ? serverBaseUrl + "/storage/products/" + editingProduct.value.photo_url
-    : avatarNoneUrl) : photoUrl.value
-})
+  return photoUrl.value == ""
+    ? editingProduct.value.photo_url
+      ? serverBaseUrl + "/storage/products/" + editingProduct.value.photo_url
+      : avatarNoneUrl
+    : photoUrl.value;
+});
 
 const imageChange = (event) => {
   // console.log(' evento ' + event.target.files[0]== null);
   editingProduct.value.photo_file = event.target.files[0];
-  console.log("Selected file: ", editingProduct.value.photo_file)
+  console.log("Selected file: ", editingProduct.value.photo_file);
 
   photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
   console.log("URL: " + photoUrl);
   return photoUrl;
-}
-
-
+};
 
 const save = () => {
   emit("save", editingProduct.value);
@@ -58,7 +58,7 @@ const cancel = () => {
 </script>
 
 <template>
-<form class="row g-3 needs-validation" novalidate @submit.prevent="save">
+  <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
     <h3 class="mt-5 mb-3">Product #{{ editingProduct.id }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -73,7 +73,10 @@ const cancel = () => {
             required
             v-model="editingProduct.name"
           />
-          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="name"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -86,7 +89,10 @@ const cancel = () => {
             required
             v-model="editingProduct.description"
           />
-          <field-error-message :errors="errors" fieldName="description"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="description"
+          ></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
@@ -99,25 +105,25 @@ const cancel = () => {
             required
             v-model="editingProduct.price"
           />
-          <field-error-message :errors="errors" fieldName="price"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="price"
+          ></field-error-message>
         </div>
 
         <div class="mb-3">
-            <label
-              for="selectType"
-              class="form-label"
-            >Type:</label>
-            <select
-              class="form-select"
-              id="selectType"
-              v-model="editingProduct.type"
-            >
-              <option value="hot dish">Hot dish</option>
-              <option value="cold dish">Cold dish</option>
-              <option value="drink">Drink</option>
-              <option value="dessert">Dessert</option>
-            </select>
-          </div>
+          <label for="selectType" class="form-label">Type:</label>
+          <select
+            class="form-select"
+            id="selectType"
+            v-model="editingProduct.type"
+          >
+            <option value="hot dish">Hot dish</option>
+            <option value="cold dish">Cold dish</option>
+            <option value="drink">Drink</option>
+            <option value="dessert">Dessert</option>
+          </select>
+        </div>
       </div>
       <div class="w-25">
         <div class="mb-3">
@@ -126,22 +132,30 @@ const cancel = () => {
             <img :src="photoFullUrl" class="w-100" />
           </div>
           <div class="form-control text-center">
-          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
-          <!--<label class="btn-new-one" @click="imageUpload">Upload a photo</label>      -->
-          
+            <input
+              type="file"
+              accept="image/*"
+              class="form-control-file"
+              id="actual-btn"
+              v-on:change="imageChange"
+            />
+            <!--<label class="btn-new-one" @click="imageUpload">Upload a photo</label>      -->
+          </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5"  @click="save">Save</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary px-5" @click="save">
+        Save
+      </button>
+      <button type="button" class="btn btn-light px-5" @click="cancel">
+        Cancel
+      </button>
     </div>
   </form>
 </template>
 
 <style scoped>
-
-
 .btn-new-one {
   background-color: #0d6efd;
   color: white;
