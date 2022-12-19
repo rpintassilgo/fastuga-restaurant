@@ -32,10 +32,6 @@
     page.value = 1
     loadProducts()
   }
-
-  const addProduct = () => {
-    router.push({ name: 'NewProduct'})
-  }
   
   const editProduct = (product) => {
     router.push({ name: 'Product', params: { id: product.id } })
@@ -48,27 +44,6 @@
       }
   }
 
-  /*const props = defineProps({
-    productsTitle: {
-      type: String,
-      default: 'Products'
-    }
-  })
-
-  const filteredProducts = computed( () => {
-   // console.log(products.value)
-   switch (filterByType.value) {
-     case value:
-       
-       break;
-   
-     default:
-       break;
-   }
-    if(filterByType.value == "all") return products.value
-    return products.value.filter((product) => (filterByType.value == product.type))
-  })*/
-  
   onMounted (() => {
     loadProducts()
   })

@@ -25,11 +25,11 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha|max:255',
+            'name' => 'required|string',
             'email' => 'required|email',
             'password' => 'required|string',
             'photo_url' => 'nullable|string',
-            'phone' => 'required|digits:9', // nao sei se convem verificar o segundo digito tbm pq n existe numeros começados por 99, 90 etc
+            'phone' => 'required',
             'nif' => 'required|digits:9',
             'default_payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
             'default_payment_reference' => ['required','string',new PaymentReferenceRule],

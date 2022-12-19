@@ -6,6 +6,7 @@
   const router = useRouter()
 
   const axios = inject('axios')
+  const toast = inject("toast")
 
   const users = ref([])
   const paginationData = ref(null)
@@ -38,10 +39,10 @@
     loadUsers()
   }
 
-  // add admin or employee
-  const addUser = () => {
-    router.push({ name: 'NewUser'})
-  }
+ const deletedUser = (deletedUser) => {
+    let idx = users.value.findIndex((p) => p.id === deletedUser.data.id)
+    if (idx >= 0) users.value.splice(idx,1)
+ }
 
   const editUser = (user) => {
     router.push({ name: 'User', params: { id: user.id } })
@@ -51,12 +52,67 @@
     router.push({ name: 'OrdersFromCustomer', params: { id: user.id } })
   }
 
+
+
+const blockUser = (user) => {
+  if(user.type != "C"){
+    axios
+    .put("users/block",user)
+    .then(() => {
+      loadUsers()
+      toast.error("User  #" + user.id + " was blocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  } else{
+    axios
+    .put("customers/block",user)
+    .then(() => {
+      loadUsers()
+      toast.error("User  #" + user.id + " was blocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+}
+
+const unblockUser = (user) => {
+  if(user.type != "C"){
+    axios
+    .put("users/unblock",user)
+    .then(() => {
+      loadUsers()
+      toast.success("User  #" + user.id + " was unblocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  } else{
+    axios
+    .put("customers/unblock",user)
+    .then(() => {
+      loadUsers()
+      toast.success("User  #" + user.id + " was unblocked")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+}
+
+const changeBlock = (user) => {
+  user.blocked == 1 ? unblockUser(user) : blockUser(user)
+}
+
   onMounted (() => {
     loadUsers()
   })
 </script>
 
 <template>
+
   <h3 class="mt-5 mb-3">Users</h3>
     <div class="row">
       <div class="search-wrapper panel-heading col-sm-12">
@@ -88,6 +144,8 @@
     :showId="false"
     @edit="editUser"
     @orders="ordersCustomer"
+    @deleted="deletedUser"
+    @block="changeBlock"
   ></user-table>
   <template class="paginator">
     <pagination

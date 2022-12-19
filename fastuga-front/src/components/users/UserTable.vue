@@ -3,7 +3,9 @@ import { ref, computed, watch, inject } from "vue"
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
+const axios = inject("axios")
 const serverBaseUrl = inject("serverBaseUrl")
+const toast = inject("toast")
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -49,17 +51,19 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["edit","deleted","orders"])
+const emit = defineEmits(["edit","deleted","orders","block"])
 
 const editingUsers = ref(props.users)
 const userToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
+
 
 const userToDeleteDescription = computed(() => {
   return userToDelete.value
     ? `#${userToDelete.value.id} `
     : ""
 })
+
 
 watch(
   () => props.users,
@@ -82,6 +86,10 @@ const ordersClick = (user) => {
   emit("orders", user)
 }
 
+const blockClick = (user) => {
+  emit("block", user)
+}
+
 const canViewUserDetail  = (userId) => {
   if (!userStore.user) {
     return false
@@ -101,6 +109,7 @@ const dialogConfirmedDelete = () => {
     })
 }
 
+
 const deleteClick = (user) => {
   userToDelete.value = user
   deleteConfirmationDialog.value.show()
@@ -108,7 +117,14 @@ const deleteClick = (user) => {
 </script>
 
 <template>
-  <!-- meter aqui um filtro por tipo de utilizador -->
+    <confirmation-dialog
+    ref="deleteConfirmationDialog"
+    confirmationBtn="Delete user"
+    :msg="`Do you really want to delete user ${userToDeleteDescription}?`"
+    @confirmed="dialogConfirmedDelete"
+    >
+    </confirmation-dialog>
+
   <table class="table">
     <thead>
       <tr>
@@ -145,8 +161,9 @@ const deleteClick = (user) => {
 
             <button 
               class="btn btn-xs btn-light" 
-               v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
-              <i class="bi bi-xs bi-lock"></i>
+              @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+              <i v-if="user.blocked == 1" class="bi bi-xs bi-lock"></i>
+              <i v-else class="bi bi-xs bi-unlock"></i>
             </button>
 
             <button

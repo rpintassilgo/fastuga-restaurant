@@ -90,6 +90,26 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
+    public function blockUser(UserRequest $request)
+    {
+        $user = User::findOrFail( $request->id );
+        $user->blocked = 1;
+
+        if( $user->save() ){
+            return new UserResource($user);
+        }
+    }
+
+    public function unblockUser(UserRequest $request)
+    {
+        $user = User::findOrFail( $request->id );
+        $user->blocked = 0;
+
+        if( $user->save() ){
+            return new UserResource($user);
+        }
+    }
+
     public function deleteUserAccount($id)
     {
         $user = User::findOrFail( $id );

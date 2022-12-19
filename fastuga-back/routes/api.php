@@ -62,6 +62,8 @@ Route::middleware('auth:api')->group(function (){
     Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
     Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
+    Route::put('users/block', [UserController::class, 'blockUser']);
+    Route::put('users/unblock', [UserController::class, 'unblockUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
     Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
     Route::post('users/image', [UserController::class, 'uploadUserImage']);
@@ -69,6 +71,8 @@ Route::middleware('auth:api')->group(function (){
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'showAllCustomers']);
     Route::get('customers/{id}', [CustomerController::class, 'showCustomer']);
+    Route::put('customers/block', [CustomerController::class, 'blockCustomer']);
+    Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer']);
     Route::put('customers/{id}', [CustomerController::class, 'editCustomerProfile']);
     Route::delete('customers/{id}', [CustomerController::class,'deleteCustomerAccount']);
 
