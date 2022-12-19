@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\ImageRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller // falta adicionar try and catch e DB neste
 {
@@ -94,6 +96,20 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         if( $user->delete() ){
             return new UserResource( $user );
         }
+    }
+
+    public function uploadUserImage(ImageRequest $request){
+        $requestData = $request->validated();
+
+        if($requestData['photo_file']){
+            $nameString = Carbon::now()->format('Ymd_His') . '_' . $requestData['photo_file']->getClientOriginalName();
+            $path = $requestData['photo_file']->storeAs('public/fotos/', $nameString);
+           // $product->photo_url = $nameString;
+
+        }
+        //$product->save();
+
+        return (string) $nameString;
     }
 
 }

@@ -8,7 +8,6 @@
 
   const router = useRouter()  
   const axios2 = inject('axios')
-  const axiosImage = inject('axiosImage')
   const toast = inject('toast')
   const productStore = useProductStore()
 

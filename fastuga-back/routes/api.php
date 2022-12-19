@@ -64,6 +64,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('users', [UserController::class, 'signUpUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
     Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
+    Route::post('users/image', [UserController::class, 'uploadUserImage']);
 
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'showAllCustomers']);

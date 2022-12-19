@@ -15,9 +15,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","photo"]);
+
 
 const editingUser = ref(props.user)
+const photoUrl = ref("");
+
 
 watch(
   () => props.user,
@@ -28,20 +31,19 @@ watch(
 )
 
 const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
+  return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
-    : avatarNoneUrl
+    : avatarNoneUrl) : photoUrl.value
 })
+
+const imageChange = (event) => {
+  editingUser.value.photo_file = event.target.files[0];
+  //photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
+}
 
 const save = () => {
   emit("save", editingUser.value);
 }
-
-const changing = (input) => {
-//FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
-
-}
-
 
 const cancel = () => {
   emit("cancel", editingUser.value);
@@ -90,9 +92,9 @@ const cancel = () => {
             id="inputPassword"
             placeholder="Password"
             required
-            v-model="editingUser.email"
+            v-model="editingUser.password"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
 
         <div class="mb-3">
@@ -118,8 +120,7 @@ const cancel = () => {
             <img :src="photoFullUrl" class="w-100" />
           </div>
           <div class="form-control text-center">
-          <input type="file" id="actual-btn" hidden/>
-          <label for="actual-btn" class="btn-new-one" @click="changing">Upload a photo</label>
+          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
           
         
           
