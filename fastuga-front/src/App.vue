@@ -98,12 +98,18 @@ const clickMenuOption = () => {
                 class="rounded-circle z-depth-0 avatar-img"
                 alt="avatar image"
               />
-              <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }}</span>
+              
+              <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }} </span>
+
             </a>
+            <li class="nav-item" v-show="(userStore.user?.type == 'C')">
+            <span class="points-text">{{ "Pontos " + userStore.user?.points ?? "Anonymous" }}</span>
+            </li>
             <ul
               class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
             >
+            
               <li>
                 <router-link
                   class="dropdown-item"
@@ -131,6 +137,7 @@ const clickMenuOption = () => {
                 </a>
               </li>
             </ul>
+            
           </li>
         </ul>
       </div>
@@ -373,6 +380,15 @@ const clickMenuOption = () => {
   margin: 1rem 0.5rem -2rem 0;
   padding-top: 1rem;
 }
+
+.points-text {
+  line-height: 2.2rem;
+  margin: 1rem 0.5rem -2rem 0;
+  padding-top: 1rem;
+  margin-left: 50%;
+}
+
+
 
 .dropdown-item {
   font-size: 0.875rem;

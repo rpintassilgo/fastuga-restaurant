@@ -19,7 +19,7 @@
 
   const userStore = useUserStore()     
 
-  const emit = defineEmits(['register'])
+  const emit = defineEmits(['users'])
 
   const register = async () => {
 
@@ -50,11 +50,12 @@
     <form
       class="row g-3 needs-validation"
       novalidate
-      @submit.prevent="register"
+      @submit.prevent="users"
     >
       <h3 class="mt-5 mb-3">Sign up</h3>
       <hr>
       <div class="mb-3">
+        <div class="mb-3">
           <label
             for="inputName"
             class="form-label"
@@ -93,6 +94,7 @@
             v-model="credentials.password"
           >
       </div>
+      
       <div class="mb-3">
           <label
             for="inputConfirmPassword"
