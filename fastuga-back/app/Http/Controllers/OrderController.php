@@ -11,6 +11,7 @@ use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\Customer;
 
 class OrderController extends Controller
 {
@@ -25,25 +26,25 @@ class OrderController extends Controller
         $orders = null;
         switch ($status) {
             case 'preparing':
-                $orders = Order::with('orderItems.product')->where('status','P')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status', 'P')->paginate(20);
                 break;
             case 'ready':
-                $orders = OrderResource::collection(Order::with('orderItems.product')->where('status','R')->paginate(20));
+                $orders = OrderResource::collection(Order::with('orderItems.product')->where('status', 'R')->paginate(20));
                 break;
             case 'delivered':
-                $orders = Order::with('orderItems.product')->where('status','D')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status', 'D')->paginate(20);
                 break;
             case 'cancelled':
-                $orders = Order::with('orderItems.product')->where('status','C')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status', 'C')->paginate(20);
                 break;
             default:
-                return response()->json(['message' => 'Invalid order status!'],400);
+                return response()->json(['message' => 'Invalid order status!'], 400);
                 break;
         }
         return OrderResource::collection($orders);
     }
 
-    public function showStatusOrdersFromCustomer($id,$status)
+    public function showStatusOrdersFromCustomer($id, $status)
     {
         $orders = null;
         switch ($status) {
@@ -64,7 +65,7 @@ class OrderController extends Controller
                 $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
                 break;
             default:
-                return response()->json(['message' => 'Invalid order status!'],400);
+                return response()->json(['message' => 'Invalid order status!'], 400);
                 break;
         }
         return OrderResource::collection($orders);
@@ -73,7 +74,7 @@ class OrderController extends Controller
 
     public function showAllOrdersFromCustomer($id)
     {
-        $orders = Order::with('orderItems.product')->where('customer_id',$id)->paginate(20);
+        $orders = Order::with('orderItems.product')->where('customer_id', $id)->paginate(20);
         return OrderResource::collection($orders);
     }
 
@@ -96,19 +97,19 @@ class OrderController extends Controller
         }
         */
 
-        try{
+        try {
             DB::beginTransaction();
 
-            $order = new Order; 
+            $order = new Order;
 
             // get ticket number from previous order
             $previousTicketNumber = Order::find(DB::table('orders')->max('id'))->ticket_number;
             //dd($previousTicketNumber);
 
             $ticketNumber = null;
-            if($previousTicketNumber == 99){
+            if ($previousTicketNumber == 99) {
                 $ticketNumber = 1;
-            } else{
+            } else {
                 $ticketNumber = ($previousTicketNumber) + 1;
             }
 
@@ -117,23 +118,23 @@ class OrderController extends Controller
             $orderLocalNumber = 1;
             $totalPrice = 0;
             $orderItemsToSave = [];
-            foreach ($items as $item){
+            foreach ($items as $item) {
                 $orderItem = new OrderItem();
 
                 $orderItem->order_local_number = $orderLocalNumber;
                 $orderLocalNumber = $orderLocalNumber + 1;
-                
+
                 // all products were verified inside orderItemRule (however if it fails, it will enter "catch")
-                $product = Product::findOrFail( $item['product_id'] );
+                $product = Product::findOrFail($item['product_id']);
 
                 $orderItem->product_id = $item['product_id'];
                 $orderItem->status = "W"; // the inicial status of an item order is Waiting
                 $orderItem->price = $product->price;
-                $orderItem->notes =  array_key_exists('notes',$item) ? $item['notes'] : null;
+                $orderItem->notes =  array_key_exists('notes', $item) ? $item['notes'] : null;
 
                 $totalPrice = $totalPrice + $product->price;
 
-                array_push($orderItemsToSave,$orderItem); // we cant save it rn, because there is no order_id
+                array_push($orderItemsToSave, $orderItem); // we cant save it rn, because there is no order_id
             }
 
 
@@ -152,31 +153,29 @@ class OrderController extends Controller
 
 
             $order->save(); // save to create id for order_id
-            
-            foreach($orderItemsToSave as $orderItem){
+
+            foreach ($orderItemsToSave as $orderItem) {
                 $order->orderItems()->save($orderItem);
             }
-            
+
 
             DB::commit();
-
-        } catch(\Throwable $error){
+        } catch (\Throwable $error) {
             DB::rollback();
-            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+            return response()->json(['message' => 'Internal server error', 'error' => $error->getMessage()], 500);
         }
 
         return new OrderResource($order);
-
     }
 
     public function setOrderToReady($id)
     {
         // sera q é o ED q diz q tá ready? se sim, verificar se o user logado é do tipo ED
-        if (Auth::user()->type != "ED"){
-            return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
+        if (Auth::user()->type != "ED") {
+            return response()->json(['message' => 'The current logged user is not an employee delivery'], 400);
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $order = Order::findOrFail($id);
@@ -185,10 +184,9 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
-        }
-        catch(\Throwable $error){
+        } catch (\Throwable $error) {
             DB::rollback();
-            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+            return response()->json(['message' => 'Internal server error', 'error' => $error->getMessage()], 500);
         }
 
         return new OrderResource($order);
@@ -197,11 +195,11 @@ class OrderController extends Controller
     public function deliverOrder($id)
     {
         // verificar se o user logado é do tipo ED
-        if (Auth::user()->type != "ED"){
-            return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
+        if (Auth::user()->type != "ED") {
+            return response()->json(['message' => 'The current logged user is not an employee delivery'], 400);
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $order = Order::findOrFail($id);
@@ -210,10 +208,9 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
-        }
-        catch(\Throwable $error){
+        } catch (\Throwable $error) {
             DB::rollback();
-            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+            return response()->json(['message' => 'Internal server error', 'error' => $error->getMessage()], 500);
         }
 
         return new OrderResource($order);
@@ -222,29 +219,29 @@ class OrderController extends Controller
     public function cancelOrder($id)
     {
         // quem cancela? gerente
-        if ( Auth::user()->type != "EM"){
-            return response()->json(['message' => 'The current logged user is not an employee manager'],400);
+        if (Auth::user()->type != "EM") {
+            return response()->json(['message' => 'The current logged user is not an employee manager'], 400);
         }
 
-        // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
         // dinheiro deve ser reembolsado (como é que vais reembolsar o dinheiro ???)
 
-        try{
+        try {
             DB::beginTransaction();
 
             $order = Order::findOrFail($id);
             $order->status = "C"; // Cancelled
 
-            $order->save();
-
+            // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
+            $costumer = Customer::findOrFail($order->customer_id); //obter costumer
+            $costumer->points = $costumer->points + $order->points_used_to_pay;
+            $costumer->points = $costumer->points - $order->points_gained;
+      
             DB::commit();
-        }
-        catch(\Throwable $error){
+        } catch (\Throwable $error) {
             DB::rollback();
-            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+            return response()->json(['message' => 'Internal server error', 'error' => $error->getMessage()], 500);
         }
 
         return new OrderResource($order);
     }
-
 }
