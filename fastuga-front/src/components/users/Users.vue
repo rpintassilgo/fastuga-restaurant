@@ -18,30 +18,16 @@
   })
 
 
-  const Search = () => {
-    console.log (searchQuery.value);
-    console.log (page.value);
-    const getUsersUrl = searchQuery.value == "all" ? `users?page=${page.value}` : (`users/${searchQuery.value}?page=${page.value}`)
-    console.log (getUsersUrl);        
-
-    axios.get(getUsersUrl)
-        .then((response) => {
-          users.value = response.data.data
-          paginationData.value = response.data.meta
-        })
-        .catch((error) => {
-          users.value = []
-          console.log(error)
-        })
-  }
-  
 
   const loadUsers = () => {
 
-    const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
-                        (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
-                      
-                        console.log(getUsersUrl)
+    const getUsersUrl = searchQuery.value == "" ? (filterByType.value == "all" ? `users?page=${page.value}` : 
+    (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/type/${filterByType.value}?page=${page.value}`))
+  
+    : (filterByType.value == "all" ? `users/email/${searchQuery.value}?page=${page.value}` : (filterByType.value == "customer" ? 
+     `customers/email/${searchQuery.value}?page=${page.value}` : `users/type/${filterByType.value}/${searchQuery.value}?page=${page.value}`))
+                        
+     console.log(getUsersUrl)
     axios.get(getUsersUrl)
         .then((response) => {
           console.log(response)
@@ -58,7 +44,6 @@
   const resetPage = () => {
     page.value = 1
     loadUsers()
-    Search()
   }
 
   // add admin or employee
@@ -74,9 +59,12 @@
     router.push({ name: 'OrdersFromCustomer', params: { id: user.id } })
   }
 
+  const clearSearch = () => {
+    searchQuery.value = '';
+    loadUsers();
+  }
   onMounted (() => {
     loadUsers()
-    Search()
   })
 
   
@@ -88,7 +76,9 @@
       <div class="search-wrapper panel-heading col-sm-12">
         <div class="input-group">
           <input class="form-control" type="text" v-model="searchQuery" placeholder="Search user by email" />
-          <button type="button" class="btn btn-primary px-5" @click="Search">Search</button>
+          <button type="button" class="btn btn-primary px-5" @click="loadUsers">Search</button>
+          
+          <button type="button" class="btn btn-primary px-5" @click="clearSearch">Clear</button>
         </div>
       </div>                        
     </div>

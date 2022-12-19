@@ -56,10 +56,9 @@ Route::middleware('auth:api')->group(function (){
 
     // USERS
     Route::get('users', [UserController::class, 'showAllUsers']);
-    Route::get('users/chef', [UserController::class, 'showAllChefEmployees']);
-    Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees']);
-    Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
-    Route::get('users/{email}', [UserController::class, 'showUserEmail']);
+    Route::get('users/type/{type}', [UserController::class, 'showUsersByType']);
+    Route::get('users/email/{email}', [UserController::class, 'showUsersByEmail']);
+    Route::get('users/type/{type}/{email}', [UserController::class, 'showUsersByTypeAndEmail']);
     Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
@@ -69,8 +68,10 @@ Route::middleware('auth:api')->group(function (){
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'showAllCustomers']);
     Route::get('customers/{id}', [CustomerController::class, 'showCustomer']);
+    Route::get('customers/email/{email}', [CustomerController::class, 'showCustomersByEmail']);
     Route::put('customers/{id}', [CustomerController::class, 'editCustomerProfile']);
     Route::delete('customers/{id}', [CustomerController::class,'deleteCustomerAccount']);
+    
 
     // ORDERS
     Route::get('orders', [OrderController::class, 'showAllOrders']);
