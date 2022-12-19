@@ -106,26 +106,17 @@ class ProductController extends Controller
         }
     }
 
-    public function uploadProductImage(ImageRequest $request, Product $product ){
-         
+    public function uploadProductImage(ImageRequest $request){
+        $requestData = $request->validated();
 
-        if ($request->hasFile('photo_url')) {
-            $image = $request->file('photo_url');
-            $ext = $image->extension();
-            $file = time().'.'.$ext;
-            // $image_name = time(). '.' . $image->getClientOriginalName();
-            
-            $image->storeAs('src/assests', $file);
-            // $image->move('src/assests', $image_name); // $image->move(public_path('photo_file'), $image_name);
-           
-            $product->photo_url = $file;
+        if($requestData['photo_file']){
+            $nameString = Carbon::now()->format('Ymd_His') . '_' . $requestData['photo_file']->getClientOriginalName();
+            $path = $requestData['photo_file']->storeAs('public/products/', $nameString);
+           // $product->photo_url = $nameString;
 
-            $product->save();
-            DB::commit();
+        }
+        //$product->save();
 
-       }
-
-       return new ProductResource($product);
-       
+        return (string) $nameString;
     }
 }

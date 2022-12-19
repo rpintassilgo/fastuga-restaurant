@@ -96,6 +96,26 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
+    public function blockCustomer(CustomerRequest $request)
+    {
+        $user = User::where('type','C')->findOrFail( $request->id );
+        $user->blocked = 1;
+
+        if( $user->save() ){
+            return new UserResource($user);
+        }
+    }
+
+    public function unblockCustomer(CustomerRequest $request)
+    {
+        $user = User::where('type','C')->findOrFail( $request->id );
+        $user->blocked = 0;
+
+        if( $user->save() ){
+            return new UserResource($user);
+        }
+    }
+
     public function deleteCustomerAccount($id)
     {
         $user = User::where('type','C')->findOrFail( $id );

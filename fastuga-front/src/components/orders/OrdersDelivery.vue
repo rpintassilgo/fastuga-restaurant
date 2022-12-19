@@ -13,9 +13,9 @@
   const orders = ref([])
   const paginationData = ref(null)
   const page = ref(1)
-  const orderToCancel = ref(null)
+  const orderToDeliver = ref(null)
   const filterByStatus = ref('all')
-  const deleteConfirmationDialog = ref(null)  
+  const deliverConfirmationDialog = ref(null)  
   
   /* Change this function */
  const loadOrders = () => {
@@ -38,33 +38,30 @@
     loadOrders()
   }
 
-  const addOrder = () => {
-    router.push({ name: 'NewOrder'})
-  }
 
-
-  
-  const cancelOrderConfirmed = () => {
-    ordersStore.changeStatusOrder(orderToCancel.value.id,"cancel")
+  const deliverOrderConfirmed = () => {
+    ordersStore.changeStatusOrder(orderToDeliver.value.id,"deliver")
       .then(() => {
-        toast.info("Order " + orderToCancelDescription.value + " was cancelled")
+        toast.info("Order " + orderToDeliverDescription.value + " was delivered")
       })
-      .catch(() => {
-        toast.error("It was not possible to cancel Order " + orderToCancelDescription.value + "!")
+      .catch((/*e*/) => {
+        toast.error("It was not possible to deliver Order " + orderToDeliverDescription.value + "!")
+       // console.log("erro: " + e.message)
       })
   }
 
-  const cancelOrder = (order) => {
-    orderToCancel.value = order
-    cancelOrderConfirmed()
+  const deliverOrder = (order) => {
+    orderToDeliver.value = order
+    deliverOrderConfirmed()
   }
 
 
-  const orderToCancelDescription = computed(() => {
-    return orderToCancel.value
-    ? `#${orderToCancel.value.id} (${orderToCancel.value.date})`
+  const orderToDeliverDescription = computed(() => {
+    return orderToDeliver.value
+    ? `#${orderToDeliver.value.id} (${orderToDeliver.value.date})`
     : ""
   })
+
 
   onMounted(() => {
     // Calling loadProjects refresh the list of projects from the API
@@ -75,10 +72,10 @@
 
 <template>
   <confirmation-dialog
-    ref="cancelConfirmationDialog"
-    confirmationBtn="Cancel order"
-    :msg="`Do you really want to cancel order ${orderToCancelDescription}?`"
-    @confirmed="cancelOrderConfirmed"
+    ref="deliverConfirmationDialog"
+    confirmationBtn="Deliver order"
+    :msg="`Do you really want to deliver order ${orderToDeliverDescription}?`"
+    @confirmed="deliverOrderConfirmed"
   >
   </confirmation-dialog>
         <h3 class="mt-5 mb-3">Orders</h3>
@@ -106,7 +103,9 @@
     :orders="orders"
     :showId="true"
     :showDates="true"
-    @cancel="cancelOrder"
+    :showDeliverButton="true"
+    :showCancelButton="false"
+    @deliver="deliverOrder"
   ></order-table>
   <template class="paginator">
     <pagination

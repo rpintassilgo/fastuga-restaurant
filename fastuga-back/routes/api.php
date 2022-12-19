@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\api\AuthController;
 
 //Route::post('login', [AuthController::class, 'login']);
@@ -52,7 +53,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('products', [ProductController::class, 'createProduct']);
     Route::put('products/{id}', [ProductController::class, 'editProduct']);
     Route::delete('products/{id}', [ProductController::class,'deleteProduct']);
-    Route::post('products/{id}/image', [ProductController::class, 'uploadProductImage']);
+    Route::post('products/image', [ProductController::class, 'uploadProductImage']);
 
     // USERS
     Route::get('users', [UserController::class, 'showAllUsers']);
@@ -61,13 +62,18 @@ Route::middleware('auth:api')->group(function (){
     Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
     Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
+    Route::put('users/block', [UserController::class, 'blockUser']);
+    Route::put('users/unblock', [UserController::class, 'unblockUser']);
     Route::put('users/{id}', [UserController::class, 'editUserProfile']);
     Route::put('users/{id}/block', [UserController::class, 'blockUserAccount']); // isto podia ser query parameter
     Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
+    Route::post('users/image', [UserController::class, 'uploadUserImage']);
 
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'showAllCustomers']);
     Route::get('customers/{id}', [CustomerController::class, 'showCustomer']);
+    Route::put('customers/block', [CustomerController::class, 'blockCustomer']);
+    Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer']);
     Route::put('customers/{id}', [CustomerController::class, 'editCustomerProfile']);
     Route::delete('customers/{id}', [CustomerController::class,'deleteCustomerAccount']);
 
@@ -81,6 +87,11 @@ Route::middleware('auth:api')->group(function (){
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
+    // ORDER ITEMS
+    Route::get('orderitems', [OrderItemController::class, 'showOrderItems']);
+    Route::get('orderitems/hotdishes', [OrderItemController::class, 'showOrderItems']);
+    Route::get('orderitems/{status}', [OrderItemController::class, 'showHotDishesByStatus']);
 
     
     

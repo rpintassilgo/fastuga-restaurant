@@ -164,7 +164,7 @@ const clickMenuOption = () => {
                 Pedidos Atuais
               </router-link>
             </li>-->
-            <div v-if="userStore.user?.type != 'C'">
+            <div v-if="userStore.user?.type == 'EM'">
               <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                 <router-link
                   class="nav-link w-100 me-3"
@@ -182,6 +182,19 @@ const clickMenuOption = () => {
                   @click="clickMenuOption"
                 >
                   <i class="bi bi-xs bi-plus-circle"></i>
+                </router-link>
+              </li>
+            </div>
+            <div v-if="userStore.user?.type == 'EC' || userStore.user?.type == 'ED'">
+              <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                <router-link
+                  class="nav-link w-100 me-3"
+                  :class="{ active: $route.name === 'ProductsVisualization' }"
+                  :to="{ name: 'ProductsVisualization' }"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-bag"></i>
+                  Products
                 </router-link>
               </li>
             </div>
@@ -234,6 +247,14 @@ const clickMenuOption = () => {
                 :to="{ name: 'OrdersFromCustomer', params: { id: userStore.user?.id } }" @click="clickMenuOption">
                 <i class="bi bi-file-text"></i>
                 Orders <!-- Orders do cliente -->
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="userStore.user?.type == 'ED'">
+                <!-- Mudar A pelos corretos da base de dados -->
+              <router-link class="nav-link" :class="{ active: $route.name === 'OrdersDelivery' }"
+                :to="{ name: 'OrdersDelivery'  }" @click="clickMenuOption">
+                <i class="bi bi-file-text"></i>
+                Orders <!-- Delivery Emplyee Orders -->
               </router-link>
             </li>
             <li class="nav-item" v-if="userStore.user?.type == 'C'">

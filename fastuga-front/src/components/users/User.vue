@@ -1,11 +1,15 @@
 <script setup>
-  import { ref, watch, inject } from 'vue'
+  import { ref, watch, inject, computed } from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
+  import { useUserStore } from "../../stores/user.js"
+  import axios from 'axios'
   
   const router = useRouter()  
-  const axios = inject('axios')
+  const axios2 = inject('axios')
   const toast = inject('toast')
+  const userStore = useUserStore()
+
 
   const props = defineProps({
       id: {
@@ -26,6 +30,8 @@
       }
   }
 
+  const operation = computed( () => (!props.id || props.id < 0) ? 'insert' : 'update')
+
   let originalValueStr = ''
   const loadUser = (id) => {    
     originalValueStr = ''
@@ -34,7 +40,7 @@
         user.value = newUser()
         originalValueStr = dataString()
       } else {
-        axios.get('users/' + id)
+        axios2.get('users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataString()
@@ -45,23 +51,79 @@
       }
   }
 
-  const save = () => {
+    const imageUpload = async () => {
+      let url = ""
+      if(user.value.photo_file != null){
+            let formData = new FormData()
+            formData.append('photo_file',user.value.photo_file)
+            try {
+                let response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/api/users/image`,formData, 
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': "Bearer " + sessionStorage.getItem('token')
+                  }
+                })
+
+                console.log("photo_url: " + JSON.stringify(response.data))
+                url = response.data
+
+            } catch (error) {
+              console.log("erro: " + error.message)
+            }
+      }
+      return url
+  }
+
+  const save = async () => {
       errors.value = null
-      axios.put('users/' + props.id, user.value)
-        .then((response) => {
-          user.value = response.data.data
-          originalValueStr = dataString()
-          toast.success('User #' + user.value.id + ' was updated successfully.')
-          router.back()
-        })
-        .catch((error) => {
-          if (error.response.status == 422) {
+      if (operation.value == 'insert') {
+        // it doesnt make sense to sign up with an image so the option to create accounts with profile pics
+        // will only we able to the manager employee account
+        if(userStore.user.type == "EM"){
+            let image = await imageUpload()
+            if(image != "") user.value.photo_url = image
+        }
+
+        axios2.post('users', user.value)
+          .then((response) => {
+            user.value = response.data.data
+            originalValueStr = dataString()
+            toast.success('User #' + user.value.id + ' was created successfully.')
+            router.back()
+          })
+          .catch((error) => {
+            if (error.response.status == 422) {
+              toast.error('User was not created due to validation errors!')
+              errors.value = error.response.data.errors
+            } else {
+              toast.error('User was not created due to unknown server error!')
+            }
+          })
+      } else {
+        let newPhoto = await imageUpload()
+        console.log("newPhoto: " + newPhoto)
+        if( newPhoto != ""){
+          user.value.photo_url = newPhoto
+          console.log("photo_url put: " + user.value.photo_url)
+        }
+        axios2.put('users/' + props.id, user.value)
+          .then((response) => {
+            user.value = response.data.data
+            originalValueStr = dataString()
+            toast.success('User #' + user.value.id + ' was updated successfully.')
+            router.back()
+          })
+          .catch((error) => {
+            console.log("error update: " + error.message)
+            if (error.response.status == 422) {
               toast.error('User #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors
             } else {
               toast.error('User #' + props.id + ' was not updated due to unknown server error!')
             }
-        })
+          })
+      }
   }
 
   const cancel = () => {

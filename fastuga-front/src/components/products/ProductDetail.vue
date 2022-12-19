@@ -4,7 +4,6 @@ import { ref, watch, computed, inject, toDisplayString } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
-const axiosImage = inject('axiosImage')
 const toast = inject('toast')
 
 const props = defineProps({
@@ -18,7 +17,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","photo"]);
 
 const editingProduct = ref(props.product);
 let photoUrl = ref("");
@@ -47,34 +46,6 @@ const imageChange = (event) => {
   return photoUrl;
 }
 
-const imageUpload = (e) => {
-  if(editingProduct.value.photo_file == null){
-    toast.error("Photo not found.")
-  } 
-  else{
-    console.log("Entraste aqui")
-
-        console.log("URL: " + photoUrl);
-
-
-        let formData = new FormData()
-        //formData.append('photo_file', editingProduct.value.photo_file)
-        // formData.append('')
-        formData.append('file', editingProduct.value.photo_file) 
-
-        let config = {
-          header: {
-            'Content-Type' : 'multipart/form-data'
-          }
-        }
-        
-        axios.post(`/products/${editingProduct.value.id}/image`, formData, config)
-          .then(res=> {
-            console.log("Response", res.data)
-          })
-          .catch(err=>console.log(err))              
-  }
-}
 
 
 const save = () => {
@@ -154,13 +125,9 @@ const cancel = () => {
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
           </div>
-
-              <div class="form-group text-center">
-                <form @submit.prevent="imageUpload">
-                <input type="file" accept="image/*" class="form-control-file" id="actual-btn" @change="imageChange"/>
-                <input class="btn-new-one" type="submit" value="Upload">
-                </form>
-              </div>
+          <div class="form-control text-center">
+          <input type="file" accept="image/*" class="form-control-file" id="actual-btn" v-on:change="imageChange"/>
+          <!--<label class="btn-new-one" @click="imageUpload">Upload a photo</label>      -->
           
         </div>
       </div>

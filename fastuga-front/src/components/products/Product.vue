@@ -2,11 +2,12 @@
   import { ref, watch, computed, onMounted, inject } from 'vue'
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
   import { useProductStore } from "../../stores/product.js"
+  import axios from 'axios'
   
   import ProductDetail from "./ProductDetail.vue"
 
   const router = useRouter()  
-  const axios = inject('axios')
+  const axios2 = inject('axios')
   const toast = inject('toast')
   const productStore = useProductStore()
 
@@ -33,7 +34,7 @@
         product.value = newProduct()
         originalValueStr = dataString()
       } else {
-        axios.get('products/' + id)
+        axios2.get('products/' + id)
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataString()
@@ -44,46 +45,66 @@
       }
   }
 
-  
-  const imageUpload = () => {
-      if(product.value.photo_file == null){
-        //toast.error("Photo not found.")
-      } else{
-          try {
+  const imageUpload = async () => {
+      let url = ""
+      if(product.value.photo_file != null){
             let formData = new FormData()
-            formData.append('photo_file',editingProduct.photo_file)
-            axiosImage.defaults.common.Authorization = "Bearer " + sessionStorage.getItem('token')
+            formData.append('photo_file',product.value.photo_file)
+            try {
+                let response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/api/products/image`,formData, 
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': "Bearer " + sessionStorage.getItem('token')
+                  }
+                })
 
-            axiosImage.post(`products/${photo.value.id}/image`,formData)
-                      .then(() => toast.success("Photo uploaded successfully!"))
-          } catch (error) {
-            toast.error("Internal server error. Selected photo not uploaded!")
-            console.log(error)
-          }
+                console.log("photo_url: " + JSON.stringify(response.data))
+                url = response.data
+
+            } catch (error) {
+              console.log("erro: " + error.message)
+            }
       }
+      return url
   }
 
+  const save = async () => {
 
-  const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post('products', product.value)
-          .then((response) => {
-            product.value = response.data.data
-            originalValueStr = dataString()
-            toast.success('Product #' + product.value.id + ' was created successfully.')
-            router.back()
-          })
-          .catch((error) => {
-            if (error.response.status == 422) {
-              toast.error('Product was not created due to validation errors!')
-              errors.value = error.response.data.errors
-            } else {
-              toast.error('Product was not created due to unknown server error!')
-            }
-          })
+        try {
+            product.value.photo_url = await imageUpload()
+            console.log("photo_url post: " + JSON.stringify(product.value.photo_url))
+            if(product.value.photo_url == "") throw new Error('Product was not created because no photo was uploaded!');
+            axios2.post('products', product.value)
+              .then((response) => {
+                product.value = response.data.data
+                originalValueStr = dataString()
+                toast.success('Product #' + product.value.id + ' was created successfully.')
+                router.back()
+              })
+              .catch((error) => {
+                if (error.response.status == 422) {
+                  toast.error('Product was not created due to validation errors!')
+                  errors.value = error.response.data.errors
+                } else {
+                  toast.error('Product was not created due to unknown server error!')
+                }
+              })
+          
+        } catch (error) {
+          toast.error('Product was not created because no photo was uploaded!');
+          console.log("erro upload foto: " + error.message)
+        }
       } else {
-        axios.put('products/' + props.id, product.value)
+        let newPhoto = await imageUpload()
+        console.log("newPhoto: " + newPhoto)
+        if( newPhoto != ""){
+          product.value.photo_url = newPhoto
+          console.log("photo_url put: " + product.value.photo_url)
+        }
+        axios2.put('products/' + props.id, product.value)
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataString()
@@ -91,6 +112,7 @@
             router.back()
           })
           .catch((error) => {
+            console.log("error update: " + error.message)
             if (error.response.status == 422) {
               toast.error('Product #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors

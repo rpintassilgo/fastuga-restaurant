@@ -3,8 +3,9 @@ import { ref, computed, watch, inject } from "vue"
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user.js"
 
-
+const axios = inject("axios")
 const serverBaseUrl = inject("serverBaseUrl")
+const toast = inject("toast")
 const userStore = useUserStore()
 const axios = inject("axios")
 const toast = inject("toast")
@@ -68,13 +69,6 @@ const userToDeleteDescription = computed(() => {
 })
 
 
-const userBlock = computed(() => {
-  return userToBlock.value
-    ? `#${userToBlock.value.id} `
-    : ""
-})
-
-
 watch(
   () => props.users,
   (newUsers) => {
@@ -96,7 +90,9 @@ const ordersClick = (user) => {
   emit("orders", user)
 }
 
-
+const blockClick = (user) => {
+  emit("block", user)
+}
 
 const canViewUserDetail  = (userId) => {
   if (!userStore.user) {
@@ -116,20 +112,6 @@ const dialogConfirmedDelete = () => {
       console.log(error)
     })
 }
-
-/*
-const dialogConfirmedblock = () => {
-  axios
-    .put("users/" + userToBlock.value.id + "/block")
-    .then((response) => {
-      emit("blocked", response.data)
-      toast.info("User " + userBlock.value + " was blocked")
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-*/
 
 
 const deleteClick = (user) => {
@@ -156,27 +138,14 @@ const blockClick = (user) => {
 </script>
 
 <template>
-
-  <!-- 
-<confirmation-dialog
-    ref="blockConfirmationDialog"
-    confirmationBtn="Block user"
-    :msg="`Do you really want to block user ${userBlock}?`"
-    @confirmed="dialogConfirmedblock"
-  >
-  </confirmation-dialog>
--->
-   <confirmation-dialog
+    <confirmation-dialog
     ref="deleteConfirmationDialog"
     confirmationBtn="Delete user"
     :msg="`Do you really want to delete user ${userToDeleteDescription}?`"
     @confirmed="dialogConfirmedDelete"
-  >
-  </confirmation-dialog>
+    >
+    </confirmation-dialog>
 
-  
-
-  <!-- meter aqui um filtro por tipo de utilizador -->
   <table class="table">
     <thead>
       <tr>
@@ -214,8 +183,9 @@ const blockClick = (user) => {
             <!-- 
             <button 
               class="btn btn-xs btn-light" 
-              @click="blockClick(user)" v-if="showBlockButton">
-              <i class="bi bi-xs bi-lock"></i>
+              @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+              <i v-if="user.blocked == 1" class="bi bi-xs bi-lock"></i>
+              <i v-else class="bi bi-xs bi-unlock"></i>
             </button>
           -->
 

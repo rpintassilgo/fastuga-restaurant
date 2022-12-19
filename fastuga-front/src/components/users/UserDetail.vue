@@ -17,10 +17,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","photo"]);
+
 
 const editingUser = ref(props.user)
 const photoUrl = ref("");
+
 
 watch(
   () => props.user,
@@ -37,24 +39,17 @@ const photoFullUrl = computed(() => {
   return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
     : avatarNoneUrl) : photoUrl.value
- 
 })
 
-
-
-
 const imageChange = (event) => {
-editingUser.value.photo_file = event.target.files[0];
-//FALTA O CODIGO PARA ALTERAR A IMAGEM AQUI
-
-  //file.value = input.target.files[0];
-  //editingUser.value.photo_file = input.target.files[0];
-
+  editingUser.value.photo_file = event.target.files[0];
+  //photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
 }
 
 const save = () => {
   emit("save", editingUser.value);
 }
+
 const cancel = () => {
   emit("cancel", editingUser.value);
 }
@@ -107,12 +102,9 @@ const cancel = () => {
             id="inputPassword"
             placeholder="Password"
             required
-            v-model="editingUser.email"
+            v-model="editingUser.password"
           />
-          <field-error-message
-            :errors="errors"
-            fieldName="email"
-          ></field-error-message>
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
 
         <div class="mb-3">

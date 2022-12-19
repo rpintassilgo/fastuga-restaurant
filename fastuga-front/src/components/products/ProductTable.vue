@@ -1,6 +1,6 @@
 <script setup>
 import avatarNoneUrl from '@/assets/avatar-none.png'
-import { ref, watch, watchEffect, computed, inject } from "vue"
+import { ref, watch, computed, inject } from "vue"
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject("axios")

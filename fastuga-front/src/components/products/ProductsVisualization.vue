@@ -33,17 +33,6 @@
     loadProducts()
   }
   
-  const editProduct = (product) => {
-    router.push({ name: 'Product', params: { id: product.id } })
-  }
-
-  const deletedProduct = (deletedProduct) => {
-      let idx = products.value.findIndex((p) => p.id === deletedProduct.id)
-      if (idx >= 0) {
-        products.value.splice(idx, 1)
-      }
-  }
-
   onMounted (() => {
     loadProducts()
   })
@@ -73,8 +62,8 @@
   <product-table
     :products="products"
     :showId="false"
-    @edit="editProduct"
-    @deleted="deletedProduct"
+    :showEditButton="false"
+    :showDeleteButton="false"
   ></product-table>
   <template class="paginator">
     <pagination
