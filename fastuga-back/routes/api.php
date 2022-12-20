@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\api\AuthController;
 
 //Route::post('login', [AuthController::class, 'login']);
@@ -83,6 +84,10 @@ Route::middleware('auth:api')->group(function (){
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
+
+    // STATISTICS
+    Route::get('statistics/{date}', [StatisticsController::class, 'countUser']);
 
     
     
