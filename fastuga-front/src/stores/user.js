@@ -49,7 +49,7 @@ export const useUserStore = defineStore('user', () => {
     async function loadUser () {
         try {
             const response = await axios.get('users/me')
-            console.log("logged user: " + JSON.stringify(response.data.data))
+            console.log("logged user: " + JSON.stringify(response.data.data)) 
             user.value = response.data.data
             console.log()
            // console.log("loadUser: " + response.data.data)
@@ -120,6 +120,12 @@ export const useUserStore = defineStore('user', () => {
         clearUser()
         return false
     }
+
+    async function changePassword($id,credentials){
+        // handle error on function call
+        await axios.put('users/'+$id+'/password',credentials)
+    }
     
-    return { user, userId, userPhotoUrl, login, signUpCustomer, loadCartFromLocalStorage, addProductToCart, removeProductFromCart, emptyCart, loadUser, logout, restoreToken }
+    return { user, userId, userPhotoUrl, login, signUpCustomer, loadCartFromLocalStorage, addProductToCart, 
+        removeProductFromCart, emptyCart, loadUser, logout, restoreToken, changePassword }
 })

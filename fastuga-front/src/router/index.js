@@ -15,6 +15,7 @@ import ProductsVisualization from "../components/products/ProductsVisualization.
 import Orders from "../components/orders/Orders.vue"
 import OrdersDelivery from "../components/orders/OrdersDelivery.vue"
 import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
+import OrderItems from "../components/orderitems/OrderItems.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 
@@ -84,6 +85,11 @@ const router = createRouter({
       path: '/orders-delivery',
       name: 'OrdersDelivery',
       component: OrdersDelivery,
+    },
+    {
+      path: '/order-items',
+      name: 'OrderItems',
+      component: OrderItems,
     },
     {
       path: '/orders/customer/:id',

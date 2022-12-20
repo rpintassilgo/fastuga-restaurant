@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Customer;
+use App\Models\OrderItem;
 
 class User extends Authenticatable
 {
@@ -22,7 +24,7 @@ class User extends Authenticatable
         'password',
         'type', // C - customer , EC - Employee Chef , ED - Employee Delivery , EM - Employee Manager
         'blocked',
-        'photo_url' // será que isto é assim? o photo url?
+        'photo_url' 
     ];
 
 
@@ -37,6 +39,12 @@ class User extends Authenticatable
     ];
 
     public function customer(){
-        return $this->hasOne('App\Models\Customer');
+        return $this->hasOne(Customer::class);
     }
+
+
+    /*
+    public function orderItems(){ // users that are chef employees can cook many hot dishes (order items)
+        return $this->hasMany(OrderItem::class,'preparation_by','id');
+    }*/
 }

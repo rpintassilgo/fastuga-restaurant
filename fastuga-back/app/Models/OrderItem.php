@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 
 class OrderItem extends Model
 {
@@ -38,4 +39,9 @@ class OrderItem extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
+
+    /*
+    public function chef(){
+        return $this->belongsTo(User::class,'preparation_by','id');
+    }*/
 }

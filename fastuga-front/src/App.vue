@@ -257,6 +257,14 @@ const clickMenuOption = () => {
                 Orders <!-- Delivery Emplyee Orders -->
               </router-link>
             </li>
+            <li class="nav-item" v-if="userStore.user?.type == 'EC'">
+                <!-- Mudar A pelos corretos da base de dados -->
+              <router-link class="nav-link" :class="{ active: $route.name === 'OrderItems' }"
+                :to="{ name: 'OrderItems'  }" @click="clickMenuOption">
+                <i class="bi bi-egg-fried"></i>
+                Order Items <!-- Delivery Emplyee Orders -->
+              </router-link>
+            </li>
             <li class="nav-item" v-if="userStore.user?.type == 'C'">
                 <!-- Mudar A pelos corretos da base de dados -->
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductsCart' }"

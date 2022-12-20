@@ -1,6 +1,10 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, inject } from 'vue'
+  import { useUserStore } from "../../stores/user.js"
   
+  const userStore = useUserStore()
+  const toast = inject("toast")
+
   const passwords = ref({
         current_password: '',
         password: '',
@@ -10,8 +14,18 @@
   const emit = defineEmits(['changedPassword'])
 
   const changePassword = () => {
-      // FALTA FAZER O LOGIN
-      emit('changedPassword')
+      try {
+        if(passwords.value.password != passwords.value.password_confirm) throw new Error("Passwords don't match!");
+        if(passwords.value.password == "") throw new Error("Insert new password!");
+        userStore.changePassword(userStore.user.id,{
+          'current_password': passwords.value.current_password,
+          'new_password': passwords.value.password
+        })
+        toast.success("Password change success!")
+      } catch (error) {
+        console.log(error.message)
+        toast.error("Password change failed!")
+      }
   }
 </script>
 
@@ -58,7 +72,7 @@
         <label
           for="inputPasswordConfirm"
           class="form-label"
-        >Password Confirmmation</label>
+        >Repeat new password</label>
         <input
           type="password"
           class="form-control"

@@ -7,8 +7,10 @@ use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\ImageRequest;
+use App\Http\Requests\PasswordRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class UserController extends Controller // falta adicionar try and catch e DB neste
@@ -130,6 +132,25 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         //$product->save();
 
         return (string) $nameString;
+    }
+
+    // all users
+    public function changePassword(PasswordRequest $request,$id){
+        try{
+            DB::beginTransaction();
+
+            $user = User::findOrFail( $id );
+            if(!Hash::check($request->current_password,$user->password)) throw new \ErrorException('Wrong password!');
+            $user->password = bcrypt($request->new_password);
+
+            $user->save();
+
+            DB::commit();
+        } catch(\Throwable $error){
+            DB::rollback();
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+        return new UserResource( $user );
     }
 
 }
