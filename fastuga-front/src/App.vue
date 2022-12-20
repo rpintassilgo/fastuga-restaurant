@@ -1,34 +1,34 @@
 <script setup>
-import { useRouter, RouterLink, RouterView } from "vue-router"
-import { ref, inject } from "vue"
-import { useUserStore } from "./stores/user.js"
+import { useRouter, RouterLink, RouterView } from "vue-router";
+import { ref, inject } from "vue";
+import { useUserStore } from "./stores/user.js";
 
-const router = useRouter()  
-const toast = inject("toast")
-const userStore = useUserStore()
+const router = useRouter();
+const toast = inject("toast");
+const userStore = useUserStore();
 
-const buttonSidebarExpand = ref(null)
+const buttonSidebarExpand = ref(null);
 
 const logout = async () => {
   if (await userStore.logout()) {
-    toast.success("User has logged out of the application.")
-    clickMenuOption()
-    router.push({name: 'Login'})
+    toast.success("User has logged out of the application.");
+    clickMenuOption();
+    router.push({ name: "Login" });
   } else {
-    toast.error("There was a problem logging out of the application!")
+    toast.error("There was a problem logging out of the application!");
   }
-}
+};
 
 const clickMenuOption = () => {
   if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
-    buttonSidebarExpand.value.click()
+    buttonSidebarExpand.value.click();
   }
-}
-
+};
 </script>
 
 <template>
-  <div class="topbar">
+  <div>
+    <div class="topbar">
         <marquee direction="up" scrolldelay="500" scrollamount="3" style="color: white;text-align:center">
             Registe-se para ter acesso a desconstos baseados em pontos
         </marquee>
@@ -349,19 +349,20 @@ const clickMenuOption = () => {
       </main>
     </div>
   </div>
+  </div>
 </template>
 
 <style>
 @import "./assets/dashboard.css";
 
-.topbar{
-    color: white;
-    text-align:center;
-    background-color: rgb(0, 0, 0);
-    height:32px;
-    overflow:hidden;
-    position:relative;
-    width: 100%;
+.topbar {
+  color: white;
+  text-align: center;
+  background-color: rgb(0, 0, 0);
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 }
 
 .logo {
@@ -387,8 +388,6 @@ const clickMenuOption = () => {
   padding-top: 1rem;
   margin-left: 50%;
 }
-
-
 
 .dropdown-item {
   font-size: 0.875rem;

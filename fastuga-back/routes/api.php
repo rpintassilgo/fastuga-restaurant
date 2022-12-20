@@ -9,27 +9,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\api\AuthController;
 
-//Route::post('login', [AuthController::class, 'login']);
-
-// temporario enquanto nao tenho o middleware feito
-/* Route::post('customers', [CustomerController::class, 'signUpCustomer']);
-Route::post('users', [UserController::class, 'signUpUser']);
-Route::get('products', [ProductController::class, 'showAllProducts']);
-Route::get('users', [UserController::class, 'showAllUsers']);
-Route::get('products/colddishes', [ProductController::class, 'showColdDishes']);
-Route::get('products/hotdishes', [ProductController::class, 'showHotDishes']);
-Route::get('products/drinks', [ProductController::class, 'showDrinks']);
-Route::get('products/desserts', [ProductController::class, 'showDesserts']);
-Route::get('customers', [CustomerController::class, 'showAllCustomers']);
-Route::get('users/chef', [UserController::class, 'showAllChefEmployees']);
-Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees']);
-Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
-Route::get('orders', [OrderController::class, 'showAllOrders']);
-Route::get('orders/{status}', [OrderController::class, 'showStatusOrders']);
-Route::get('orders/customer/{id}', [OrderController::class, 'showOrdersFromCustomer']);
-Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatusOrdersFromCustomer']);
-Route::get('customers/{id}', [CustomerController::class, 'showCustomer']); */
-
 
 Route::post('customers', [CustomerController::class, 'signUpCustomer']);
 Route::post('login', [AuthController::class, 'login']);
@@ -56,21 +35,26 @@ Route::middleware('auth:api')->group(function (){
     Route::post('products/image', [ProductController::class, 'uploadProductImage']);
 
     // USERS
-    Route::get('users', [UserController::class, 'showAllUsers']);
-    Route::get('users/chef', [UserController::class, 'showAllChefEmployees']);
+    Route::get('users', [UserController::class, 'index'])->middleware('can:viewAny,App\Models\User');
+    Route::get('users/chef', [UserController::class, 'showAllChefEmployees'])->middleware('can:viewAllChefEmployees,App\Models\User');
+    Route::get('users/{id}', [UserController::class, 'show'])->middleware('can:view,id');
+    Route::post('users/image', [UserController::class, 'store_uploadUserImage'])->middleware('can:storeuploadUserImage,App\Models\User');
+    Route::put('users/{id}', [UserController::class, 'update'])->middleware('can:update,id');
+    Route::delete('users/{id}', [UserController::class,'destroy'])->middleware('can:destroy,id');
+    Route::put('users/block', [UserController::class, 'update_blockUser'])->middleware('can:updateblockUser,App\Models\User');
+    Route::put('users/unblock', [UserController::class, 'update_unblockUser'])->middleware('can:updateunblockUser,App\Models\User');
+
+    
+
+
+
     Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees']);
     Route::get('users/manager', [UserController::class, 'showAllManagerEmployees']);
-    Route::get('users/{id}', [UserController::class, 'showUser']);
     Route::post('users', [UserController::class, 'signUpUser']);
-    Route::put('users/block', [UserController::class, 'blockUser']);
-    Route::put('users/unblock', [UserController::class, 'unblockUser']);
-    Route::put('users/{id}', [UserController::class, 'editUserProfile']);
-    Route::put('users/{id}/block', [UserController::class, 'blockUserAccount']); // isto podia ser query parameter
-    Route::delete('users/{id}', [UserController::class,'deleteUserAccount']);
-    Route::post('users/image', [UserController::class, 'uploadUserImage']);
+    // Route::put('users/{id}/block', [UserController::class, 'blockUserAccount']); // isto podia ser query parameter
 
     // CUSTOMERS
-    Route::get('customers', [CustomerController::class, 'showAllCustomers']);
+    Route::get('customers', [CustomerController::class, 'index']);
     Route::get('customers/{id}', [CustomerController::class, 'showCustomer']);
     Route::put('customers/block', [CustomerController::class, 'blockCustomer']);
     Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer']);

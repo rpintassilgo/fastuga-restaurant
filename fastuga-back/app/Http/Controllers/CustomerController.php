@@ -7,13 +7,15 @@ use App\Models\User;
 use App\Models\Customer;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
 
-    public function showAllCustomers() // nao tou a dar load aqui tbm acho eu
+    public function /*showAllCustomers*/index() // nao tou a dar load aqui tbm acho eu
     {
+        $this->authorize('viewAny', Customer::class);
         $customers = User::where('type','C')->paginate(20);
         return UserResource::collection($customers);
     }
