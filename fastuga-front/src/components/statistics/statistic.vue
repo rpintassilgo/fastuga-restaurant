@@ -5,29 +5,39 @@ import axios from 'axios';
 const statistics = ref([])
 const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
 
+
 async function var2022(year) {
 
       try {
+        console.log("ENTROU")
         //axios.defaults.headers.common['Authorization'] = "Bearer " + sessionStorage.getItem('token');
         const resp = await axios.get(serverBaseUrl + '/api/statistics/' + year , 
+        
         {
           headers: {
             'Content-Type': 'application/json',
             'Authorization' : "Bearer " + sessionStorage.getItem('token'),
-            "Access-Control-Allow-Origin": "*",
-            'Access-Control-Allow-Credentials':true,
-            'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
 
           }
         })
+        console.log("RESP ->" + resp)
         statistics.value = resp.data
+        
         return statistics.value
       
       } catch (error) {
         console.log(error)
       }
 }
- await(var2022(2022));
+const promise1 = Promise.resolve(await(var2022(2022)));
+promise1.then((value) => {
+  console.log(value);
+  // expected output: 123
+});
+
+
+ 
+ 
 
 export default {
   name: 'Hello',
@@ -44,7 +54,7 @@ export default {
         labels: ['2017', '2018', '2019', '2020', '2021', '2022'],
         datasets: [{
           label: '# of Users',
-          data: [0,2,3,5,10,5,var2022(2022)],
+          data: [1,12,3,5,10,5],
           borderWidth: 1
         }]
       },
@@ -58,7 +68,7 @@ export default {
     });
 
     myChart;
-  }
+  },
 }
   </script>
 
