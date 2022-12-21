@@ -14,7 +14,7 @@ use Carbon\Carbon;
 class UserController extends Controller // falta adicionar try and catch e DB neste
 {
 
-    public function /*showAllUsers*/index()
+    public function index()
     {
         return UserResource::collection(User::paginate(20));
     }
@@ -38,7 +38,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
     }
 
 
-    public function /*showUser*/show($id)
+    public function show($id)
     {
         $user = User::findOrFail($id);
         return new UserResource($user);
@@ -74,7 +74,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
     }
 
     // this function cannot be used to edit customers 
-    public function /*editUserProfile*/update(UserRequest $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $user = User::findOrFail( $request->$id );
         $user->name = $request->input('name');
@@ -89,7 +89,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
-    public function update_blockUser(UserRequest $request)
+    public function blockUser(UserRequest $request)
     {
         $user = User::findOrFail( $request->id );
         $user->blocked = 1;
@@ -99,7 +99,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
-    public function update_unblockUser(UserRequest $request)
+    public function unblockUser(UserRequest $request)
     {
         $user = User::findOrFail( $request->id );
         $user->blocked = 0;
@@ -109,7 +109,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
-    public function /*deleteUserAccount*/destroy($id)
+    public function destroy($id)
     {
         $user = User::findOrFail( $id );
         if( $user->delete() ){
@@ -117,7 +117,7 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
-    public function store_uploadUserImage(ImageRequest $request){
+    public function uploadUserImage(ImageRequest $request){
         $requestData = $request->validated();
 
         if($requestData['photo_file']){

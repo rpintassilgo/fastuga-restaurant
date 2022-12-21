@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
 {
@@ -27,10 +28,10 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, User $model) 
+    public function view(User $user) 
     {
-        return $user->type == "EM" || $user->id == $model->id;
-
+        $id = request()->route()->parameter('id');
+        return $user->type == "EM" || $user->id == $id;
     }
 
     /**
@@ -41,7 +42,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -51,9 +52,10 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, User $model)
+    public function update(User $user)
     {
-        return $user->type == "EM" || $user->id == $model->id;
+        $id = request()->route()->parameter('id');
+        return $user->type == "EM" || $user->id == $id;
     }
 
     /**
@@ -63,10 +65,9 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user)
     {
         return $user->type == "EM";
-
     }
 
     /**
@@ -76,10 +77,10 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, User $model)
-    {
-        //
-    }
+    // public function restore(User $user, User $model)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
@@ -88,25 +89,19 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
+    // public function forceDelete(User $user, User $model)
+    // {
+    //     //
+    // }
+
+
+    public function showMe()
     {
-        //
+        return Auth::check();
     }
 
-    public function updateblockUser(User $user, User $model)
+    public function blockOrUnblockUser(User $user)
     {
         return $user->type == "EM";
-    }
-
-    public function updateunblockUser(User $user, User $model)
-    {
-        return $user->type == "EM";
-    }
-
-    public function storeuploadUserImage(User $user, User $model)
-    {
-        return $user->type == "EM" || $user->id == $model->id;
-
-
     }
 }

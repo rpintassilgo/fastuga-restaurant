@@ -16,7 +16,7 @@ use App\Models\Customer;
 class OrderController extends Controller
 {
 
-    public function showAllOrders()
+    public function index()
     {
         return OrderResource::collection(Order::with('orderItems.product')->paginate(20));
     }

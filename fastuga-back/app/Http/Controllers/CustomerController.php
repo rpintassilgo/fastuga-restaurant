@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\DB;
 class CustomerController extends Controller
 {
 
-    public function /*showAllCustomers*/index() // nao tou a dar load aqui tbm acho eu
+    public function index() // nao tou a dar load aqui tbm acho eu
     {
         $this->authorize('viewAny', Customer::class);
         $customers = User::where('type','C')->paginate(20);
         return UserResource::collection($customers);
     }
 
-    public function showCustomer($id)
+    public function show($id)
     {
         $user = User::where('type','C')->findOrFail($id);
         return new UserResource($user);
@@ -62,7 +62,7 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
-    public function editCustomerProfile(CustomerRequest $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
         try{
             DB::beginTransaction();
@@ -118,7 +118,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function deleteCustomerAccount($id)
+    public function destroy($id)
     {
         $user = User::where('type','C')->findOrFail( $id );
         if( $user->delete() ){

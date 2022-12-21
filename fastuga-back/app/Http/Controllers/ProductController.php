@@ -14,12 +14,12 @@ use Exception;
 class ProductController extends Controller
 {
   
-    public function showAllProducts()
+    public function index()
     {
         return ProductResource::collection(Product::paginate(10));
     }
 
-    public function showProduct($id)
+    public function show($id)
     {
         $product = Product::findOrFail($id);
         return new ProductResource($product);
@@ -49,7 +49,7 @@ class ProductController extends Controller
         return ProductResource::collection($product);
     }
 
-    public function createProduct(ProductRequest $request)
+    public function store(ProductRequest $request)
     {
         try{
             DB::beginTransaction();
@@ -74,7 +74,7 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function editProduct(ProductRequest $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         try{
             DB::beginTransaction();
@@ -98,7 +98,7 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function deleteProduct($id)
+    public function destroy($id)
     {
         $product = Product::findOrFail( $id );
         if( $product->delete() ){
