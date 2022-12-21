@@ -16,6 +16,6 @@ class StatisticsController extends Controller
         ->whereYear('created_at', date($date))
         ->count();
         dd($count);
-    return UserResource::collection($count);
+    return $count;
   }
 }

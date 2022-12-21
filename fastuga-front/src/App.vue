@@ -72,6 +72,7 @@ const clickMenuOption = () => {
             <img src="@/assets/fastuga-carrinho.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
           </li>
+          
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
             :to="{ name: 'Register' }" @click="clickMenuOption">
@@ -86,6 +87,7 @@ const clickMenuOption = () => {
               Login
             </router-link>
           </li>
+          
           <li class="nav-item dropdown" v-show="userStore.user">
             <a class="nav-link dropdown-toggle" href="#"
               id="navbarDropdownMenuLink"
@@ -183,6 +185,20 @@ const clickMenuOption = () => {
                 >
                   <i class="bi bi-xs bi-plus-circle"></i>
                 </router-link>
+              </li>
+            </div>
+            <div v-if="userStore.user?.type != 'C'">
+              <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                <router-link
+                  class="nav-link w-100 me-3"
+                  :class="{ active: $route.name === 'Statistic' }"
+                  :to="{ name: 'Statistic' }"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-bag"></i>
+                  {{userStore.user?.type == 'C' ? "Menu" : "Statistic"}}
+                </router-link>
+
               </li>
             </div>
             <div v-if="userStore.user?.type == 'C'">
