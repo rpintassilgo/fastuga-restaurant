@@ -55,6 +55,10 @@
     deliverOrderConfirmed()
   }
 
+  const showOrderItems = (order) => {
+    router.push({ name: 'OrderItemsVisualization' , params: { order_id: order.id }})
+  }
+
 
   const orderToDeliverDescription = computed(() => {
     return orderToDeliver.value
@@ -105,7 +109,9 @@
     :showDates="true"
     :showDeliverButton="true"
     :showCancelButton="false"
+    :showOrderItemsButton="true"
     @deliver="deliverOrder"
+    @orderItems="showOrderItems"
   ></order-table>
   <template class="paginator">
     <pagination

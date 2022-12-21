@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\DB;
 class OrderItemController extends Controller
 {
 
-    // isto aqui está tudo mal, o order item nao tem tipo, tenho de arranjar maneira de aceder ao produto da order item e assim verificar o tipo do produto
-    // possivelmente nao é necessario dar hardcode, deve dar para fazer isso atraves das relacoes
-
     public function showOrderItems() 
     {
         return OrderItemResource::collection(OrderItem::paginate(20));
@@ -30,6 +27,18 @@ class OrderItemController extends Controller
     {
         return OrderItemResource::collection(OrderItem::with('product')
         ->whereRelation('product','type','hot dish')->paginate(20));
+    }
+
+    public function showHotDishesFromOrder($order_id)
+    {
+        return OrderItemResource::collection(OrderItem::with('product')
+        ->whereRelation('product','type','hot dish')->where('order_id',$order_id)->paginate(20));
+    }
+
+    public function showOrderItemsFromOrder($order_id)
+    {
+        return OrderItemResource::collection(OrderItem::with('product')
+        ->where('order_id',$order_id)->paginate(20));
     }
 
     public function showHotDishesByStatus($status)
@@ -50,6 +59,33 @@ class OrderItemController extends Controller
                 $orderItems = OrderItem::with('product'/*,'chef'*/)
                 ->whereRelation('product','type','hot dish')
                 ->where('status','R')->paginate(20);   // por alguma razao nao ta a mostrar o paginate
+                break;
+            default:
+                return response()->json(['message' => 'Invalid orderItem status!'],400);
+                break;
+        }
+        return OrderItemResource::collection($orderItems);
+    }
+
+    
+    public function showOrderItemsFromOrderByStatus($order_id,$status)
+    {
+        $orderItems = null;
+        switch ($status) {
+            case 'waiting':
+                $matchThese = ['status' => 'W', 'order_id' => $order_id];
+                $orderItems = OrderItem::with('product'/*,'chef'*/)
+                ->where($matchThese)->paginate(20);
+                break;
+            case 'preparing':
+                $matchThese = ['status' => 'P', 'order_id' => $order_id];
+                $orderItems = OrderItem::with('product'/*,'chef'*/)
+                ->where($matchThese)->paginate(20);
+                break;
+            case 'ready':
+                $matchThese = ['status' => 'R', 'order_id' => $order_id];
+                $orderItems = OrderItem::with('product'/*,'chef'*/)
+                ->where($matchThese)->paginate(20);   // por alguma razao nao ta a mostrar o paginate
                 break;
             default:
                 return response()->json(['message' => 'Invalid orderItem status!'],400);

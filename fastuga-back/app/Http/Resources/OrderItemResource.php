@@ -17,12 +17,13 @@ class OrderItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'order_id' => $this->order_id,
             'order_local_number' => $this->order_local_number,
             'status' => $this->status,
             'price' => $this->price,
             'preparation_by' => $this->preparation_by,
             'notes' => $this->notes,
-            'product' => $this->whenLoaded('product')
+            'product' => $this->product
         ];
     }
 }

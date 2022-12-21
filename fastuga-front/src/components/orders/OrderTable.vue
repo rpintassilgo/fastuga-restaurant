@@ -1,4 +1,9 @@
 <script setup>
+  import { ref, onMounted } from 'vue'
+  import { useUserStore } from "../../stores/user.js"
+
+  const userStore = useUserStore()
+
   const props = defineProps({
     orders: {
       type: Array,
@@ -67,18 +72,33 @@
     showDeliverButton: {
       type: Boolean,
       default: false,
+    },
+    showOrderItemsButton: {
+      type: Boolean,
+      default: false,
     }
   })
 
-  const emit = defineEmits(["cancel","deliver"]);
+  const emit = defineEmits(["cancel","deliver","orderItems"]);
 
   const cancelClick = (order) => {
     emit("cancel", order)
   }
 
-    const deliverClick = (order) => {
+  const deliverClick = (order) => {
     emit("deliver", order)
   }
+
+  const orderItemsClick = (order) => {
+    emit("orderItems", order)
+  }
+
+  const loggedUserType = ref(null)
+        
+
+  onMounted(() => {
+    loggedUserType.value = userStore.user.type
+  })
 
 </script>
 
@@ -119,7 +139,7 @@
           class="text-end"
           v-if="showCancelButton || showDeliverButton"
         >
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-end" v-if="loggedUserType != 'C'">
             <button
               class="btn btn-xs btn-danger"
               @click="cancelClick(order)"
@@ -133,6 +153,14 @@
               @click="deliverClick(order)"
               v-if="showDeliverButton && order.status == 'R'"
             >Deliver
+            </button>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button
+              class="btn btn-xs btn-success"
+              @click="orderItemsClick(order)"
+              v-if="showOrderItemsButton && order.status != 'C'"
+            >Order Items
             </button>
           </div>
         </td>

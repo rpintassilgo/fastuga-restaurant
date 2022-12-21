@@ -17,6 +17,7 @@ import Orders from "../components/orders/Orders.vue"
 import OrdersDelivery from "../components/orders/OrdersDelivery.vue"
 import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
 import OrderItems from "../components/orderitems/OrderItems.vue"
+import OrderItemsVisualization from "../components/orderitems/OrderItemsVisualization.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 
@@ -96,6 +97,12 @@ const router = createRouter({
       path: '/order-items',
       name: 'OrderItems',
       component: OrderItems,
+    },
+    {
+      path: '/order-items/order/:order_id',
+      name: 'OrderItemsVisualization',
+      component: OrderItemsVisualization,
+      props: route => ({ order_id: parseInt(route.params.order_id) }) 
     },
     {
       path: '/orders/customer/:id',

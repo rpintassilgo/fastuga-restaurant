@@ -1,26 +1,28 @@
 <script setup>
   import { ref, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
-  import { useOrderItemsStore } from "../../stores/orderItems.js"
-  import { useOrdersStore } from "../../stores/orders.js"
   import OrderItemTable from "./OrderItemTable.vue"
 
   const router = useRouter()
 
   const axios = inject("axios")
-  const toast = inject("toast")
 
-  const ordersStore = useOrdersStore()
-  const orderItemsStore = useOrderItemsStore()
   const orderItems = ref([])
   const paginationData = ref(null)
   const page = ref(1)
   const filterByStatus = ref('waiting')
+
+  const props = defineProps({
+      order_id: {
+          type: Number,
+          default: null
+      }
+  })
   
 
- const loadHotDishes= () => {
-    const getUsersUrl = filterByStatus.value == "all" ? `orderitems/hotdishes?page=${page.value}` : 
-                                                `orderitems/hotdishes/${filterByStatus.value}?page=${page.value}`
+ const loadOrderItems= () => {
+    const getUsersUrl = filterByStatus.value == "all" ? `orderitems/order/${props.order_id}?page=${page.value}` : 
+                                                `orderitems/order/${props.order_id}/${filterByStatus.value}?page=${page.value}`
 
     axios.get(getUsersUrl)
         .then((response) => {
@@ -36,55 +38,26 @@
 
   const resetPage = () => {
     page.value = 1
-    loadHotDishes()
+    loadOrderItems()
   }
 
-  const prepareOrderItem = (orderItem) => {
-    try {
-        orderItemsStore.changeStatusOrderItem(orderItem.id,"preparing")
-        loadHotDishes()
-        toast.success("Order item #" + orderItem.id + " is being prepared!")
-    } catch (error) {
-        toast.error("Order item #" + orderItem.id + " didn't start the preparation!")
-    }
+   const goBack = () => {
+      router.back()
   }
-
-   const readyOrderItem = (orderItem) => {
-    try {
-        orderItemsStore.changeStatusOrderItem(orderItem.id,"ready")
-        checkIfOrderReady()
-        loadHotDishes()
-        toast.success("Order item #" + orderItem.id + " is ready!")    
-    } catch (error) {
-        toast.error("It was not possible to set order item #" + orderItem.id + " as ready!")
-    }
-  }
-
-  const checkIfOrderReady = async (orderItem) => {
-    try {
-      const response = await axios.get(`orderitems/${orderItem.id}`)
-      const response2 = await axios.get(`orderitems/hotdishes/order/${response.data.data.order_id}`)
-      console.log("todos os items da order: " + JSON.stringify(response2.data.data))
-      let isReady = true
-      response.data.data.forEach((order_item) => {
-        if(order_item != 'R') isReady = false
-      });
-      
-      if(isReady) ordersStore.changeStatusOrder(response.data.data.order_id,'ready')
-      
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
 
   onMounted(() => {
-    loadHotDishes()
+    loadOrderItems()
   })
 
 </script>
 
 <template>
+      <div>
+        <button
+        class="btn btn-xs btn-info"
+        @click="goBack()"
+        >Back</button>
+      </div>
       <h3 class="mt-5 mb-3">Order Items</h3>
       <div class="mx-2 mt-2 flex-grow-1">
       <label
@@ -107,8 +80,8 @@
 
   <order-item-table
     :orderItems="orderItems"
-    @ready="readyOrderItem"
-    @prepare="prepareOrderItem"
+    :showPrepareButton="false"
+    :showReadyButton="false"
   ></order-item-table>
   <template class="paginator">
     <pagination

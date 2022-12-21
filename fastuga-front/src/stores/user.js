@@ -22,14 +22,31 @@ export const useUserStore = defineStore('user', () => {
         return user.value?.id ?? -1
     })
 
+    const replacerFunc = () => {
+        const visited = new WeakSet();
+        return (key, value) => {
+          if (typeof value === "object" && value !== null) {
+            if (visited.has(value)) {
+              return;
+            }
+            visited.add(value);
+          }
+          return value;
+        };
+      };
+     
+      
+
     const loadCartFromLocalStorage = () => {
-        return localStorage.getItem(userId) != null ? JSON.parse(localStorage.getItem(userId)) : []
+        //console.log("user id do carrinho: " + JSON.stringify(userId, replacerFunc()))
+        console.log("id msm do user.id: " + userId.value)
+        return localStorage.getItem(userId.value) != null ? JSON.parse(localStorage.getItem(userId.value)) : []
     }
 
     const addProductToCart = (product) =>{
         cart.value = loadCartFromLocalStorage()
         cart.value.push(product)
-        localStorage.setItem(userId,JSON.stringify(cart.value))
+        localStorage.setItem(userId.value,JSON.stringify(cart.value))
     }
 
     const removeProductFromCart = (product) =>{
@@ -38,7 +55,7 @@ export const useUserStore = defineStore('user', () => {
         console.log("product that im trying to remove: " + JSON.stringify(product.id))
         let r = cart.value.splice(cart.value.findIndex((p) => p.id == product.id),1)
         console.log("cart after remove: " + JSON.stringify(cart.value))
-        if(r.length != 0) localStorage.setItem(userId,JSON.stringify(cart.value))
+        if(r.length != 0) localStorage.setItem(userId.value,JSON.stringify(cart.value))
     }
 
     const emptyCart = () => { // this one is not being used rn
@@ -56,6 +73,18 @@ export const useUserStore = defineStore('user', () => {
         } catch (error) {
             console.log("error from loadUser: " + error.message)
             clearUser () 
+            throw error
+        }
+    }
+
+    async function myself(){
+        try {
+            const response = await axios.get('users/me')
+            console.log("logged user: " + JSON.stringify(response.data.data)) 
+            return response.data.data
+           // console.log("loadUser: " + response.data.data)
+        } catch (error) {
+            console.log("error from myself: " + error.message)
             throw error
         }
     }

@@ -3,6 +3,7 @@
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
+
   
   const toast = inject('toast')
   const axios = inject('axios')
@@ -29,6 +30,7 @@
   })
   const userStore = useUserStore()
 
+
   const loadCart = () => {
       cart.value = userStore.loadCartFromLocalStorage()
   }
@@ -42,31 +44,36 @@
     if(userStore.user.default_payment_type == "" && userStore.user.default_payment_reference == "" && paymentMethod.value == "default"){
       toast.error("No default payment reference found")
     } else{
-          //console.log("dados: " + userStore.user.default_payment_reference + "  |   " + userStore.user.default_payment_type)
+          try {
+            if(totalPrice.value == 0) throw new Error('The cart is empty!');
+          } catch (error) {
+            toast.error("The cart is empty!")
+            return;
+          }
           try {
             
             switch (paymentMethod.value) {
                 case 'default':
                   paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
                   paymentData.value.reference = userStore.user.default_payment_reference
-                  paymentData.value.value = totalPrice
+                  paymentData.value.value = totalPrice.value
                   break;
                 case 'mbway':
                   paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice
+                  paymentData.value.value = totalPrice.value
 
                   break;
                 case 'visa':
                   paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice
+                  paymentData.value.value = totalPrice.value
 
                   break;
                 case 'paypal':
                   paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice
+                  paymentData.value.value = totalPrice.value
 
                   break;
 
@@ -82,7 +89,7 @@
           
 
             order.value.customer_id = userStore.user ? userStore.user.id : null
-            order.value.total_paid = totalPrice
+            order.value.total_paid = totalPrice.value
             order.value.payment_type = paymentData.value.type.toUpperCase()
             order.value.payment_reference = paymentData.value.reference
 
@@ -91,14 +98,18 @@
             const promises = await Promise.all(cart.value.map(item => axios.get(`orderitems/${item.id}`)))
             promises.forEach((p) => orderItems.push(p.data.data))
             order.value.order_items = orderItems
-            await axios.post('orders',order.value)
+            let r = await axios.post('orders',order.value)
+            console.log("order criada: " + r)
+
+
+            toast.success("Payment successful!")
+            userStore.emptyCart()
+            router.push({ name: 'ProductsMenu'})
 
             
-
-          
       
           } catch (error) {
-            console.log(error.message)
+            toast.error("Payment failed!")
           }
           
     }

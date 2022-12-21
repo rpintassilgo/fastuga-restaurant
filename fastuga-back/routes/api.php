@@ -13,7 +13,6 @@ use App\Http\Controllers\api\AuthController;
 Route::post('customers', [CustomerController::class, 'signUpCustomer']);
 Route::post('login', [AuthController::class, 'login']);
 
-
 Route::middleware('auth:api')->group(function (){
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('users/me', [UserController::class, 'showMyself']);
@@ -64,13 +63,16 @@ Route::middleware('auth:api')->group(function (){
     Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatusOrdersFromCustomer']);
     Route::post('orders', [OrderController::class, 'createOrder']);
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
-    Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
+    Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']); // mas aidna nao sei pq têm permissoes diferentes
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
 
     // ORDER ITEMS
     Route::get('orderitems', [OrderItemController::class, 'showOrderItems']);
     Route::get('orderitems/hotdishes', [OrderItemController::class, 'showHotDishes']);
     Route::get('orderitems/hotdishes/{status}', [OrderItemController::class, 'showHotDishesByStatus']);
+    Route::get('orderitems/hotdishes/order/{order_id}', [OrderItemController::class, 'showHotDishesFromOrder']);
+    Route::get('orderitems/order/{order_id}', [OrderItemController::class, 'showOrderItemsFromOrder']);
+    Route::get('orderitems/order/{order_id}/{status}', [OrderItemController::class, 'showOrderItemsFromOrderByStatus']);
     Route::get('orderitems/{id}', [OrderItemController::class, 'showOrderItem']);
     Route::put('orderitems/{id}/{status}', [OrderItemController::class, 'changeStatusOrderItem']);
 });
