@@ -19,6 +19,7 @@ class OrderRequest extends FormRequest
         return [
             'customer_id' => 'nullable', // verificar se o id existe no user
             'total_paid' => 'required|between:0,99999999.99', // decimal(8,2)
+            'total_paid_with_points' => 'required', 
             'points_gained' => 'required|integer',
             'points_used_to_pay' => 'required|integer',
             'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',

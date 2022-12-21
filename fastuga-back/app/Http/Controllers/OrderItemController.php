@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\OrderItem;
 use App\Http\Resources\OrderItemResource;
+use App\Http\Resources\OrderItemPaymentResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,9 +15,15 @@ class OrderItemController extends Controller
     // isto aqui está tudo mal, o order item nao tem tipo, tenho de arranjar maneira de aceder ao produto da order item e assim verificar o tipo do produto
     // possivelmente nao é necessario dar hardcode, deve dar para fazer isso atraves das relacoes
 
-    public function showOrderItems() // logo se vê, são 100 mil :)
+    public function showOrderItems() 
     {
         return OrderItemResource::collection(OrderItem::paginate(20));
+    }
+
+    public function showOrderItem($id) // used for payment in frontend
+    {
+        $orderItem = OrderItem::findOrFail($id);
+        return new OrderItemPaymentResource($orderItem);
     }
 
     public function showHotDishes()

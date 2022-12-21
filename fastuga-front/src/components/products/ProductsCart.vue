@@ -21,6 +21,10 @@
   const emptyCart = () => {
    userStore.emptyCart()
   }
+
+  const payment = () => {
+    router.push({ name: 'ProductsPayment'})
+  }
   
   onMounted (() => {
     loadCart()
@@ -53,6 +57,12 @@
       :options="{hideCount: true}">
     </pagination>
   </template>
+    <div>
+    <button
+      class="btn btn-xs btn-success"
+      @click="payment"
+    >Payment</button>
+  </div>
 </template>
 
 

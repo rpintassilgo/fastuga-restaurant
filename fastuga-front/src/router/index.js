@@ -4,6 +4,7 @@ import { useUserStore } from "../stores/user.js"
 import HomeView from '../views/HomeView.vue'
 import Carrinho from '../views/Carrinho.vue'
 import ProductsMenu from '../components/products/ProductsMenu.vue'
+import ProductsPayment from '../components/products/ProductsPayment.vue'
 
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
@@ -70,6 +71,11 @@ const router = createRouter({
       path: '/cart',
       name: 'ProductsCart',
       component: ProductsCart,
+    },
+    {
+      path: '/payment',
+      name: 'ProductsPayment',
+      component: ProductsPayment,
     },
     {
       path: '/items',
