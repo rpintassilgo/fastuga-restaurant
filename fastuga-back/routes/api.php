@@ -28,42 +28,51 @@ Route::middleware('auth:api')->group(function (){
     Route::get('products/desserts', [ProductController::class, 'showDesserts'])->middleware('can:viewAny,App\Models\Product'); // works fine
     Route::post('products', [ProductController::class, 'store'])->middleware('can:create,App\Models\Product'); // works fine
     Route::post('products/image', [ProductController::class, 'uploadProductImage'])->middleware('can:create,App\Models\Product'); // works fine
+    Route::post('products/{id}/image', [ProductController::class, 'uploadProductImage']);
     Route::put('products/{id}', [ProductController::class, 'update'])->middleware('can:update,App\Models\Product'); // Works fine
     Route::delete('products/{id}', [ProductController::class,'destroy'])->middleware('can:delete,App\Models\Product'); // Works fine
     
     // USERS
     Route::get('users', [UserController::class, 'index'])->middleware('can:viewAny,App\Models\User'); // works fine
     Route::get('users/manager', [UserController::class, 'showAllManagerEmployees'])->middleware('can:viewAny,App\Models\User'); // works fine
+    Route::get('users/type/{type}', [UserController::class, 'showUsersByType']); // não tenho
+    Route::get('users/email/{email}', [UserController::class, 'showUsersByEmail']); // não tenho
+    Route::get('users/type/{type}/{email}', [UserController::class, 'showUsersByTypeAndEmail']); // não tenho
     Route::get('users/chef', [UserController::class, 'showAllChefEmployees'])->middleware('can:viewAny,App\Models\User'); // works fine
     Route::get('users/delivery', [UserController::class, 'showAllDeliveryEmployees'])->middleware('can:viewAny,App\Models\User'); // works fine
     Route::get('users/{id}', [UserController::class, 'show'])->middleware('can:view,App\Models\User'); // works fine
     Route::post('users/image', [UserController::class, 'uploadUserImage'])->middleware('can:create,App\Models\User'); // works fine
-    Route::put('users/{id}', [UserController::class, 'update'])->where('id', '[0-9]+')->middleware('can:update,App\Models\User'); 
-    Route::put('users/block', [UserController::class, 'blockUser'])->middleware('can:blockOrUnblockUser,App\Models\User');
-    Route::put('users/unblock', [UserController::class, 'unblockUser'])->middleware('can:blockOrUnblockUser,App\Models\User');
+    Route::put('users/{id}', [UserController::class, 'update'])->where('id', '[0-9]+')->middleware('can:update,App\Models\User'); // não tenho
+    Route::put('users/{id}/block', [UserController::class, 'blockUserAccount'])->middleware('can:blockOrUnblockUser,App\Models\User'); // works fine
+    Route::put('users/{id}/unblock', [UserController::class, 'unblockUserAccount'])->middleware('can:blockOrUnblockUser,App\Models\User'); // works fine
     Route::delete('users/{id}', [UserController::class,'destroy'])->middleware('can:delete,App\Models\User'); // works fine
 
     // CUSTOMERS
     Route::get('customers', [CustomerController::class, 'index'])->middleware('can:viewAny,App\Models\Customer'); // works fine
     Route::get('customers/{id}', [CustomerController::class, 'show'])->middleware('can:view,App\Models\Customer'); // works fine
-    Route::put('customers/block', [CustomerController::class, 'blockCustomer'])->middleware('can:block_Customer,App\Models\Customer');
-    Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer'])->middleware('can:unblock_Customer,App\Models\Customer'); 
+    Route::get('customers/email/{email}', [CustomerController::class, 'showCustomersByEmail']); // não tenho
+    Route::put('customers/block', [CustomerController::class, 'blockCustomer'])->middleware('can:update,App\Models\Customer'); // não tenho e mal
+    Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer']);  // não tenho e mal
     Route::put('customers/{id}', [CustomerController::class, 'update'])->middleware('can:update,App\Models\Customer'); 
     Route::delete('customers/{id}', [CustomerController::class,'destroy'])->middleware('can:delete,App\Models\Customer'); // works fine
 
     // ORDERS
     Route::get('orders', [OrderController::class, 'index'])->middleware('can:viewAny,App\Models\Order'); // works fine
     Route::get('orders/customer/{id}', [OrderController::class, 'showAllOrdersFromCustomer'])->middleware('can:view,App\Models\Order'); 
-    Route::get('orders/{status}', [OrderController::class, 'showStatusOrders'])->middleware('can:viewAny,App\Models\Order'); // works fine
-    Route::get('orders/{id}', [OrderController::class, 'showOrder']);
+    Route::get('orders/{status}', [OrderController::class, 'showStatusOrders'])->whereIn('status', ['C', 'D', 'R', 'P'])->middleware('can:viewAny,App\Models\Order'); // works fine
+    Route::get('orders/{id}', [OrderController::class, 'showOrder'])->middleware('can:view,App\Models\Order'); // problema com a status
     Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatusOrdersFromCustomer']);
     Route::post('orders', [OrderController::class, 'createOrder'])->middleware('can:create,App\Models\Order'); // works fine
-    Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']); // isto podia ser query parameter
-    Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder']);
-    Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+    Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady'])->middleware('can:update,App\Models\Order'); // works fine
+    Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder'])->middleware('can:update,App\Models\Order'); // works fine
+    Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->middleware('can:updateCancelOrder,App\Models\Order'); // works fine
 
     // ORDER ITEMS
     Route::get('orderitems', [OrderItemController::class, 'showOrderItems'])->middleware('can:viewAny,App\Models\OrderItem');
-    Route::get('orderitems/hotdishes', [OrderItemController::class, 'showOrderItems']);
+    Route::get('orderitems/hotdishes', [OrderItemController::class, 'showOrderItems']); // não tenho
     Route::get('orderitems/{status}', [OrderItemController::class, 'showHotDishesByStatus']);
+
+    // STATISTICS
+    Route::get('statistics/{date}', [StatisticsController::class, 'countUser']);
+
 });

@@ -89,17 +89,31 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         }
     }
 
-    public function blockUser(UserRequest $request)
-    {
-        $user = User::findOrFail( $request->id );
-        $user->blocked = 1;
-
-        if( $user->save() ){
-            return new UserResource($user);
+    public function blockUserAccount($id)
+    { 
+        if (Auth::user()->type != "EM"){
+            return response()->json(['message' => 'The current logged user is not an Employee Manager'],400);
         }
+
+        try{
+            DB::beginTransaction();
+
+            $user = User::findOrFail( $id );
+            $user->blocked = "1"; // bloqueado
+
+            $user->save();
+
+            DB::commit();
+        }
+        catch(\Throwable $error){
+            DB::rollback();
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+
+        return new UserResource($user);
     }
 
-    public function unblockUser(UserRequest $request)
+    public function unblockUserAccount(UserRequest $request)
     {
         $user = User::findOrFail( $request->id );
         $user->blocked = 0;

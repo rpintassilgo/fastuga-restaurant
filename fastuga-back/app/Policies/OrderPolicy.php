@@ -54,9 +54,9 @@ class OrderPolicy
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Order $order)
+    public function update(User $user/*, Order $order*/)
     {
-        //
+        return $user->type == "ED";
     }
 
     /**
@@ -94,4 +94,9 @@ class OrderPolicy
     // {
     //     //
     // }
+
+    public function updateCancelOrder(User $user/*, Order $order*/)
+    {
+        return $user->type == "EM";
+    }
 }
