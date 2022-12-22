@@ -19,7 +19,7 @@
   
   /* Change this function */
  const loadOrders = () => {
-    const getUsersUrl = filterByStatus.value == "all" ? `orders?page=${page.value}` : `orders/${filterByStatus.value}?page=${page.value}`
+    const getUsersUrl = filterByStatus.value == "all" ? `orders?page=${page.value}` : `orders/status/${filterByStatus.value}?page=${page.value}`
     axios.get(getUsersUrl)
         .then((response) => {
           console.log(response)

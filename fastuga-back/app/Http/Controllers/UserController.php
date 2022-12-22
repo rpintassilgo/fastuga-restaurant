@@ -21,22 +21,54 @@ class UserController extends Controller // falta adicionar try and catch e DB ne
         return UserResource::collection(User::paginate(20));
     }
 
-    public function showAllChefEmployees() 
+    public function showUsersByEmail($email)
     {
-        $chefEmployees = User::where('type','EC')->paginate(20);
-        return UserResource::collection($chefEmployees);
+        $query = DB::table('users')->where('email','LIKE','%'.$email.'%')->paginate(20);
+        return UserResource::collection($query);
     }
 
-    public function showAllDeliveryEmployees() 
+
+    public function showUsersByType($type)
     {
-        $deliveryEmployees = User::where('type','ED')->paginate(20);
-        return UserResource::collection($deliveryEmployees);
+        $users = null;
+        switch ($type) {
+            case 'chef':
+                $users = User::where('type','EC')->paginate(20);
+                break;
+            case 'delivery':
+                $users = User::where('type','ED')->paginate(20);
+                break;
+            case 'manager':
+                $users = User::where('type','EM')->paginate(20);
+                break;
+            default:
+                return response()->json(['message' => 'Invalid user type!'],400);
+                break;
+        }
+        return UserResource::collection($users);
     }
 
-    public function showAllManagerEmployees() 
+    public function showUsersByTypeAndEmail($type,$email)
     {
-        $managerEmployees = User::where('type','em')->paginate(20);
-        return UserResource::collection($managerEmployees);
+        $users = null;
+        switch ($type) {
+                case 'chef':
+                    $users = DB::table('users')->where('type', 'EC')
+                    -> where('email','LIKE','%'.$email.'%')->paginate(20);
+                    break;
+                case 'delivery':
+                    $users = DB::table('users')->where('type', 'ED')
+                    -> where('email','LIKE','%'.$email.'%')->paginate(20);
+                    break;
+                case 'manager':
+                    $users = DB::table('users')->where('type', 'EM') 
+                    -> where('email','LIKE','%'.$email.'%')->paginate(20);
+                    break;
+                default:
+                    return response()->json(['message' => 'Invalid user type!'],400);
+                    break;
+                    }
+        return UserResource::collection($users);
     }
 
 

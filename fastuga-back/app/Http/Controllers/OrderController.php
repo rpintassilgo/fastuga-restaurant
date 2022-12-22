@@ -234,26 +234,34 @@ class OrderController extends Controller
     public function cancelOrder($id)
     {
         // quem cancela? gerente
-        if ( Auth::user()->type != "EM"){
-            return response()->json(['message' => 'The current logged user is not an employee manager'],400);
+        if (Auth::user()->type != "EM") {
+            return response()->json(['message' => 'The current logged user is not an employee manager'], 400);
         }
 
-        // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
         // dinheiro deve ser reembolsado (como é que vais reembolsar o dinheiro ???)
 
-        try{
+        try {
             DB::beginTransaction();
 
             $order = Order::findOrFail($id);
             $order->status = "C"; // Cancelled
 
+            // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
+            // $user_id = Auth::id(); // user autenticado
+
+            $customer_id = $order->customer_id; // id do customer associado à order
+
+            $customer = Customer::findOrFail($customer_id); // obter o customer
+            $customer->points = $customer->points + $order->points_used_to_pay; // devolve os pontos gastos na order que vai cancelar
+            $customer->points = $customer->points - $order->points_gained; // retira os pontos ganhos com a order que vai ser cancelada
+
+            $customer->save();
             $order->save();
 
             DB::commit();
-        }
-        catch(\Throwable $error){
+        } catch (\Throwable $error) {
             DB::rollback();
-            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+            return response()->json(['message' => 'Internal server error', 'error' => $error->getMessage()], 500);
         }
 
         return new OrderResource($order);

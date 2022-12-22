@@ -24,6 +24,12 @@ class CustomerController extends Controller
         return new UserResource($user);
     }
 
+    public function showCustomersByEmail($email)
+    {
+        $query = DB::table('users')->where('email','LIKE','%'.$email.'%')->where('type','C')->paginate(20);
+        return UserResource::collection($query);
+    }
+
 
     public function signUpCustomer(CustomerRequest $request)
     {

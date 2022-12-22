@@ -12,15 +12,20 @@
   const paginationData = ref(null)
   const page = ref(1)
   const filterByType = ref("all")
-  const searchQuery = ref("")
+  const search = ref("")
 
   const totalUsers = computed(() => {
     return paginationData ? paginationData.total : 0
   })
 
   const loadUsers = () => {
-    const getUsersUrl = filterByType.value == "all" ? `users?page=${page.value}` : 
-                        (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/${filterByType.value}?page=${page.value}`)
+
+    const getUsersUrl = search.value == "" ? (filterByType.value == "all" ? `users?page=${page.value}` :
+    (filterByType.value == "customer" ? `customers?page=${page.value}` : `users/type/${filterByType.value}?page=${page.value}`))
+
+    : (filterByType.value == "all" ? `users/email/${search.value}?page=${page.value}` : (filterByType.value == "customer" ?
+     `customers/email/${search.value}?page=${page.value}` : `users/type/${filterByType.value}/${search.value}?page=${page.value}`))
+
     axios.get(getUsersUrl)
         .then((response) => {
           console.log(response)
@@ -32,6 +37,11 @@
           users.value = []
           console.log(error)
         })
+  }
+
+  const clearSearch = () => {
+    search.value = '';
+    loadUsers();
   }
 
   const resetPage = () => {
@@ -116,7 +126,13 @@ const changeBlock = (user) => {
   <h3 class="mt-5 mb-3">Users</h3>
     <div class="row">
       <div class="search-wrapper panel-heading col-sm-12">
-          <input class="form-control" type="text" v-model="searchQuery" placeholder="Search user by email" />
+        <div class="input-group">
+          <input class="form-control" type="text" v-model="search" placeholder="Search user by email" />
+
+          <button type="button" class="btn btn-primary px-5" @click="loadUsers">Search</button>
+
+          <button type="button" class="btn btn-primary px-5" @click="clearSearch">Clear</button>
+        </div>
       </div>                        
     </div>
     <div class="mx-2 mt-2 flex-grow-1 ">
