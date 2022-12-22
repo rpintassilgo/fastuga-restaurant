@@ -16,7 +16,6 @@ import OrdersFromCustomer from "../components/orders/OrdersFromCustomer.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 import Statistic from "../components/statistics/statistic.vue"
-import Statistic_order from "../components/statistics/statistic_order.vue"
 import Statistic_product from "../components/statistics/statistic_product.vue"
 
 
@@ -62,11 +61,11 @@ const router = createRouter({
       name: 'Statistic',
       component: Statistic
     },
-    {
-      path: '/statistic_order',
-      name: 'Statistic_order',
-      component: Statistic_order
-    },
+    // {
+    //   path: '/statistic_order',
+    //   name: 'Statistic_order',
+    //   component: Statistic_order
+    // },
     {
       path: '/statistic_product',
       name: 'Statistic_product',

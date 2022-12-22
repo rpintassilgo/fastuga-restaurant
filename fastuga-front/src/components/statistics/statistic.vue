@@ -2,31 +2,6 @@
 import Chart from "chart.js/auto";
 import { ref } from "vue";
 import axios from "axios";
-const statistics = ref([]);
-const userbyYear = [];
-const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL;
-
-async function var2022(year) {
-  try {
-    const resp = await axios.get(serverBaseUrl + "/api/statistics/" + year, {
-      headers: {
-        "Content-Type": " ",
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    });
-    statistics.value = resp.data;
-    console.log("return " + JSON.parse(statistics.value));
-    return JSON.parse(statistics.value);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-const years = [2017, 2018, 2019, 2020, 2021, 2022];
-for (let index = 0; index < years.length; index++) {
-  const CountUsers = await var2022(years[index]);
-  userbyYear.push(CountUsers);
-}
 
 export default {
   name: "Hello",
@@ -35,37 +10,6 @@ export default {
   },
   mounted() {
     console.log("component mounted");
-
-    const ctx = document.getElementById("myChart"); // node
-    const myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["2017", "2018", "2019", "2020", "2021", "2022"],
-        datasets: [
-          {
-            label: "# of Users",
-            data: [
-              userbyYear[0],
-              userbyYear[1],
-              userbyYear[2],
-              userbyYear[3],
-              userbyYear[4],
-              userbyYear[5],
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-
-    myChart;
   },
 };
 </script>
@@ -74,18 +18,10 @@ export default {
   <div>
     <p></p>
     <p>
-      <a href="/statistic_order">Search for Orders by Year</a>
     </p>
     <p>
-      <a href="/statistic_product">ola</a>
+      <a href="/statistic_product">Search for Products by type</a>
     </p>
-
-    <h1 style="margin-top: 20px">Accounts Created By Year</h1>
-
-    <div class="hello">
-      <h1>{{ msg }}</h1>
-      <canvas id="myChart" width="200" height="200 "></canvas>
-    </div>
   </div>
 </template>
 

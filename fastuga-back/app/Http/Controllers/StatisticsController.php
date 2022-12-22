@@ -12,21 +12,17 @@ use PhpParser\Node\Expr\Cast\String_;
 
 class StatisticsController extends Controller
 {
-  public function countUser($date)
-  {
-    $count = DB::table('users')
-      ->whereYear('created_at', date($date))
-      ->count();
-    return $count;
-  }
+  // public function countUser($date)
+  // {
+  //   $count = DB::table('users')
+  //     ->whereYear('created_at', date($date))
+  //     ->count();
+  //   return $count;
+  // }
 
   public function countProductType()
   {
-    $x = DB::table('products')
-      ->select('type')
-      ->distinct()
-      ->get()
-      ->count();
-    return $x;
+    $array = DB::select('select type, count(type) as count from products group by type');
+    return response()->json($array);
   }
 }
