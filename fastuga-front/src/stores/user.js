@@ -105,7 +105,7 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
-            socket.emit('loggedIn', user.value)
+            //socket.emit('loggedIn', user.value)
             return true       
         } 
         catch(error) {
@@ -135,7 +135,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout () {
         try {
             await axios.post('logout')
-            socket.emit('loggedOut', user.value)
+            //socket.emit('loggedOut', user.value)
             clearUser()
             return true
         } catch (error) {
@@ -148,7 +148,7 @@ export const useUserStore = defineStore('user', () => {
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
-            socket.emit('loggedIn', user.value)
+            //socket.emit('loggedIn', user.value)
             //await ordersStore.loadAllOrders()
             return true
         }
@@ -160,7 +160,7 @@ export const useUserStore = defineStore('user', () => {
         // handle error on function call
         await axios.put('users/'+$id+'/password',credentials)
     }
-
+/*
     socket.on('updateUser', (updateUser) => {
         console.log('Someone else has updated the user #' + updateUser.id)
         if(user.value?.id == updateUser.id){
@@ -170,7 +170,7 @@ export const useUserStore = defineStore('user', () => {
             toast.info(`User profile #${updateUser.id} (${updateUser.name}) has changed!`)
         }
     })
-    
+    */
     return { user, userId, userPhotoUrl, login, signUpCustomer, loadCartFromLocalStorage, addProductToCart, 
         removeProductFromCart, emptyCart, loadUser, logout, restoreToken, changePassword }
 })

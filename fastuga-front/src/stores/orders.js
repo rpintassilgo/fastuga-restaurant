@@ -45,7 +45,7 @@ export const useOrdersStore = defineStore('orders', () => {
         // Note that when an error occours, the exception should be
         // catch by the function that called the insertOrder
         const response = await axios.post('orders', newOrder)
-        socket.emit('newOrder', response.data.data)
+        //socket.emit('newOrder', response.data.data)
         return response.data
     }
 
@@ -60,7 +60,7 @@ export const useOrdersStore = defineStore('orders', () => {
                 orders.value.data[idx] = response.data.data
             }
             */
-           socket.emit('changeStatusOrder', response.data.data)
+           //socket.emit('changeStatusOrder', response.data.data)
     }
 
     
