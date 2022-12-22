@@ -88,6 +88,7 @@ Route::middleware('auth:api')->group(function (){
 
     // STATISTICS
     Route::get('statistics/{date}', [StatisticsController::class, 'countUser']);
+    Route::get('statistics/type/{type}', [StatisticsController::class, 'countProductType'])->whereIn('type', ['hot dish', 'cold dish', 'drink', 'dessert']);
 
     
     

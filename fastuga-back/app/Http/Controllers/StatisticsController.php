@@ -17,4 +17,13 @@ class StatisticsController extends Controller
         ->count();
     return $count;
   }
+
+  public function countProductType()
+  {
+    $array = DB::select('select type, count(type) as count from products group by type');
+    return response()->json($array);
+  }
+  
 }
+
+

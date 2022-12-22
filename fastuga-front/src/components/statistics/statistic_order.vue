@@ -1,96 +1,100 @@
 <script>
-import Chart from 'chart.js/auto'
-import {ref} from 'vue'
-import axios from 'axios';
-const statistics = ref([])
-const userbyYear = [];
-const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
+import Chart from "chart.js/auto";
+import { ref } from "vue";
+import axios from "axios";
 
-async function var2022(year) {
+const statistics = ref([]);
+const productbyType = [];
+const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL;
 
-      try {
-        const resp = await axios.get(serverBaseUrl + '/api/statistics/' + year , 
-        {
-          headers: {
-            'Content-Type': ' ',
-            'Authorization' : "Bearer " + sessionStorage.getItem('token'),
-          }
-        })
-        statistics.value = resp.data
-        console.log("return " + JSON.parse(statistics.value))
-        return JSON.parse(statistics.value)
-      
-      } catch (error) {
-        console.log(error)
-      }
+async function vartypes(type) {
+  try {
+    const resp = await axios.get(serverBaseUrl + "/api/statistics/type/" + type, {
+      headers: {
+        "Content-Type": " ",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    });
+    statistics.value = resp.data;
+    console.log(JSON.stringify(statistics.value));
+
+    return JSON.parse(JSON.stringify(statistics.value));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
+const typeProducts = ["hot dish", "cold dish", "drink", "dessert"];
+for (let index = 0; index < typeProducts.length; index++) {
+  const countProducts = await vartypes(typeProducts[index]);
+  for (let x = 0; x < countProducts.length; x++) {
+    productbyType.push(countProducts[0]);
+    countProducts.shift();
+  }
 
-const years = [2017,2018,2019,2020,2021,2022]
-for (let index = 0; index < years.length; index++) {
-  const CountUsers = (await(var2022(years[index])))
-  userbyYear.push(CountUsers);
 }
-
-
-
-
-
 
 export default {
-  name: 'Hello',
+  name: "Hello",
   props: {
-    msg: String
+    msg: String,
   },
-  mounted(){
-    console.log('component mounted')
+  mounted() {
+    console.log("component mounted");
 
-    const ctx = document.getElementById('myChart'); // node
+    const ctx = document.getElementById("myChart"); // node
+
     const myChart = new Chart(ctx, {
-      type: 'bar',
+      type: "bar",
       data: {
-        labels: ['2017', '2018', '2019', '2020', '2021', '2022'],
-        datasets: [{
-          label: '# of Users',
-          data: [userbyYear[0],userbyYear[1],userbyYear[2],userbyYear[3],userbyYear[4],userbyYear[5]],
-          borderWidth: 1
-        }]
+        labels: ["Hot Dishes", "Cold Dishes", "Drinks", "Desserts"],
+        datasets: [
+          {
+            label: "# of Produt",
+            data: [
+              productbyType[0].count,
+              productbyType[1].count,
+              productbyType[2].count,
+              productbyType[3].count,
+            ],
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         scales: {
           y: {
-            beginAtZero: true
-          }
-        }
-      }
+            beginAtZero: true,
+          },
+        },
+      },
     });
 
     myChart;
   },
-}
+};
+</script>
 
-  </script>
+<template>
+  <div>
+    <p></p>
+    <a href="statistic">Back</a>
+    <h1>Search for Products by type</h1>
 
-<template> 
-<p></p>
-<a href="statistic">Search for Accounts Created by Year</a>
-<h1 style="margin-top: 20px;"> Orders Created By Year</h1>
-            
-
-<div class="hello">
-  <h1> {{ msg }}</h1> 
- <canvas id="myChart" width="200" height="200 "></canvas>
-</div>
+    <div class="hello">
+      <h1>{{ msg }}</h1>
+      <canvas id="myChart" width="200" height="200 "></canvas>
+    </div>
+  </div>
 </template>
 
 
-
 <style>
-.left{
-margin-left: 20%;
+.left {
+  margin-left: 20%;
 }
-.right{
-margin-left: 40%;
+.right {
+  margin-left: 40%;
 }
 .hello {
   margin: auto;
@@ -100,4 +104,5 @@ margin-left: 40%;
   padding: 10px;
 }
 </style>
+
    

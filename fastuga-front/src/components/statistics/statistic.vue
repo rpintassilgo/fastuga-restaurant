@@ -17,7 +17,7 @@ async function var2022(year) {
           }
         })
         statistics.value = resp.data
-        console.log("return " + JSON.parse(statistics.value))
+        //console.log("return " + JSON.parse(statistics.value))
         return JSON.parse(statistics.value)
       
       } catch (error) {
@@ -31,10 +31,6 @@ for (let index = 0; index < years.length; index++) {
   const CountUsers = (await(var2022(years[index])))
   userbyYear.push(CountUsers);
 }
-
-
-
-
 
 
 export default {
