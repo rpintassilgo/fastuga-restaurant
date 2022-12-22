@@ -3,12 +3,12 @@ import Chart from "chart.js/auto";
 import { ref } from "vue";
 import axios from "axios";
 const statistics = ref([]);
-const userbyYear = [];
+const productbyType = [];
 const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL;
 
-async function var2022(year) {
+async function vartypes(type) {
   try {
-    const resp = await axios.get(serverBaseUrl + "/api/statistics/" + year, {
+    const resp = await axios.get(serverBaseUrl + "/api/statistics/" + type, {
       headers: {
         "Content-Type": " ",
         Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -22,10 +22,10 @@ async function var2022(year) {
   }
 }
 
-const years = [2017, 2018, 2019, 2020, 2021, 2022];
-for (let index = 0; index < years.length; index++) {
-  const CountUsers = await var2022(years[index]);
-  userbyYear.push(CountUsers);
+const typeProducts = ["Hot Dishes", "Cold Dishes", "Drinks", "Desserts"];
+for (let index = 0; index < typeProducts.length; index++) {
+  const countProducts = await vartypes(typeProducts[index]);
+  productbyType.push(countProducts);
 }
 
 export default {
@@ -40,17 +40,15 @@ export default {
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["2017", "2018", "2019", "2020", "2021", "2022"],
+        labels: ["Hot Dishes", "Cold Dishes", "Drinks", "Desserts"],
         datasets: [
           {
-            label: "# of Users",
+            label: "# of Products",
             data: [
-              userbyYear[0],
-              userbyYear[1],
-              userbyYear[2],
-              userbyYear[3],
-              userbyYear[4],
-              userbyYear[5],
+              productbyType[0],
+              productbyType[1],
+              productbyType[2],
+              productbyType[3],
             ],
             borderWidth: 1,
           },
@@ -73,14 +71,8 @@ export default {
 <template>
   <div>
     <p></p>
-    <p>
-      <a href="/statistic_order">Search for Orders by Year</a>
-    </p>
-    <p>
-      <a href="/statistic_product">ola</a>
-    </p>
-
-    <h1 style="margin-top: 20px">Accounts Created By Year</h1>
+    <a href="statistic">Back</a>
+    <h1>Ola</h1>
 
     <div class="hello">
       <h1>{{ msg }}</h1>
@@ -88,7 +80,6 @@ export default {
     </div>
   </div>
 </template>
-
 
 
 <style>
@@ -106,4 +97,5 @@ export default {
   padding: 10px;
 }
 </style>
+
    
