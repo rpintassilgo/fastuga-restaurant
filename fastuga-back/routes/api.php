@@ -52,6 +52,8 @@ Route::middleware('auth:api')->group(function (){
     Route::put('customers/block', [CustomerController::class, 'blockCustomer']);//->middleware('can:update,App\Models\Customer'); // não tenho
     Route::put('customers/unblock', [CustomerController::class, 'unblockCustomer']); // não tenho 
     Route::put('customers/{id}', [CustomerController::class, 'editCustomerProfile']);//->middleware('can:update,App\Models\Customer');
+    Route::put('customers/points/add/{user_id}', [CustomerController::class, 'addPointsCustomer']);
+    Route::put('customers/points/remove/{user_id}', [CustomerController::class, 'removePointsCustomer']);
     Route::delete('customers/{id}', [CustomerController::class,'deleteCustomerAccount']);//->middleware('can:delete,App\Models\Customer'); // works fine
 
     // ORDERS

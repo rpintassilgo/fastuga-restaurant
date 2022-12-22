@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Customer;
 use App\Http\Requests\CustomerRequest;
+use App\Http\Requests\PointsRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
 
@@ -128,5 +129,39 @@ class CustomerController extends Controller
         if( $user->delete() ){
             return new UserResource( $user );
         }
+    }
+
+    public function addPointsCustomer(PointsRequest $request,$user_id)
+    {
+        try {
+            $customer = Customer::where('user_id',$user_id)->first();
+            //var_dump($customer);
+            $customer->points = $customer->points + $request->points;
+    
+            $customer->save();
+    
+            $user = User::where('type','C')->findOrFail( $user_id );
+        } catch (\Throwable $error) {
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+        return new UserResource( $user );
+
+    }
+
+    public function removePointsCustomer(PointsRequest $request,$user_id)
+    {
+        try {
+            $customer = Customer::where('user_id',$user_id)->first();
+            //var_dump($customer);
+            $customer->points = $customer->points - $request->points;
+    
+            $customer->save();
+    
+            $user = User::where('type','C')->findOrFail( $user_id );
+        } catch (\Throwable $error) {
+            return response()->json(['message' => 'Internal server error','error' => $error->getMessage()],500);
+        }
+        return new UserResource( $user );
+
     }
 }

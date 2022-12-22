@@ -3,12 +3,14 @@
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
+  import axios from 'axios'
 
   
   const toast = inject('toast')
-  const axios = inject('axios')
+  const axios2 = inject('axios')
   const router = useRouter()
 
+  const points = ref(0)
   const cart = ref([])
   const total = ref(0)
   const paymentMethod = ref('default')
@@ -40,7 +42,11 @@
   }
 
   const pay = async () => {
-    let status = ""
+    let limiteReached = false
+    let pointsUsed = false
+    let total_paid = totalPrice.value
+    let total_paid_in_points = 0
+    let gainedPoints = 0
     console.log("cart payment: " + JSON.stringify(cart.value))
     if(userStore.user.default_payment_type == "" && userStore.user.default_payment_reference == "" && paymentMethod.value == "default"){
       toast.error("No default payment reference found")
@@ -52,41 +58,116 @@
             return;
           }
           try {
+            if(userStore.user?.type == 'C'){
+              let avaiablePoints = userStore.user.points
+              if(((points.value <= avaiablePoints) || (points.value % 10 !== 0)) && points.value != 0){
+                pointsUsed = true
+                total_paid_in_points = (points.value/10)*5
+                total_paid = totalPrice.value - total_paid_in_points
+
+
+              } else{
+                if(points.value != 0) toast.error("Not enough points or/and invalid number of points!")
+                //throw new Error('Invalid points!');
+              }
+            }
             
             switch (paymentMethod.value) {
                 case 'default':
                   paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
+
+                  if(paymentData.value.type == 'visa'){
+                      if(total_paid > 200){
+                        limiteReached = true
+                        toast.error("Visa limit is 200€!")
+                        throw new Error("payment limit")
+                      }
+                  } else if(paymentData.value.type == 'paypal'){
+                      if(total_paid > 50){
+                        limiteReached = true
+                        toast.error("Paypal limit is 50€!")
+                        throw new Error("payment limit")
+                      }
+                  } else{
+                      if(total_paid > 10){
+                        limiteReached = true
+                        toast.error("MBway limit is 10€!")
+                        throw new Error("payment limit")
+                      }
+                  }
                   paymentData.value.reference = userStore.user.default_payment_reference
-                  paymentData.value.value = totalPrice.value
+                  paymentData.value.value = total_paid
                   break;
                 case 'mbway':
+                      if(total_paid > 10){
+                        limiteReached = true
+                        toast.error("MBway limit is 10€!")
+                        throw new Error("payment limit")
+                      }
                   paymentData.value.type = 'mbway'
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice.value
+                  paymentData.value.value = total_paid
 
                   break;
                 case 'visa':
+                      if(total_paid > 200){
+                        limiteReached = true
+                        toast.error("Visa limit is 200€!")
+                        throw new Error("payment limit")
+                      }
                   paymentData.value.type = 'visa'
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice.value
+                  paymentData.value.value = total_paid
 
                   break;
                 case 'paypal':
+                      if(total_paid > 50){
+                        limiteReached = true
+                        toast.error("Paypal limit is 50€!")
+                        throw new Error("payment limit")
+                      }
                   paymentData.value.type = 'paypal'
                   paymentData.value.reference = paymentReference.value
-                  paymentData.value.value = totalPrice.value
+                  paymentData.value.value = total_paid
 
                   break;
 
                 default:
                   break;
             }
+
+            if(!limiteReached){
+                gainedPoints = Math.floor(totalPrice.value/10)
+                // put para adicionar os pontos ganhos
+                axios2.put(`customers/points/add/${userStore.user.id}`,{'points': gainedPoints})
+                .then((response) => {
+                  console.log("response dos pontos: " + JSON.stringify(response))
+                  toast.success("You have gained " + gainedPoints + " points!")
+                  })
+                .catch((error) => console.log(error.message))
+                axios2.put(`customers/points/remove/${userStore.user.id}`,{'points': points.value})
+                .then((response) => {
+                  console.log("response dos pontos: " + JSON.stringify(response))
+                  toast.success("You have used " + points.value + " points!")
+                  })
+                .catch((error) => console.log(error.message))
+            }
+
             
-            /* nao da para testar pq tem https aqui so na vm
-            axios.post('https://dad-202223-payments-api.vercel.app/api/payments',paymentData.value)
-            .then((response) => status = response.status)
-            .catch((error) => console.log(error.message))
-            */
+            // efetuar pagamento
+            // 10 mbway, 50 paypal, 200 visa
+            console.log("paymentData: " + JSON.stringify(paymentData.value))
+            let payment_response = await axios.post('https://dad-202223-payments-api.vercel.app/api/payments', {
+              "type": paymentData.value.type,
+              "reference": paymentData.value.reference,
+              "value" : paymentData.value.value
+            }/*,{
+                  headers: {
+                                'Content-type': 'application/json',
+                          },
+            }*/)
+            console.log("pagamento: " + payment_response)
+            
           
 
             order.value.customer_id = userStore.user ? userStore.user.id : null
@@ -94,20 +175,29 @@
             order.value.payment_type = paymentData.value.type.toUpperCase()
             order.value.payment_reference = paymentData.value.reference
 
+
+            if(pointsUsed){
+              order.value.total_paid = total_paid
+              order.value.total_paid_with_points = total_paid_in_points
+              order.value.points_gained = gainedPoints
+              order.value.points_used_to_pay = points.value
+            }
+
             
             const productsId = []
-            //const promises = await Promise.all(cart.value.map(item => axios.get(`orderitems/${item.product.id}`)))
+            //const promises = await Promise.all(cart.value.map(item => axios2.get(`orderitems/${item.product.id}`)))
             //promises.forEach((p) => orderItems.push(p.data.data))
             cart.value.forEach((p) => productsId.push({ "product_id": p.id }))
             order.value.order_items = productsId
             console.log(typeof order.value.order_items)
             console.log("orderItems: " + JSON.stringify(order.value.order_items))
             console.log("order a enviar: " + JSON.stringify(order.value))
-            let r = await axios.post('orders',order.value)
+            let r = await axios2.post('orders',order.value)
             console.log("order criada: " + JSON.stringify(r.data.data))
 
 
             toast.success("Payment successful!")
+            // descomentar o empty cart e a rota
             //userStore.emptyCart()
             //router.push({ name: 'ProductsMenu'})
 
@@ -168,6 +258,19 @@
         novalidate
         @submit.prevent="pay"
       >
+      <div class="mb-3" v-if="userStore.user?.type == 'C'">
+          <label
+            for="inputPoints"
+            class="form-label"
+          >Points:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputPoints"
+            required
+            v-model="points"
+          >
+     </div>
       <div class="mb-3">
             <label
               for="selectType"

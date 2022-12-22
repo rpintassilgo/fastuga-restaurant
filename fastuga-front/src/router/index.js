@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "../stores/user.js"
 
-import HomeView from '../views/HomeView.vue'
-import Carrinho from '../views/Carrinho.vue'
 import ProductsMenu from '../components/products/ProductsMenu.vue'
 import ProductsPayment from '../components/products/ProductsPayment.vue'
 
@@ -30,7 +28,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: Dashboard
     },
     {
       path: '/login',
@@ -52,11 +50,6 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
-    },
-    {
-      path: '/Carrinho',
-      name: 'Carrinho',
-      component: Carrinho
     },
     {
       path: '/menu',
@@ -139,18 +132,6 @@ const router = createRouter({
       component: User,
       props: { id: -1 }
     },
-   /* {
-      path: '/projects/:id/tasks',
-      name: 'ProjectTasks',
-      component: ProjectTasks,
-      props: route => ({ id: parseInt(route.params.id) })
-    },
-    {
-      path: '/projects/:id/tasks/new',
-      name: 'NewTaskOfProject',
-      component: Task,
-      props: route => ({ id:-1, fixedProject:  parseInt(route.params.id) })
-    },*/
     {
       path: '/products/new',
       name: 'NewProduct',
@@ -162,11 +143,6 @@ const router = createRouter({
       name: 'Product',
       component: Product,
       props: route => ({ id: parseInt(route.params.id) })    
-    },
-    {
-      path: '/reports',
-      name: 'Reports',
-      component: () => import('../views/AboutView.vue')
     },
     {
       path: '/about',
