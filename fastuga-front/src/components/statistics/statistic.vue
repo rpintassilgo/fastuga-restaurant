@@ -1,20 +1,26 @@
-<script>
-import Chart from 'chart.js/auto'
-import {ref} from 'vue'
-import axios from 'axios';
+<script setup>
+import Chart from "chart.js/auto";
+import { ref, watch, computed, onMounted, inject } from "vue";
+
+const axios = inject("axios");
+
 const statistics = ref([])
 const userbyYear = [];
-const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
+const years = [2017,2018,2019,2020,2021,2022]
+
+const props = defineProps({
+  msg: String,
+});
 
 async function var2022(year) {
 
       try {
-        const resp = await axios.get(serverBaseUrl + '/api/statistics/' + year , 
+        const resp = await axios.get(`statistics/${year}`, 
         {
           headers: {
-            'Content-Type': ' ',
-            'Authorization' : "Bearer " + sessionStorage.getItem('token'),
-          }
+            "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
         })
         statistics.value = resp.data
         //console.log("return " + JSON.parse(statistics.value))
@@ -26,23 +32,22 @@ async function var2022(year) {
 }
 
 
-const years = [2017,2018,2019,2020,2021,2022]
-for (let index = 0; index < years.length; index++) {
+const graph = async () => {
+  for (let index = 0; index < years.length; index++) {
   const CountUsers = (await(var2022(years[index])))
   userbyYear.push(CountUsers);
 }
+};
 
+onMounted(async () => {
+  // console.log("component mounted");
+  // console.log(productbyType);
 
-export default {
-  name: 'Hello',
-  props: {
-    msg: String
-  },
-  mounted(){
-    console.log('component mounted')
+  const ctx = document.getElementById('myChart'); // node
 
-    const ctx = document.getElementById('myChart'); // node
-    const myChart = new Chart(ctx, {
+  await graph();
+
+  const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['2017', '2018', '2019', '2020', '2021', '2022'],
@@ -61,11 +66,9 @@ export default {
       }
     });
 
-    myChart;
-  },
-}
-
-  </script>
+  myChart;
+});
+</script>
 
 <template> 
 <p></p>
