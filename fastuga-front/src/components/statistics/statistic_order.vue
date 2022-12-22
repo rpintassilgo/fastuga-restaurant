@@ -73,8 +73,8 @@ export default {
 
 <template> 
 <p></p>
-<a href="/statistic_order">Search for Orders by Year</a>
-<h1 style="margin-top: 20px;"> Accounts Created By Year</h1>
+<a href="statistic">Search for Accounts Created by Year</a>
+<h1 style="margin-top: 20px;"> Orders Created By Year</h1>
             
 
 <div class="hello">
