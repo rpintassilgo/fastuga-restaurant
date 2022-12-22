@@ -16,10 +16,12 @@
 
   const removeProduct = (product) => {
     userStore.removeProductFromCart(product)
+    loadCart()
   }
 
   const emptyCart = () => {
    userStore.emptyCart()
+   loadCart()
   }
 
   const payment = () => {

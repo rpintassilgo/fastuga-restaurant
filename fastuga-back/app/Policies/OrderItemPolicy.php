@@ -11,36 +11,11 @@ class OrderItemPolicy
 
     public function viewAny(User $user)
     {
-        return $user->type == "EM"; // costumer também?
+       return $user->type == "EM" || $user->type == "EC" || $user->type == "ED" || $user->type == "C";
     }
 
-    public function view(User $user, OrderItem $orderItem)
+    public function update(User $user)
     {
-        //
-    }
-
-    public function create(User $user)
-    {
-        //
-    }
-
-    public function update(User $user, OrderItem $orderItem)
-    {
-        //
-    }
-
-    public function delete(User $user, OrderItem $orderItem)
-    {
-        //
-    }
-
-    public function restore(User $user, OrderItem $orderItem)
-    {
-        //
-    }
-
-    public function forceDelete(User $user, OrderItem $orderItem)
-    {
-        //
+        return $user->type == "EM" || $user->type == "EC";
     }
 }

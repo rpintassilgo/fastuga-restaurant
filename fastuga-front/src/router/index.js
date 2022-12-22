@@ -3,7 +3,8 @@ import { useUserStore } from "../stores/user.js"
 
 import ProductsMenu from '../components/products/ProductsMenu.vue'
 import ProductsPayment from '../components/products/ProductsPayment.vue'
-
+import Statistic from "../components/statistics/statistic.vue"
+import Statistic_products from "../components/statistics/statistic_products.vue"
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import Register from "../components/auth/Register.vue"
@@ -145,6 +146,16 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })    
     },
     {
+      path: '/statistic',
+      name: 'Statistic',
+      component: Statistic
+    },
+    {
+      path: '/statistic_products',
+      name: 'Statistic_products',
+      component: Statistic_products
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -163,7 +174,7 @@ router.beforeEach(async (to, from, next) => {
     handlingFirstRoute = false
     await userStore.restoreToken()
   }
-  if ((to.name == 'Login') || (to.name == 'home') || (to.name == 'Register')) {
+  if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'Register')) {
     next()
     return
   }
@@ -171,18 +182,12 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'Login' })
     return
   }
-  if (to.name == 'Reports') {
-    if (userStore.user.type != 'A') {
-      next({ name: 'home' })
-      return
-    }
-  }
   if (to.name == 'User') {
     if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
       next()
       return
     }
-    next({ name: 'home' })
+    next({ name: 'Dashboard' })
     return
   }
   next()

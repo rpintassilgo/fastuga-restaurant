@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserPolicy
 {
@@ -17,7 +19,7 @@ class UserPolicy
     public function view(User $user) 
     {
         $id = request()->route()->parameter('id');
-        return $user->type == "EM" || $user->id == $id;
+        return $user->type == "EM" || $user->id == $id; // user autenticado só pode ver o seu email e não o email dos outros users
     }
 
     public function create(User $user)
@@ -28,24 +30,13 @@ class UserPolicy
     public function update(User $user)
     {
         $id = request()->route()->parameter('id');
-        return $user->type == "EM" || $user->id == $id;
+        return $user->type == "EM" || $user->id == $id; // user apenas pode dar update ao seu perfil
     }
 
     public function delete(User $user)
     {
         return $user->type == "EM";
     }
-
-    // public function restore(User $user, User $model)
-    // {
-    //     //
-    // }
-
-    // public function forceDelete(User $user, User $model)
-    // {
-    //     //
-    // }
-
 
     public function showMe()
     {

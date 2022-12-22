@@ -7,7 +7,7 @@ import { Toast } from 'bootstrap'
 export const useUserStore = defineStore('user', () => {
     const ordersStore = useOrdersStore()
     const axios = inject('axios')
-    const socket = inject('socket')
+    //const socket = inject('socket')
     const toast = inject('toast')
     const serverBaseUrl = inject('serverBaseUrl')
     

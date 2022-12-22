@@ -187,6 +187,20 @@ const clickMenuOption = () => {
                 </router-link>
               </li>
             </div>
+            <div v-if="userStore.user?.type == 'EM'">
+              <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                <router-link
+                  class="nav-link w-100 me-3"
+                  :class="{ active: $route.name === 'Statistic' }"
+                  :to="{ name: 'Statistic' }"
+                  @click="clickMenuOption"
+                >
+                  <i class="bi bi-bag"></i>
+                  {{userStore.user?.type == 'C' ? "Menu" : "Statistic"}}
+                </router-link>
+
+              </li>
+            </div>
             <div v-if="userStore.user?.type == 'EC' || userStore.user?.type == 'ED'">
               <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                 <router-link

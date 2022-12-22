@@ -20,6 +20,7 @@ export const useProductStore = defineStore('product', () => {
     })
     
 
+    /*
     async function loadProduct(id) {
         try {
             const response = await axios.get(`products/${id}`)
@@ -29,6 +30,7 @@ export const useProductStore = defineStore('product', () => {
             throw error
         }
     }
+    */
     
     
     return { product, productId, productPhotoUrl }

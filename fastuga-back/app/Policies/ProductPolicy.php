@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductPolicy
 {
@@ -11,12 +13,12 @@ class ProductPolicy
 
     public function viewAny(User $user)
     {
-        return $user->type == "EM" || $user->type == "EC" || $user->type == "ED" || $user->type == "C";
+        return true;
     }
 
     public function view(User $user)
     {
-        return $user->type == "EM";
+        return true;
     }
 
     public function create(User $user)
@@ -33,14 +35,4 @@ class ProductPolicy
     {
         return $user->type == "EM";
     }
-
-    // public function restore(User $user, Product $product)
-    // {
-    //     //
-    // }
-
-    // public function forceDelete(User $user, Product $product)
-    // {
-    //     //
-    // }
 }

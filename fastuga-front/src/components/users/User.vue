@@ -90,6 +90,7 @@
             user.value = response.data.data
             originalValueStr = dataString()
             toast.success('User #' + user.value.id + ' was created successfully.')
+            if(user.value.type == "M") router.push({ name: 'Users' })
           })
           .catch((error) => {
             if (error.response.status == 422) {
@@ -112,6 +113,7 @@
             user.value = response.data.data
             originalValueStr = dataString()
             toast.success('User #' + user.value.id + ' was updated successfully.')
+            if(user.value.type == "M") router.push({ name: 'Users' })
           })
           .catch((error) => {
             console.log("error update: " + error.message)

@@ -52,6 +52,7 @@
       .catch(() => {
         toast.error("It was not possible to cancel Order " + orderToCancelDescription.value + "!")
       })
+      loadOrders()
   }
 
   const cancelOrder = (order) => {

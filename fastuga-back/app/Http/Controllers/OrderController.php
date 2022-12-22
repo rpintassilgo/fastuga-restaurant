@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Customer;
 use App\Models\OrderItem;
 use App\Http\Requests\OrderRequest;
 use App\Models\Product;
@@ -247,11 +248,9 @@ class OrderController extends Controller
             $order->status = "C"; // Cancelled
 
             // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
-            // $user_id = Auth::id(); // user autenticado
+            $user_id = Auth::id(); // user autenticado
 
-            $customer_id = $order->customer_id; // id do customer associado à order
-
-            $customer = Customer::findOrFail($customer_id); // obter o customer
+            $customer = Customer::findOrFail($user_id); // obter o customer
             $customer->points = $customer->points + $order->points_used_to_pay; // devolve os pontos gastos na order que vai cancelar
             $customer->points = $customer->points - $order->points_gained; // retira os pontos ganhos com a order que vai ser cancelada
 
