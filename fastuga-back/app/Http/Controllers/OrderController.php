@@ -232,11 +232,16 @@ class OrderController extends Controller
             $order->status = "C"; // Cancelled
 
             // os pontos gastos e ganhos devem ser reembolsados (isto é só dar um update em alguns campos do user)
-            $costumer = Customer::findOrFail($order->customer_id); //obter costumer
-            $costumer->points = $costumer->points + $order->points_used_to_pay;
-            $costumer->points = $costumer->points - $order->points_gained;
+            // $user_id = Auth::id(); // user autenticado
 
-            $costumer->save();
+            $customer_id = $order->customer_id; // id do customer associado à order
+
+            $customer = Customer::findOrFail($customer_id); // obter o customer
+            $customer->points = $customer->points + $order->points_used_to_pay; // devolve os pontos gastos na order que vai cancelar
+            $customer->points = $customer->points - $order->points_gained; // retira os pontos ganhos com a order que vai ser cancelada
+
+            $customer->save();
+            $order->save();
       
             DB::commit();
         } catch (\Throwable $error) {
