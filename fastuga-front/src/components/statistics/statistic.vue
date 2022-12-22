@@ -72,7 +72,7 @@ onMounted(async () => {
 
 <template> 
 <p></p>
-<a href="/statistic_order">Search for Products by type</a>
+<a href="/statistic_products">Search for Products by type</a>
 <h1 style="margin-top: 20px;"> Accounts Created By Year</h1>
             
 
