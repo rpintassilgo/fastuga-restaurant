@@ -3,41 +3,37 @@ import Chart from 'chart.js/auto'
 import {ref} from 'vue'
 import axios from 'axios';
 const statistics = ref([])
+const userbyYear = [];
 const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
-
 
 async function var2022(year) {
 
       try {
-        console.log("ENTROU")
-        //axios.defaults.headers.common['Authorization'] = "Bearer " + sessionStorage.getItem('token');
         const resp = await axios.get(serverBaseUrl + '/api/statistics/' + year , 
-        
         {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': ' ',
             'Authorization' : "Bearer " + sessionStorage.getItem('token'),
-
           }
         })
-        console.log("RESP ->" + resp)
         statistics.value = resp.data
-        
-        return statistics.value
+        console.log("return " + JSON.parse(statistics.value))
+        return JSON.parse(statistics.value)
       
       } catch (error) {
         console.log(error)
       }
 }
-const promise1 = Promise.resolve(await(var2022(2022)));
-promise1.then((value) => {
-  console.log(value);
-  // expected output: 123
-});
 
 
- 
- 
+const years = [2017,2018,2019,2020,2021,2022]
+for (let index = 0; index < years.length; index++) {
+  const CountUsers = (await(var2022(years[index])))
+  userbyYear.push(CountUsers);
+}
+
+
+
 
 export default {
   name: 'Hello',
@@ -54,7 +50,7 @@ export default {
         labels: ['2017', '2018', '2019', '2020', '2021', '2022'],
         datasets: [{
           label: '# of Users',
-          data: [1,12,3,5,10,5],
+          data: [userbyYear[0],userbyYear[1],userbyYear[2],userbyYear[3],userbyYear[4],userbyYear[5]],
           borderWidth: 1
         }]
       },
@@ -73,6 +69,14 @@ export default {
   </script>
 
 <template> 
+<h1 style="margin-top: 20px;"> Numero de Contas Criadas em Cada Ano</h1>
+
+
+
+ 
+
+            
+
 <div class="hello">
   <h1> {{ msg }}</h1> 
  <canvas id="myChart" width="200" height="200 "></canvas>
@@ -82,10 +86,16 @@ export default {
 
 
 <style>
+.left{
+margin-left: 20%;
+}
+.right{
+margin-left: 40%;
+}
 .hello {
   margin: auto;
   width: 45%;
-  margin-top: 5%;
+  margin-top: 1%;
   border: 3px solid black;
   padding: 10px;
 }

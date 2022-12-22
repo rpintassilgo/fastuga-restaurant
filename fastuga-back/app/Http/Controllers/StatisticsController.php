@@ -15,7 +15,6 @@ class StatisticsController extends Controller
         $count = DB::table('users')
         ->whereYear('created_at', date($date))
         ->count();
-        dd($count);
     return $count;
   }
 }
