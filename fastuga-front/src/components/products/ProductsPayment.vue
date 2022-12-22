@@ -41,6 +41,7 @@
 
   const pay = async () => {
     let status = ""
+    console.log("cart payment: " + JSON.stringify(cart.value))
     if(userStore.user.default_payment_type == "" && userStore.user.default_payment_reference == "" && paymentMethod.value == "default"){
       toast.error("No default payment reference found")
     } else{
@@ -59,19 +60,19 @@
                   paymentData.value.value = totalPrice.value
                   break;
                 case 'mbway':
-                  paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
+                  paymentData.value.type = 'mbway'
                   paymentData.value.reference = paymentReference.value
                   paymentData.value.value = totalPrice.value
 
                   break;
                 case 'visa':
-                  paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
+                  paymentData.value.type = 'visa'
                   paymentData.value.reference = paymentReference.value
                   paymentData.value.value = totalPrice.value
 
                   break;
                 case 'paypal':
-                  paymentData.value.type = userStore.user.default_payment_type.toLowerCase()
+                  paymentData.value.type = 'paypal'
                   paymentData.value.reference = paymentReference.value
                   paymentData.value.value = totalPrice.value
 
@@ -94,22 +95,27 @@
             order.value.payment_reference = paymentData.value.reference
 
             
-            const orderItems = []
-            const promises = await Promise.all(cart.value.map(item => axios.get(`orderitems/${item.id}`)))
-            promises.forEach((p) => orderItems.push(p.data.data))
-            order.value.order_items = orderItems
+            const productsId = []
+            //const promises = await Promise.all(cart.value.map(item => axios.get(`orderitems/${item.product.id}`)))
+            //promises.forEach((p) => orderItems.push(p.data.data))
+            cart.value.forEach((p) => productsId.push({ "product_id": p.id }))
+            order.value.order_items = productsId
+            console.log(typeof order.value.order_items)
+            console.log("orderItems: " + JSON.stringify(order.value.order_items))
+            console.log("order a enviar: " + JSON.stringify(order.value))
             let r = await axios.post('orders',order.value)
-            console.log("order criada: " + r)
+            console.log("order criada: " + JSON.stringify(r.data.data))
 
 
             toast.success("Payment successful!")
-            userStore.emptyCart()
-            router.push({ name: 'ProductsMenu'})
+            //userStore.emptyCart()
+            //router.push({ name: 'ProductsMenu'})
 
             
       
           } catch (error) {
             toast.error("Payment failed!")
+            console.log(error.message)
           }
           
     }

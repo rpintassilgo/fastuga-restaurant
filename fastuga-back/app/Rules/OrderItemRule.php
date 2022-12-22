@@ -25,7 +25,21 @@ class OrderItemRule implements Rule
             return false;
         }
 
-        //dd($value);
+        //var_dump($value);
+        //dd(is_array($value));
+
+        /*
+        $collection = collect($value)->map(function ($item) {
+            if( is_null($item['product_id']) ) return false;
+
+            $product = Product::find( $item['product_id'] );
+            if($product == null) return false;
+        })->reject(function ($name) {
+            return false;
+        });*/
+
+        
+        //$dataArr = (array) $value;
 
         // foreach de cada item do pedido
         foreach ($value as $item){
@@ -37,7 +51,7 @@ class OrderItemRule implements Rule
             if($product == null) return false;
     
         }
-
+        
         // se correr tudo até aqui sem entrar em nenhum if
         return true;
     }

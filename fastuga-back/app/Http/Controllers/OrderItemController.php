@@ -20,7 +20,11 @@ class OrderItemController extends Controller
     public function showOrderItem($id) // used for payment in frontend
     {
         $orderItem = OrderItem::findOrFail($id);
-        return new OrderItemPaymentResource($orderItem);
+
+        if (Auth::user()->type == "C"){
+            return new OrderItemPaymentResource($orderItem);
+        }
+        return new OrderItemResource($orderItem);
     }
 
     public function showHotDishes()

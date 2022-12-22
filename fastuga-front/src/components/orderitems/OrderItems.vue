@@ -24,7 +24,7 @@
 
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log("hot dishes: " + JSON.stringify(response.data.data))
+          //console.log("hot dishes: " + JSON.stringify(response.data.data))
           orderItems.value = response.data.data
           paginationData.value = response.data.meta
         })
@@ -49,10 +49,10 @@
     }
   }
 
-   const readyOrderItem = (orderItem) => {
+   const readyOrderItem = async (orderItem) => {
     try {
         orderItemsStore.changeStatusOrderItem(orderItem.id,"ready")
-        checkIfOrderReady()
+        await checkIfOrderReady(orderItem)
         loadHotDishes()
         toast.success("Order item #" + orderItem.id + " is ready!")    
     } catch (error) {
@@ -63,13 +63,14 @@
   const checkIfOrderReady = async (orderItem) => {
     try {
       const response = await axios.get(`orderitems/${orderItem.id}`)
+      console.log("response: fds " + JSON.stringify(response.data.data.order_id))
       const response2 = await axios.get(`orderitems/hotdishes/order/${response.data.data.order_id}`)
       console.log("todos os items da order: " + JSON.stringify(response2.data.data))
       let isReady = true
-      response.data.data.forEach((order_item) => {
-        if(order_item != 'R') isReady = false
+      response2.data.data.forEach((order_item) => {
+        if(order_item.status != 'R') isReady = false
       });
-      
+      console.log("isReady: " + isReady)
       if(isReady) ordersStore.changeStatusOrder(response.data.data.order_id,'ready')
       
     } catch (error) {
@@ -107,6 +108,7 @@
 
   <order-item-table
     :orderItems="orderItems"
+    :showOrderId="true"
     @ready="readyOrderItem"
     @prepare="prepareOrderItem"
   ></order-item-table>

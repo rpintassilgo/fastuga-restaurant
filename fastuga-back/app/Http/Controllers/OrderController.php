@@ -97,6 +97,7 @@ class OrderController extends Controller
         */
 
         try{
+            //var_dump('ola');
             DB::beginTransaction();
 
             $order = new Order; 
@@ -120,6 +121,7 @@ class OrderController extends Controller
             foreach ($items as $item){
                 $orderItem = new OrderItem();
 
+                //$orderItem->order_id = 
                 $orderItem->order_local_number = $orderLocalNumber;
                 $orderLocalNumber = $orderLocalNumber + 1;
                 
@@ -127,11 +129,13 @@ class OrderController extends Controller
                 $product = Product::findOrFail( $item['product_id'] );
 
                 $orderItem->product_id = $item['product_id'];
-                $orderItem->status = "W"; // the inicial status of an item order is Waiting
+                $orderItem->status = $product->type == "hot dish" ? "W" : "R"; // the inicial status of an item order is Waiting
                 $orderItem->price = $product->price;
                 $orderItem->notes =  array_key_exists('notes',$item) ? $item['notes'] : null;
 
                 $totalPrice = $totalPrice + $product->price;
+
+                //var_dump($orderItem);
 
                 array_push($orderItemsToSave,$orderItem); // we cant save it rn, because there is no order_id
             }
@@ -150,12 +154,20 @@ class OrderController extends Controller
             $order->date = Carbon::now()->format('Y-m-d');
             $order->delivered_by = null;
 
-
             $order->save(); // save to create id for order_id
+            //var_dump(gettype($orderItemsToSave));
+            $order->orderItems()->saveMany($orderItemsToSave);
+
+
+            $order->save();
+
+            //var_dump($order);
             
+            /*
             foreach($orderItemsToSave as $orderItem){
                 $order->orderItems()->save($orderItem);
             }
+            */
             
 
             DB::commit();
@@ -172,8 +184,8 @@ class OrderController extends Controller
     public function setOrderToReady($id)
     {
         // sera q é o ED q diz q tá ready? se sim, verificar se o user logado é do tipo ED
-        if (Auth::user()->user_type != "ED"){
-            return response()->json(['message' => 'The current logged user is not an employee delivery'],400);
+        if (Auth::user()->type != "EC"){
+            return response()->json(['message' => 'The current logged user is not an employee chef'],400);
         }
 
         try{

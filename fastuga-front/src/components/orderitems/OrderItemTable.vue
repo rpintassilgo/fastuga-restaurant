@@ -9,6 +9,10 @@ const serverBaseUrl = inject("serverBaseUrl")
       type: Array,
       default: () => [],
     },
+    showOrderId: {
+      type: Boolean,
+      default: false,
+    },
     showId: {
       type: Boolean,
       default: false,
@@ -74,6 +78,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   <table class="table">
     <thead>
       <tr>
+        <th v-if="showOrderId">Order ID</th>
         <th v-if="showId">ID</th>
         <th v-if="showOrderLocalNumber">Order Local Number #</th>
         <th v-if="showStatus">Status</th>
@@ -88,6 +93,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         v-for="orderItem in orderItems"
         :key="orderItem.id"
       >
+        <td v-if="showOrderId">{{ orderItem.order_id }}</td>
         <td v-if="showId">{{ orderItem.id }}</td>
         <td v-if="showOrderLocalNumber">{{ orderItem.order_local_number }}</td>
         <td v-if="showStatus">{{ orderItem.status }}</td>

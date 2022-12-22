@@ -58,7 +58,7 @@
         @click="goBack()"
         >Back</button>
       </div>
-      <h3 class="mt-5 mb-3">Order Items</h3>
+      <h3 class="mt-5 mb-3">Order Items from Order #{{props.order_id}}</h3>
       <div class="mx-2 mt-2 flex-grow-1">
       <label
         for="selectType"
