@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { useUserStore } from "../../stores/user.js"
 
 const serverBaseUrl = inject("serverBaseUrl");
 
@@ -17,7 +18,7 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel","photo"]);
 
-
+const userStore = useUserStore()
 const editingUser = ref(props.user)
 const photoUrl = ref("");
 
@@ -31,6 +32,7 @@ watch(
 )
 
 const photoFullUrl = computed(() => {
+  console.log("CLIENTE LOGADO: " + JSON.stringify(editingUser.value))
   return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
     : avatarNoneUrl) : photoUrl.value
@@ -84,7 +86,37 @@ const cancel = () => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
 
-        <div class="mb-3 px-1">
+        <div class="mb-3" v-if="userStore.user.type == 'C'">
+            <label
+              for="selectType"
+              class="form-label"
+            >Default Payment Method:</label>
+            <select
+              class="form-select"
+              id="selectDefaultPaymentType"
+              v-model="editingUser.default_payment_type"
+              required
+            >
+              <option value="VISA">Visa</option>
+              <option value="PAYPAL">Paypal</option>
+              <option value="MBWAY">MBWay</option>
+            </select>
+      </div>
+      <div class="mb-3" v-if="userStore.user.type == 'C'">
+          <label
+            for="inputDefaultPaymentReference"
+            class="form-label"
+          >Default Payment Reference</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputDefaultPaymentReference"
+            v-model="editingUser.default_payment_reference"
+            required
+          >
+       </div>
+
+        <div class="mb-3 px-1" v-if="editingUser.id != userStore.user.id">
           <label for="inputPassword" class="form-label">Password</label>
           <input
             type="password"
@@ -97,7 +129,7 @@ const cancel = () => {
           <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.user.type == 'EM'">
             <label
               for="selectType"
               class="form-label"
@@ -107,6 +139,7 @@ const cancel = () => {
               id="selectType"
               v-model="editingUser.type"
             >
+              <option value="C">Customer</option>
               <option value="EC">Employee Chef</option>
               <option value="ED">Employee Delivery</option>
               <option value="EM">Employee Manager</option>

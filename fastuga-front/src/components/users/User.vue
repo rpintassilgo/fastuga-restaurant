@@ -84,13 +84,12 @@
             let image = await imageUpload()
             if(image != "") user.value.photo_url = image
         }
-
-        axios2.post('users', user.value)
+        let postString = user.value.type == "C" ? 'customers' : 'users'
+        axios2.post(postString, user.value)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataString()
             toast.success('User #' + user.value.id + ' was created successfully.')
-            router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
@@ -107,12 +106,12 @@
           user.value.photo_url = newPhoto
           console.log("photo_url put: " + user.value.photo_url)
         }
-        axios2.put('users/' + props.id, user.value)
+        let putString = user.value.type == "C" ? `customers/${props.id}` : `users/${props.id}`
+        axios2.put(putString, user.value)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataString()
             toast.success('User #' + user.value.id + ' was updated successfully.')
-            router.back()
           })
           .catch((error) => {
             console.log("error update: " + error.message)

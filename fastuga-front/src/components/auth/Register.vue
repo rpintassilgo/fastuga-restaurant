@@ -164,8 +164,6 @@
             v-model="credentials.default_payment_reference"
           >
        </div>
-
-      <!-- meter o upload da foto aqui depois, ou senao se a pessoa quiser q vá ao perfil e troque-->
   
       <div class="mb-3 d-flex justify-content-center">
         <button
