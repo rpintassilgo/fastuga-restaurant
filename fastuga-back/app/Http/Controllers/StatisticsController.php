@@ -11,10 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class StatisticsController extends Controller
 {
-    public function countUser($date){
+    public function countUser($date)
+    {
 
-        $count = DB::table('users')->whereYear('created_at',date($date))->count();
+        $count = DB::table('users')->whereYear('created_at', date($date))->count();
         return $count;
+    }
 
+    public function countProductType()
+    {
+        $array = DB::select('select type, count(type) as count from products group by type');
+        return response()->json($array);
     }
 }

@@ -12,13 +12,13 @@ class OrderPolicy
 
     public function viewAny(User $user)
     {
-        return $user->type == "EM";
+        return $user->type == "EM" || $user->type == "ED";
     }
 
-    public function view(User $user/*, Order $order*/)
+    public function view(User $user)
     {
         $id = request()->route()->parameter('id');
-        return $user->type == "EM" || $user->id == $id;
+        return (($user->type == "EM") || ($user->type == "C" && $user->id == $id)) || ($user->type == "ED"); // o customer autenticado apenas pode ver as suas orders, não as orders de outros customers
     }
 
 
@@ -27,28 +27,14 @@ class OrderPolicy
         return $user->type == "C";
     }
 
-    public function update(User $user/*, Order $order*/)
+    public function update(User $user)
     {
         return $user->type == "ED";
     }
 
-    public function delete(User $user, Order $order)
+    public function updateCancelOrder(User $user)
     {
-        //
-    }
-
-    // public function restore(User $user, Order $order)
-    // {
-    //     //
-    // }
-
-    // public function forceDelete(User $user, Order $order)
-    // {
-    //     //
-    // }
-
-    public function updateCancelOrder(User $user/*, Order $order*/)
-    {
-        return $user->type == "EM";
+        $id = request()->route()->parameter('id');
+        return (($user->type == "EM") || ($user->type == "C" && $user->id == $id)); // o customer autenticado apenas pode cancelar as suas orders, não as orders de outros customers
     }
 }

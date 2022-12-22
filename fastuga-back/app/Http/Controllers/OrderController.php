@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Http\Requests\OrderRequest;
 use App\Models\Product;
+use App\Models\Customer;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

@@ -18,7 +18,7 @@ class CustomerPolicy
     public function view(User $user)
     {
         $id = request()->route()->parameter('id');
-        return $user->type == "EM" || $user->id == $id;
+        return $user->type == "EM" || $user->id == $id; // o customer autenticado apenas se pode ver a si, e não os outros customers
     }
 
     public function update(User $user)
@@ -32,5 +32,8 @@ class CustomerPolicy
         return $user->type == "EM";
     }
 
-    // fazer função block_Customer
+    public function blockUnblockCustomer(User $user)
+    {
+        return $user->type == "EM";
+    }
 }
