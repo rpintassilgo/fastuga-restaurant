@@ -2,10 +2,13 @@ import { ref, computed, inject, watch } from 'vue'
 import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useOrdersStore } from "./orders.js"
+import { Toast } from 'bootstrap'
 
 export const useUserStore = defineStore('user', () => {
     const ordersStore = useOrdersStore()
     const axios = inject('axios')
+    const socket = inject('socket')
+    const toast = inject('toast')
     const serverBaseUrl = inject('serverBaseUrl')
     
     const user = ref(null)
@@ -102,6 +105,7 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
+            socket.emit('loggedIn', user.value)
             return true       
         } 
         catch(error) {
@@ -131,6 +135,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout () {
         try {
             await axios.post('logout')
+            socket.emit('loggedOut', user.value)
             clearUser()
             return true
         } catch (error) {
@@ -143,6 +148,7 @@ export const useUserStore = defineStore('user', () => {
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
+            socket.emit('loggedIn', user.value)
             //await ordersStore.loadAllOrders()
             return true
         }
@@ -154,6 +160,16 @@ export const useUserStore = defineStore('user', () => {
         // handle error on function call
         await axios.put('users/'+$id+'/password',credentials)
     }
+
+    socket.on('updateUser', (updateUser) => {
+        console.log('Someone else has updated the user #' + updateUser.id)
+        if(user.value?.id == updateUser.id){
+            user.value = updateUser
+            toast.info(`Your user profile has changed!`)
+        } else{
+            toast.info(`User profile #${updateUser.id} (${updateUser.name}) has changed!`)
+        }
+    })
     
     return { user, userId, userPhotoUrl, login, signUpCustomer, loadCartFromLocalStorage, addProductToCart, 
         removeProductFromCart, emptyCart, loadUser, logout, restoreToken, changePassword }

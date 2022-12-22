@@ -66,9 +66,8 @@ const clickMenuOption = () => {
           <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-letras.png" alt="" width="230" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 300px;"/>
           </router-link>
-          <li class="nav-item" v-show="(userStore.user?.type == 'A' || userStore.user?.type == 'M')">
-            <!-- Mudar A e M pelos corretos da base de dados -->
-          <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
+          <li class="nav-item" v-if="userStore.user?.type == 'C'">
+          <router-link :to="{ name: 'ProductsCart' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-carrinho.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
           </li>
@@ -100,6 +99,9 @@ const clickMenuOption = () => {
               />
               <span class="avatar-text">{{ userStore.user?.name ?? "Anonymous" }}</span>
             </a>
+            <li class="nav-item" v-show="userStore.user?.type == 'C'">
+              <span class="points-text">Points: {{userStore.user?.points}}</span>
+            </li>
             <ul
               class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
@@ -377,6 +379,12 @@ const clickMenuOption = () => {
   height: 3.3rem;
 }
 .avatar-text {
+  line-height: 2.2rem;
+  margin: 1rem 0.5rem -2rem 0;
+  padding-top: 1rem;
+}
+
+.points-text {
   line-height: 2.2rem;
   margin: 1rem 0.5rem -2rem 0;
   padding-top: 1rem;

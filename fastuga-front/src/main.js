@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { io } from 'socket.io-client'
 import axios from 'axios'
 import Toaster from "@meforma/vue-toaster"
 import Pagination from "v-pagination-3"
@@ -27,6 +28,7 @@ app.provide('axiosImage', axios.create({
     baseURL: serverBaseUrl + '/api'
   }))
 app.provide('serverBaseUrl', serverBaseUrl)  
+app.provide('socket', io(import.meta.env.VITE_APP_WS_SERVER))
 
 app.use(Toaster, {
     // Global/Default options

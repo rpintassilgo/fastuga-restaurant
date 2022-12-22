@@ -6,6 +6,7 @@ export const useOrdersStore = defineStore('orders', () => {
     const userStore = useUserStore()
 
     const axios = inject('axios')
+    const socket = inject('socket')
 
 
     // verificar se depois como tou a fazer é uma boa pratica
@@ -44,7 +45,7 @@ export const useOrdersStore = defineStore('orders', () => {
         // Note that when an error occours, the exception should be
         // catch by the function that called the insertOrder
         const response = await axios.post('orders', newOrder)
-        //orders.value.push(response.data)
+        socket.emit('newOrder', response.data.data)
         return response.data
     }
 
@@ -59,6 +60,7 @@ export const useOrdersStore = defineStore('orders', () => {
                 orders.value.data[idx] = response.data.data
             }
             */
+           socket.emit('changeStatusOrder', response.data.data)
     }
 
     
