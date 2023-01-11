@@ -1,5 +1,4 @@
 /vendor/
-/database/
 phpunit.xml
 node_modules/
 npm-debug.log
