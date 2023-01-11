@@ -66,11 +66,10 @@ const serverBaseUrl = inject("serverBaseUrl")
   }
 
   const photoFullUrl = (product) => {
-  //console.log(product)
-  return product.photo_url
-    ? serverBaseUrl + "/storage/products/" + product.photo_url
-    : avatarNoneUrl
-}
+    return product.photo_url
+      ? serverBaseUrl + "/storage/products/" + product.photo_url
+      : avatarNoneUrl
+  }
 
 </script>
 

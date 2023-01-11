@@ -107,6 +107,7 @@ class OrderController extends Controller
             $orderLocalNumber = 1;
             $totalPrice = 0;
             $orderItemsToSave = [];
+            $noHotDishes = true;
             foreach ($items as $item){
                 $orderItem = new OrderItem();
 
@@ -123,11 +124,13 @@ class OrderController extends Controller
 
                 $totalPrice = $totalPrice + $product->price;
 
+                if($product->type == "hot dish") $noHotDishes = false;
+
                 array_push($orderItemsToSave,$orderItem); // we cant save it rn, because there is no order_id
             }
 
 
-            $order->status = "P";
+            $order->status = $noHotDishes == true ? "R" : "P";
             $order->ticket_number = $ticketNumber;
             $order->customer_id = $request->has('customer_id') ? $request->input('customer_id') : null; //
             $order->total_price = $totalPrice;

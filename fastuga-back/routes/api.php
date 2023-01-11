@@ -67,9 +67,7 @@ Route::middleware('auth:api')->group(function (){
     Route::get('orders/status/{status}', [OrderController::class, 'showStatusOrders'])->whereIn('status', ['preparing', 'ready', 'delivered', 'cancelled'])->middleware('can:view,App\Models\Order');
     Route::get('orders/{id}', [OrderController::class, 'showOrder'])->middleware('can:view,App\Models\Order')->middleware('can:view,App\Models\Order');
     Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatusOrdersFromCustomer'])->middleware('can:view,App\Models\Order');
-    Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady']);/*->middleware('can:update,App\Models\Order'); // works fine */
-    // setOrderToReady endpoint doesnt have middleware because customer is calling it to set order to ready when the order does not
-    // have hot dishes in payment (huge security flaw, find a better way to set order to ready when theres no hot dishes later)
+    Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady'])->middleware('can:update,App\Models\Order'); // works fine 
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder'])->middleware('can:update,App\Models\Order'); // works fine
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->middleware('can:updateCancelOrder,App\Models\Order'); // works fine
 

@@ -22,8 +22,6 @@ const vartypes = async (type) => {
     });
     statistics.value = resp.data;
 
-    // console.log(statistics.value);
-
     return JSON.parse(JSON.stringify(statistics.value));
   } catch (error) {
     console.log(error);
@@ -32,25 +30,15 @@ const vartypes = async (type) => {
 
 const graph = async () => {
   for (let index = 0; index < typeProducts.length; index++) {
-    // console.log(typeProducts);
     const countProducts = await vartypes(typeProducts[index]);
-    // console.log(countProducts);
-
-    // console.log(index);
-
-    // console.log(countProducts[2]);
 
     for (let x = 0; x < countProducts.length; x++) {
       productbyType.push(countProducts[x]);
-      // countProducts.shift();
-      // console.log(productbyType);
     }
   }
 };
 
 onMounted(async () => {
-  // console.log("component mounted");
-  // console.log(productbyType);
 
   const ctx = document.getElementById("myChart"); // node
 

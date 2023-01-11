@@ -28,8 +28,6 @@
 
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log(response)
-         // users.value.splice(0)
           users.value = response.data.data
           paginationData.value = response.data.meta
         })

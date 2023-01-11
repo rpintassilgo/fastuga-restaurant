@@ -32,7 +32,6 @@ watch(
 )
 
 const photoFullUrl = computed(() => {
-  console.log("CLIENTE LOGADO: " + JSON.stringify(editingUser.value))
   return photoUrl.value == "" ? (editingUser.value.photo_url
     ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
     : avatarNoneUrl) : photoUrl.value
@@ -40,7 +39,6 @@ const photoFullUrl = computed(() => {
 
 const imageChange = (event) => {
   editingUser.value.photo_file = event.target.files[0];
-  //photoUrl = URL.createObjectURL(editingProduct.value.photo_file);
 }
 
 const save = () => {

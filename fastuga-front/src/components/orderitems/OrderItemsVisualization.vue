@@ -26,7 +26,6 @@
 
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log("hot dishes: " + JSON.stringify(response.data.data))
           orderItems.value = response.data.data
           paginationData.value = response.data.meta
         })

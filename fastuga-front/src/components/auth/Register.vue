@@ -23,12 +23,9 @@
 
   const register = async () => {
 
-    console.log(JSON.stringify(credentials.value))
-
     if (await userStore.signUpCustomer(credentials.value)) {
       toast.success('Account created')
       emit('register')
-      //router.back()
       router.push('/login')
     } else if (credentials.value.password != credentials.value.confirmPassword || credentials.value.password == '' || credentials.value.confirmPassword == '') {
       credentials.value.password = ''
@@ -53,7 +50,6 @@
   }
   else if (credentials.value.default_payment_type == ''){
       credentials.value.default_payment_type  = ''
-      console.log("length"+credentials.value.nif.length)
       toast.error('Invalid default_payment_type')
 
   }

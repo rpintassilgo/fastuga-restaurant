@@ -1,10 +1,11 @@
 <script setup>
-  import { ref, onMounted, inject } from 'vue'
+  import { ref, onMounted, inject, toDisplayString } from 'vue'
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
   
   const axios = inject('axios')
+  const toast = inject('toast')
   const router = useRouter()
 
   const products = ref([])
@@ -17,10 +18,8 @@
     const getProductsUrl = filterByType.value == "all" ? `products?page=${page.value}` : `products/${filterByType.value}?page=${page.value}`
     axios.get(getProductsUrl)
       .then((response) => {
-        //console.log(response.data)
         products.value = response.data.data
         paginationData.value = response.data.meta
-        //console.log(products.value)
       })
       .catch((error) => {
         products.value = []
@@ -34,7 +33,8 @@
   }
 
   const addProductToCart = (product) => {
-    userStore.addProductToCart(product)          
+    userStore.addProductToCart(product)    
+    toast.success(`Product '${product.name}' added to cart`) 
   }
 
   onMounted (() => {

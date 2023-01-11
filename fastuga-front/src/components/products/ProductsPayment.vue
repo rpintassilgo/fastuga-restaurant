@@ -51,7 +51,6 @@
     let total_paid = totalPrice.value
     let total_paid_in_points = 0
     let gainedPoints = 0
-    console.log("cart payment: " + JSON.stringify(cart.value))
     if(userStore.user?.default_payment_type == "" && userStore.user?.default_payment_reference == "" && paymentMethod.value == "default"){
       toast.error("No default payment reference found")
     } else{
@@ -72,7 +71,6 @@
 
               } else{
                 if(points.value != 0) toast.error("Not enough points or/and invalid number of points!")
-                //throw new Error('Invalid points!');
               }
             }
             
@@ -146,30 +144,25 @@
                   // put to add gained points
                   axios2.put(`customers/points/add/${userStore.user.id}`,{'points': gainedPoints})
                   .then((response) => {
-                    console.log("response dos pontos: " + JSON.stringify(response))
                     toast.success("You have gained " + gainedPoints + " points!")
                     })
                   .catch((error) => console.log(error.message))
                   axios2.put(`customers/points/remove/${userStore.user.id}`,{'points': points.value})
                   .then((response) => {
-                    console.log("response dos pontos: " + JSON.stringify(response))
                     toast.success("You have used " + points.value + " points!")
                     })
                   .catch((error) => console.log(error.message))
               }
             }
             
-            // efetuar pagamento
-            // 10 mbway, 50 paypal, 200 visa
-            console.log("paymentData: " + JSON.stringify(paymentData.value))
+            // fake payment
+            // limit per type: 10 mbway, 50 paypal, 200 visa
             let payment_response = await axios.post(`${paymentServiceUri}/api/payments`, {
               "type": paymentData.value.type,
               "reference": paymentData.value.reference,
               "value" : paymentData.value.value
-            })
-            
+            })        
           
-
             order.value.customer_id = userStore.user ? userStore.user.id : null
             order.value.total_paid = totalPrice.value
             order.value.payment_type = paymentData.value.type.toUpperCase()
@@ -183,32 +176,16 @@
                 order.value.points_used_to_pay = points.value
               }
             }
-
             
             const productsId = []
             cart.value.forEach((p) => productsId.push({ "product_id": p.id }))
             order.value.order_items = productsId
             let r = await axios2.post('orders',order.value)
 
-            // -----------------------------------------------------------------
-            // set order to ready if there are no hot dishes
-            let noHotDishes = true
-            cart.value.every((p) => {
-              if(p.type == 'hot dish'){
-                noHotDishes = false
-                return false
-              }
-              return true
-            })
-            if(noHotDishes) orderStore.changeStatusOrder(r.data.data.id,'ready')
-
-            // Its not a good idea to do this, since the user will have access to
-            // the ready order endpoint, if I find a better way to do this I will
-            // change it
-            // -----------------------------------------------------------------
-
-
             toast.success("Payment successful!")
+
+            userStore.emptyCart()
+            router.push({ name: 'Dashboard'})
           } catch (error) {
             toast.error("Payment failed!")
             console.log(error.message)

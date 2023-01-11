@@ -16,7 +16,6 @@
 
   const login = async () => {
     if (await userStore.login(credentials.value)) {
-      console.log(userStore.user)
       toast.success('User ' + userStore.userId + ' has entered the application.')
       emit('login')
       router.push('/dashboard')

@@ -159,19 +159,20 @@ const deleteClick = (user) => {
               <i class="bi bi-xs bi-pencil"></i>
             </button>
 
-            <button 
-              class="btn btn-xs btn-light" 
-              @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
-              <i v-if="user.blocked == 1" class="bi bi-xs bi-lock"></i>
-              <i v-else class="bi bi-xs bi-unlock"></i>
-            </button>
+            <div v-if="userStore.user.id != user.id">
+              <button 
+                class="btn btn-xs btn-light" 
+                @click="blockClick(user)" v-if="showBlockButton"> <!-- tratar do botao para bloquear utilizadores -->
+                <i v-if="user.blocked == 1" class="bi bi-xs bi-lock"></i>
+                <i v-else class="bi bi-xs bi-unlock"></i>
+              </button>
 
-            <button
-              class="btn btn-xs btn-light"
-              @click="deleteClick(user)" v-if="showDeleteButton">
-              <i class="bi bi-xs bi-trash3"></i>
-            </button>
-
+              <button
+                class="btn btn-xs btn-light"
+                @click="deleteClick(user)" v-if="showDeleteButton">
+                <i class="bi bi-xs bi-trash3"></i>
+              </button>
+            </div>
           </div>
         </td>
 

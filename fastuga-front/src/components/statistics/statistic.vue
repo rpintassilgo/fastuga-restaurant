@@ -23,7 +23,6 @@ async function var2022(year) {
       },
         })
         statistics.value = resp.data
-        //console.log("return " + JSON.parse(statistics.value))
         return JSON.parse(statistics.value)
       
       } catch (error) {
@@ -40,9 +39,6 @@ const graph = async () => {
 };
 
 onMounted(async () => {
-  // console.log("component mounted");
-  // console.log(productbyType);
-
   const ctx = document.getElementById('myChart'); // node
 
   await graph();

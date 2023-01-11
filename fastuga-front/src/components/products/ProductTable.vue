@@ -72,11 +72,6 @@ watch(
   }
 )
 
-// Alternative to previous watch
-// watchEffect(() => {
-//   editingProducts.value = props.products
-// })
-
 const editClick = (product) => {
   emit("edit", product)
 }
@@ -102,7 +97,6 @@ const dialogConfirmedDelete = () => {
 }
 
 const photoFullUrl = (product) => {
-  //console.log(product)
   return product.photo_url
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : avatarNoneUrl

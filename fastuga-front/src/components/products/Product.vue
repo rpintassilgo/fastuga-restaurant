@@ -59,11 +59,10 @@
                   }
                 })
 
-                console.log("photo_url: " + JSON.stringify(response.data))
                 url = response.data
 
             } catch (error) {
-              console.log("erro: " + error.message)
+              console.log(error.message)
             }
       }
       return url
@@ -75,7 +74,6 @@
       if (operation.value == 'insert') {
         try {
             product.value.photo_url = await imageUpload()
-            console.log("photo_url post: " + JSON.stringify(product.value.photo_url))
             if(product.value.photo_url == "") throw new Error('Product was not created because no photo was uploaded!');
             axios2.post('products', product.value)
               .then((response) => {
@@ -95,14 +93,11 @@
           
         } catch (error) {
           toast.error('Product was not created because no photo was uploaded!');
-          console.log("erro upload foto: " + error.message)
         }
       } else {
         let newPhoto = await imageUpload()
-        console.log("newPhoto: " + newPhoto)
         if( newPhoto != ""){
           product.value.photo_url = newPhoto
-          console.log("photo_url put: " + product.value.photo_url)
         }
         axios2.put('products/' + props.id, product.value)
           .then((response) => {
@@ -112,7 +107,6 @@
             router.back()
           })
           .catch((error) => {
-            console.log("error update: " + error.message)
             if (error.response.status == 422) {
               toast.error('Product #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors

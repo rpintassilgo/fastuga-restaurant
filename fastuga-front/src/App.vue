@@ -30,7 +30,7 @@ const clickMenuOption = () => {
 <template>
   <div class="topbar">
         <marquee direction="up" scrolldelay="500" scrollamount="3" style="color: white;text-align:center">
-            Registe-se para ter acesso a desconstos baseados em pontos
+            Sign up to have access to points based discounts
         </marquee>
     </div>
 

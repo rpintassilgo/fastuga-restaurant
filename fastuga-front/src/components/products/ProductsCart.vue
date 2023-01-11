@@ -5,6 +5,7 @@
   import { useUserStore } from "../../stores/user.js"
   
   const axios = inject('axios')
+  const toast = inject('toast')
   const router = useRouter()
 
   const cart = ref([])
@@ -16,6 +17,7 @@
 
   const removeProduct = (product) => {
     userStore.removeProductFromCart(product)
+    toast.success(`Product '${product.name}' removed from cart`)
     loadCart()
   }
 

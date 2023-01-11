@@ -24,7 +24,6 @@
 
     axios.get(getUsersUrl)
         .then((response) => {
-          //console.log("hot dishes: " + JSON.stringify(response.data.data))
           orderItems.value = response.data.data
           paginationData.value = response.data.meta
         })
@@ -63,14 +62,11 @@
   const checkIfOrderReady = async (orderItem) => {
     try {
       const response = await axios.get(`orderitems/${orderItem.id}`)
-      console.log("response: fds " + JSON.stringify(response.data.data.order_id))
       const response2 = await axios.get(`orderitems/hotdishes/order/${response.data.data.order_id}`)
-      console.log("todos os items da order: " + JSON.stringify(response2.data.data))
       let isReady = true
       response2.data.data.forEach((order_item) => {
         if(order_item.status != 'R') isReady = false
       });
-      console.log("isReady: " + isReady)
       if(isReady) ordersStore.changeStatusOrder(response.data.data.order_id,'ready')
       
     } catch (error) {

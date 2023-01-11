@@ -27,44 +27,37 @@
         default: null
       }
   })
-
-  //const user_id = ref(props.id)
   
-  /* Change this function */
+
   const loadOrders = () => {
     const getUsersUrl = filterByStatus.value == "all" ? `orders/customer/${props.id}?page=${page.value}` : 
                                                 `orders/customer/${props.id}/${filterByStatus.value}?page=${page.value}`
     axios.get(getUsersUrl)
         .then((response) => {
-          //console.log("loadOrders: " + response)
-         // users.value.splice(0)
           ordersFromCustomer.value = response.data.data
           paginationData.value = response.data.meta
           firstLoad.value = firstLoad.value + 1
         })
         .catch((error) => {
           orders.value = []
-          console.log(error)
+          console.log(error.message)
         })
   }
 
   // get customer from id
   const loadCustomer = () => {
-    console.log("props.id (loadCustomer): " + props.id)
       axios.get(`customers/${props.id}`)
           .then((response) => {
-            console.log("then get customer: " + JSON.stringify(response.data.data))
             customer.value = response.data.data
           })
           .catch((error) => {
             customer.value = null
-            console.log("loadCustomer error: " + error.message)
+            console.log(error.message)
           })
   }
 
   const resetPage = () => {
     page.value = 1
-    //loadCustomer()
     loadOrders()
   }
 

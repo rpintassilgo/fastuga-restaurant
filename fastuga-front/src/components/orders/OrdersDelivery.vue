@@ -22,8 +22,6 @@
     const getUsersUrl = filterByStatus.value == "all" ? `orders?page=${page.value}` : `orders/status/${filterByStatus.value}?page=${page.value}`
     axios.get(getUsersUrl)
         .then((response) => {
-          console.log(response)
-         // users.value.splice(0)
           orders.value = response.data.data
           paginationData.value = response.data.meta
         })
@@ -46,7 +44,6 @@
       })
       .catch((/*e*/) => {
         toast.error("It was not possible to deliver Order " + orderToDeliverDescription.value + "!")
-       // console.log("erro: " + e.message)
       })
   }
 

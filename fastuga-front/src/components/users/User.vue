@@ -64,8 +64,6 @@
                     'Authorization': "Bearer " + sessionStorage.getItem('token')
                   }
                 })
-
-                console.log("photo_url: " + JSON.stringify(response.data))
                 url = response.data
 
             } catch (error) {
@@ -79,7 +77,7 @@
       errors.value = null
       if (operation.value == 'insert') {
         // it doesnt make sense to sign up with an image so the option to create accounts with profile pics
-        // will only we able to the manager employee account
+        // will only we able for the manager employee account
         if(userStore.user.type == "EM"){
             let image = await imageUpload()
             if(image != "") user.value.photo_url = image
@@ -102,10 +100,8 @@
           })
       } else {
         let newPhoto = await imageUpload()
-        console.log("newPhoto: " + newPhoto)
         if( newPhoto != ""){
           user.value.photo_url = newPhoto
-          console.log("photo_url put: " + user.value.photo_url)
         }
         let putString = user.value.type == "C" ? `customers/${props.id}` : `users/${props.id}`
         axios2.put(putString, user.value)
@@ -116,7 +112,6 @@
             if(user.value.type == "M") router.push({ name: 'Users' })
           })
           .catch((error) => {
-            console.log("error update: " + error.message)
             if (error.response.status == 422) {
               toast.error('User #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors

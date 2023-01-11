@@ -105,12 +105,6 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })   // customer id
     },
     {
-      path: '/orders/new', // isto aqui possivelmente vai ser o carrinho
-      name: 'NewOrder',
-      component: Order,
-      props: { id: -1 }
-    },
-    {
       path: '/orders/:id',
       name: 'Order',
       component: Order,
@@ -154,14 +148,6 @@ const router = createRouter({
       path: '/statistic_products',
       name: 'Statistic_products',
       component: Statistic_products
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
     }
   ]
 })
@@ -178,12 +164,6 @@ router.beforeEach(async (to, from, next) => {
     next()
     return
   }
-  /*
-  if (!userStore.user) {
-    next({ name: 'Login' })
-    return
-  }
-  */
   if (to.name == 'User') {
     if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
       next()
