@@ -4,12 +4,16 @@
   import ProductTable from "./ProductTable.vue"
   import { useUserStore } from "../../stores/user.js"
   import axios from 'axios'
+  import { useOrdersStore } from '../../stores/orders'
 
   
   const toast = inject('toast')
   const axios2 = inject('axios')
+  const paymentServiceUri = inject('paymentServiceUri')
   const router = useRouter()
   const userStore = useUserStore()
+  const orderStore = useOrdersStore()
+
 
   const points = ref(0)
   const cart = ref([])
@@ -158,12 +162,11 @@
             // efetuar pagamento
             // 10 mbway, 50 paypal, 200 visa
             console.log("paymentData: " + JSON.stringify(paymentData.value))
-            let payment_response = await axios.post('https://dad-202223-payments-api.vercel.app/api/payments', {
+            let payment_response = await axios.post(`${paymentServiceUri}/api/payments`, {
               "type": paymentData.value.type,
               "reference": paymentData.value.reference,
               "value" : paymentData.value.value
             })
-            console.log("pagamento: " + payment_response)
             
           
 
@@ -186,6 +189,23 @@
             cart.value.forEach((p) => productsId.push({ "product_id": p.id }))
             order.value.order_items = productsId
             let r = await axios2.post('orders',order.value)
+
+            // -----------------------------------------------------------------
+            // set order to ready if there are no hot dishes
+            let noHotDishes = true
+            cart.value.every((p) => {
+              if(p.type == 'hot dish'){
+                noHotDishes = false
+                return false
+              }
+              return true
+            })
+            if(noHotDishes) orderStore.changeStatusOrder(r.data.data.id,'ready')
+
+            // Its not a good idea to do this, since the user will have access to
+            // the ready order endpoint, if I find a better way to do this I will
+            // change it
+            // -----------------------------------------------------------------
 
 
             toast.success("Payment successful!")

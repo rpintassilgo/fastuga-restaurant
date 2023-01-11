@@ -18,7 +18,7 @@ class OrderController extends Controller
 
     public function showAllOrders()
     {
-        return OrderResource::collection(Order::with('orderItems.product')->paginate(20));
+        return OrderResource::collection(Order::with('orderItems.product')->latest()->paginate(20));
     }
 
     public function showStatusOrders($status)
@@ -26,16 +26,16 @@ class OrderController extends Controller
         $orders = null;
         switch ($status) {
             case 'preparing':
-                $orders = Order::with('orderItems.product')->where('status','P')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status','P')->latest()->paginate(20);
                 break;
             case 'ready':
-                $orders = OrderResource::collection(Order::with('orderItems.product')->where('status','R')->paginate(20));
+                $orders = Order::with('orderItems.product')->where('status','R')->latest()->paginate(20);
                 break;
             case 'delivered':
-                $orders = Order::with('orderItems.product')->where('status','D')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status','D')->latest()->paginate(20);
                 break;
             case 'cancelled':
-                $orders = Order::with('orderItems.product')->where('status','C')->paginate(20);
+                $orders = Order::with('orderItems.product')->where('status','C')->latest()->paginate(20);
                 break;
             default:
                 return response()->json(['message' => 'Invalid order status!'],400);
@@ -50,19 +50,19 @@ class OrderController extends Controller
         switch ($status) {
             case 'preparing':
                 $matchThese = ['status' => 'P', 'customer_id' => $id];
-                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                $orders = Order::with('orderItems.product')->where($matchThese)->latest()->paginate(20);
                 break;
             case 'ready':
                 $matchThese = ['status' => 'R', 'customer_id' => $id];
-                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                $orders = Order::with('orderItems.product')->where($matchThese)->latest()->paginate(20);
                 break;
             case 'delivered':
                 $matchThese = ['status' => 'D', 'customer_id' => $id];
-                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                $orders = Order::with('orderItems.product')->where($matchThese)->latest()->paginate(20);
                 break;
             case 'cancelled':
                 $matchThese = ['status' => 'C', 'customer_id' => $id];
-                $orders = Order::with('orderItems.product')->where($matchThese)->paginate(20);
+                $orders = Order::with('orderItems.product')->where($matchThese)->latest()->paginate(20);
                 break;
             default:
                 return response()->json(['message' => 'Invalid order status!'],400);
@@ -74,7 +74,7 @@ class OrderController extends Controller
 
     public function showAllOrdersFromCustomer($id)
     {
-        $orders = Order::with('orderItems.product')->where('customer_id',$id)->paginate(20);
+        $orders = Order::with('orderItems.product')->where('customer_id',$id)->latest()->paginate(20);
         return OrderResource::collection($orders);
     }
 
@@ -87,25 +87,13 @@ class OrderController extends Controller
     public function createOrder(OrderRequest $request)
     {
 
-        //dd($request);
-
-        // check if logged user is customer or if it is not logged (customer without account) 
-        // isto devia ser middleware depois e secalhar toda a gente pode criar order
-        /*
-        if (Auth::user()->user_type != "C" || !Auth::check()){
-            return response()->json(['message' => 'The user is not a customer'],400);
-        }
-        */
-
         try{
-            //var_dump('ola');
             DB::beginTransaction();
 
             $order = new Order; 
 
             // get ticket number from previous order
             $previousTicketNumber = Order::find(DB::table('orders')->max('id'))->ticket_number;
-            //dd($previousTicketNumber);
 
             $ticketNumber = null;
             if($previousTicketNumber == 99){
@@ -114,7 +102,7 @@ class OrderController extends Controller
                 $ticketNumber = ($previousTicketNumber) + 1;
             }
 
-            // criar itens do pedido e adicioná-los ao pedido
+            // create order items and add them to the order
             $items = $request->input('order_items');
             $orderLocalNumber = 1;
             $totalPrice = 0;
@@ -122,7 +110,6 @@ class OrderController extends Controller
             foreach ($items as $item){
                 $orderItem = new OrderItem();
 
-                //$orderItem->order_id = 
                 $orderItem->order_local_number = $orderLocalNumber;
                 $orderLocalNumber = $orderLocalNumber + 1;
                 
@@ -135,8 +122,6 @@ class OrderController extends Controller
                 $orderItem->notes =  array_key_exists('notes',$item) ? $item['notes'] : null;
 
                 $totalPrice = $totalPrice + $product->price;
-
-                //var_dump($orderItem);
 
                 array_push($orderItemsToSave,$orderItem); // we cant save it rn, because there is no order_id
             }
@@ -156,20 +141,10 @@ class OrderController extends Controller
             $order->delivered_by = null;
 
             $order->save(); // save to create id for order_id
-            //var_dump(gettype($orderItemsToSave));
             $order->orderItems()->saveMany($orderItemsToSave);
 
 
             $order->save();
-
-            //var_dump($order);
-            
-            /*
-            foreach($orderItemsToSave as $orderItem){
-                $order->orderItems()->save($orderItem);
-            }
-            */
-            
 
             DB::commit();
 
@@ -184,10 +159,11 @@ class OrderController extends Controller
 
     public function setOrderToReady($id)
     {
-        // sera q é o ED q diz q tá ready? se sim, verificar se o user logado é do tipo ED
+        /*
         if (Auth::user()->type != "EC"){
             return response()->json(['message' => 'The current logged user is not an employee chef'],400);
         }
+        */
 
         try{
             DB::beginTransaction();
@@ -207,7 +183,7 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function deliverOrder($id)
+    public function deliverOrder(Request $request,$id)
     {
         // verificar se o user logado é do tipo ED
         if (Auth::user()->type != "ED"){
@@ -219,6 +195,7 @@ class OrderController extends Controller
 
             $order = Order::findOrFail($id);
             $order->status = "D"; // Delivered
+            $order->delivered_by = $request->has('delivery_id') ? $request->input('delivery_id') : null; //
 
             $order->save();
 

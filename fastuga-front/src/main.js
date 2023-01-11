@@ -18,6 +18,7 @@ import "bootstrap"
 const app = createApp(App)
 
 const serverBaseUrl = import.meta.env.VITE_APP_BASE_URL
+const paymentServiceUri = import.meta.env.VITE_PAYMENT_SERVICE_URI
 app.provide('axios', axios.create({
     baseURL: serverBaseUrl + '/api',
     headers: {
@@ -28,6 +29,7 @@ app.provide('axiosImage', axios.create({
     baseURL: serverBaseUrl + '/api'
   }))
 app.provide('serverBaseUrl', serverBaseUrl)  
+app.provide('paymentServiceUri', paymentServiceUri) 
 //app.provide('socket', io(import.meta.env.VITE_APP_WS_SERVER))
 
 app.use(Toaster, {
