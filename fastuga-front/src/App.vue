@@ -43,7 +43,7 @@ const clickMenuOption = () => {
           <img src="@/assets/fastuga-logo.png" alt="" width="95" height="80" class=" logo d-inline-block align-text-top" style="margin-left: 50px;"/>
         </router-link>
 
-        <router-link :to="{ name: 'ProductsMenu' }" @click="clickMenuOption" v-if="userStore.user?.type == 'C'">
+        <router-link :to="{ name: 'ProductsMenu' }" @click="clickMenuOption" v-if="userStore.user?.type == 'C' || !userStore.user">
             <img src="@/assets/fastuga-menu.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
 
@@ -66,7 +66,7 @@ const clickMenuOption = () => {
           <router-link :to="{ name: 'Dashboard' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-letras.png" alt="" width="230" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 300px;"/>
           </router-link>
-          <li class="nav-item" v-if="userStore.user?.type == 'C'">
+          <li class="nav-item" v-if="userStore.user?.type == 'C' || !userStore.user">
           <router-link :to="{ name: 'ProductsCart' }" @click="clickMenuOption">
             <img src="@/assets/fastuga-carrinho.png" alt="" width="100" height="80" class=" logo d-inline-block align-text-top" style="margin-right: 20px;"/>
           </router-link>
@@ -214,7 +214,7 @@ const clickMenuOption = () => {
                 </router-link>
               </li>
             </div>
-            <div v-if="userStore.user?.type == 'C'">
+            <div v-if="userStore.user?.type == 'C' || !userStore.user">
               <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                 <router-link
                   class="nav-link w-100 me-3"
@@ -281,7 +281,7 @@ const clickMenuOption = () => {
                 Order Items <!-- Delivery Emplyee Orders -->
               </router-link>
             </li>
-            <li class="nav-item" v-if="userStore.user?.type == 'C'">
+            <li class="nav-item" v-if="userStore.user?.type == 'C' || !userStore.user">
                 <!-- Mudar A pelos corretos da base de dados -->
               <router-link class="nav-link" :class="{ active: $route.name === 'ProductsCart' }"
                 :to="{ name: 'ProductsCart' }" @click="clickMenuOption">

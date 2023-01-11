@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,10 +40,4 @@ class User extends Authenticatable
     public function customer(){
         return $this->hasOne(Customer::class);
     }
-
-
-    /*
-    public function orderItems(){ // users that are chef employees can cook many hot dishes (order items)
-        return $this->hasMany(OrderItem::class,'preparation_by','id');
-    }*/
 }

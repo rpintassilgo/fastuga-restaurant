@@ -23,11 +23,6 @@ class Product extends Model
         'price'
     ];
 
-    protected $nullable = [ // será que todos os campos são mandatórios ??
-        'description', // a descrição é obrigatória ou pode ser null ??
-        'photo_url'
-    ];
-
     public function orderItem(){
         return $this->hasOne(OrderItem::class);
     }

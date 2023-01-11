@@ -28,12 +28,6 @@ class Order extends Model
         'delivered_by',
     ];
 
-    protected $nullable = [ 
-        'ticket_number', // pq no inicio quando a order é criada, nao se consegue calcular o ticket number de imediato
-        'customer_id',
-        'delivered_by'
-    ];
-
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

@@ -26,11 +26,6 @@ class OrderItem extends Model
         'notes'
     ];
 
-    protected $nullable = [ 
-        'notes',
-        'preparation_by'
-    ];
-
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -39,9 +34,4 @@ class OrderItem extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
-
-    /*
-    public function chef(){
-        return $this->belongsTo(User::class,'preparation_by','id');
-    }*/
 }

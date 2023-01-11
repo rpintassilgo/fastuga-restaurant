@@ -178,10 +178,12 @@ router.beforeEach(async (to, from, next) => {
     next()
     return
   }
+  /*
   if (!userStore.user) {
     next({ name: 'Login' })
     return
   }
+  */
   if (to.name == 'User') {
     if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
       next()

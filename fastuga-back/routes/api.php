@@ -14,17 +14,22 @@ use App\Http\Controllers\api\AuthController;
 Route::post('customers', [CustomerController::class, 'signUpCustomer']);
 Route::post('login', [AuthController::class, 'login']);
 
+// PRODUCTS
+Route::get('products', [ProductController::class, 'showAllProducts']);
+Route::get('products/hotdishes', [ProductController::class, 'showHotDishes']);
+Route::get('products/colddishes', [ProductController::class, 'showColdDishes']);
+Route::get('products/drinks', [ProductController::class, 'showDrinks']);
+Route::get('products/desserts', [ProductController::class, 'showDesserts']);
+
+// ORDERS
+Route::post('orders', [OrderController::class, 'createOrder']);
 
 Route::middleware('auth:api')->group(function (){
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::get('users/me', [UserController::class, 'showMyself']); //->middleware('can:showMe,App\Models\User'); // works fine
 
     // PRODUCTS
-    Route::get('products', [ProductController::class, 'showAllProducts'])->middleware('can:viewAny,App\Models\Product'); // works fine
-    Route::get('products/hotdishes', [ProductController::class, 'showHotDishes'])->middleware('can:viewAny,App\Models\Product'); // works fine
-    Route::get('products/colddishes', [ProductController::class, 'showColdDishes'])->middleware('can:viewAny,App\Models\Product'); // works fine
-    Route::get('products/drinks', [ProductController::class, 'showDrinks'])->middleware('can:viewAny,App\Models\Product'); // works fine
-    Route::get('products/desserts', [ProductController::class, 'showDesserts'])->middleware('can:viewAny,App\Models\Product'); // works fine
+
     Route::get('products/{id}', [ProductController::class, 'showProduct'])->where('id', '[0-9]+')->middleware('can:view,App\Models\Product'); // works fine
     Route::post('products', [ProductController::class, 'createProduct'])->middleware('can:create,App\Models\Product'); // works fine
     Route::put('products/{id}', [ProductController::class, 'editProduct'])->middleware('can:update,App\Models\Product'); // Works fine
@@ -62,7 +67,6 @@ Route::middleware('auth:api')->group(function (){
     Route::get('orders/status/{status}', [OrderController::class, 'showStatusOrders'])->whereIn('status', ['preparing', 'ready', 'delivered', 'cancelled'])->middleware('can:view,App\Models\Order');
     Route::get('orders/{id}', [OrderController::class, 'showOrder'])->middleware('can:view,App\Models\Order')->middleware('can:view,App\Models\Order');
     Route::get('orders/customer/{id}/{status}', [OrderController::class, 'showStatusOrdersFromCustomer'])->middleware('can:view,App\Models\Order');
-    Route::post('orders', [OrderController::class, 'createOrder'])->middleware('can:create,App\Models\Order'); // works fine
     Route::put('orders/{id}/ready', [OrderController::class, 'setOrderToReady'])->middleware('can:update,App\Models\Order'); // works fine
     Route::put('orders/{id}/deliver', [OrderController::class, 'deliverOrder'])->middleware('can:update,App\Models\Order'); // works fine
     Route::put('orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->middleware('can:updateCancelOrder,App\Models\Order'); // works fine

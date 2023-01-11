@@ -9,11 +9,12 @@
   const toast = inject('toast')
   const axios2 = inject('axios')
   const router = useRouter()
+  const userStore = useUserStore()
 
   const points = ref(0)
   const cart = ref([])
   const total = ref(0)
-  const paymentMethod = ref('default')
+  const paymentMethod = userStore.user ? ref('default') : ref('visa')
   const paymentData = ref({
     "type": "",
     "reference": "",
@@ -30,7 +31,6 @@
     'payment_reference': '',
     'order_items': []
   })
-  const userStore = useUserStore()
 
 
   const loadCart = () => {
@@ -48,7 +48,7 @@
     let total_paid_in_points = 0
     let gainedPoints = 0
     console.log("cart payment: " + JSON.stringify(cart.value))
-    if(userStore.user.default_payment_type == "" && userStore.user.default_payment_reference == "" && paymentMethod.value == "default"){
+    if(userStore.user?.default_payment_type == "" && userStore.user?.default_payment_reference == "" && paymentMethod.value == "default"){
       toast.error("No default payment reference found")
     } else{
           try {
@@ -136,23 +136,24 @@
                   break;
             }
 
-            if(!limiteReached){
-                gainedPoints = Math.floor(totalPrice.value/10)
-                // put para adicionar os pontos ganhos
-                axios2.put(`customers/points/add/${userStore.user.id}`,{'points': gainedPoints})
-                .then((response) => {
-                  console.log("response dos pontos: " + JSON.stringify(response))
-                  toast.success("You have gained " + gainedPoints + " points!")
-                  })
-                .catch((error) => console.log(error.message))
-                axios2.put(`customers/points/remove/${userStore.user.id}`,{'points': points.value})
-                .then((response) => {
-                  console.log("response dos pontos: " + JSON.stringify(response))
-                  toast.success("You have used " + points.value + " points!")
-                  })
-                .catch((error) => console.log(error.message))
+            if(userStore.user){
+              if(!limiteReached){
+                  gainedPoints = Math.floor(totalPrice.value/10)
+                  // put to add gained points
+                  axios2.put(`customers/points/add/${userStore.user.id}`,{'points': gainedPoints})
+                  .then((response) => {
+                    console.log("response dos pontos: " + JSON.stringify(response))
+                    toast.success("You have gained " + gainedPoints + " points!")
+                    })
+                  .catch((error) => console.log(error.message))
+                  axios2.put(`customers/points/remove/${userStore.user.id}`,{'points': points.value})
+                  .then((response) => {
+                    console.log("response dos pontos: " + JSON.stringify(response))
+                    toast.success("You have used " + points.value + " points!")
+                    })
+                  .catch((error) => console.log(error.message))
+              }
             }
-
             
             // efetuar pagamento
             // 10 mbway, 50 paypal, 200 visa
@@ -161,11 +162,7 @@
               "type": paymentData.value.type,
               "reference": paymentData.value.reference,
               "value" : paymentData.value.value
-            }/*,{
-                  headers: {
-                                'Content-type': 'application/json',
-                          },
-            }*/)
+            })
             console.log("pagamento: " + payment_response)
             
           
@@ -175,34 +172,23 @@
             order.value.payment_type = paymentData.value.type.toUpperCase()
             order.value.payment_reference = paymentData.value.reference
 
-
-            if(pointsUsed){
-              order.value.total_paid = total_paid
-              order.value.total_paid_with_points = total_paid_in_points
-              order.value.points_gained = gainedPoints
-              order.value.points_used_to_pay = points.value
+            if(userStore.user){
+              if(pointsUsed){
+                order.value.total_paid = total_paid
+                order.value.total_paid_with_points = total_paid_in_points
+                order.value.points_gained = gainedPoints
+                order.value.points_used_to_pay = points.value
+              }
             }
 
             
             const productsId = []
-            //const promises = await Promise.all(cart.value.map(item => axios2.get(`orderitems/${item.product.id}`)))
-            //promises.forEach((p) => orderItems.push(p.data.data))
             cart.value.forEach((p) => productsId.push({ "product_id": p.id }))
             order.value.order_items = productsId
-            console.log(typeof order.value.order_items)
-            console.log("orderItems: " + JSON.stringify(order.value.order_items))
-            console.log("order a enviar: " + JSON.stringify(order.value))
             let r = await axios2.post('orders',order.value)
-            console.log("order criada: " + JSON.stringify(r.data.data))
 
 
             toast.success("Payment successful!")
-            // descomentar o empty cart e a rota
-            //userStore.emptyCart()
-            //router.push({ name: 'ProductsMenu'})
-
-            
-      
           } catch (error) {
             toast.error("Payment failed!")
             console.log(error.message)
@@ -214,8 +200,6 @@
   const totalPrice = computed(() => {
     cart.value.forEach(item => {
       total.value = total.value + Number(item.price)
-      //console.log("preço do item: " + item.price)
-      //console.log("preço do item: " + typeof item.price)
     });
     return total.value
 })
@@ -281,7 +265,7 @@
               id="selectDefaultPaymentType"
               v-model="paymentMethod"
             >
-              <option value="default">Default payment type</option>
+              <option v-if="userStore.user" value="default">Default payment type</option>
               <option value="visa">Visa</option>
               <option value="paypal">Paypal</option>
               <option value="mbway">MBWay</option>
