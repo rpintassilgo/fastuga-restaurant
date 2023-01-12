@@ -44,7 +44,7 @@ PASSPORT_CLIENT_SECRET=
 
 ```
 
-Install depencies with composer, start your server, configure the database and install passport to generate its keys
+Install depencies, start your server, configure the database and install passport to generate its keys
 ```bash
 $ composer install
 
