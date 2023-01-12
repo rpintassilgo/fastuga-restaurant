@@ -1,25 +1,25 @@
 # Fastuga
 
-Fastuga was an university project done for the class Distributed Applications Development. Its purpose was to implement a management plataform for a fictional restaurant called Fastuga with a Single Page Application (SPA) on the frontend and a MVC(without views) architetural pattern on the backend that includes a Restful API
+Fastuga was an university project done for the class Distributed Applications Development. Its purpose was to implement a management plataform for a fictional restaurant called Fastuga with a Single Page Application (SPA) on the frontend and a MVC(without views) architetural pattern on the backend that includes a Restful API.
 
 Technologies used in the project: Vue, Laravel, MySQL
 
 ## How it works
 
 User types:
-> Customer: A customer can add/remove products from the menu to its cart and perform the payment
-> Delivery employee: Deliver order and see all the orders including its status and its order items status
-> Chef employee: Prepare hot dishes and set them to ready
+> Customer: A customer can add/remove products from the menu to its cart and perform the payment\
+> Delivery employee: Deliver order and see all the orders including its status and its order items status\
+> Chef employee: Prepare hot dishes and set them to ready\
 > Manager employee: Manage users, products and cancel orders
 
-Status:
-> Order: : 'P' (Preparing), 'R' (Ready), 'D' (Delivered) and 'C' (Cancelled)
-> Order items: 'W' (Waiting), 'P' (Preparing) and 'R' (Ready);
-
-Note: All user’s passwords of the provided data are “123”.
+Order and order item status:
+> Order: : 'P' (Preparing), 'R' (Ready), 'D' (Delivered) and 'C' (Cancelled)\
+> Order item: 'W' (Waiting), 'P' (Preparing) and 'R' (Ready);
 
 Modus Operandi:
 > A customer adds products to his cart and performs the payment. A customer without account does not have access to discounts. If the cart does not include > hot dishes, the order status will be 'Ready' since the initial status from other order items such as cold dishes, drinks and desserts are always 'Ready'. > In this scenario, the delivery employee can deliver the order after the payment. If there are hot dishes, all the items from the order need to 'Ready' so > that the order can be 'Ready' and delivered by the delivery employee. To set all order items to 'Ready', a chef employee will need to prepare all the hot > dishes. After this, the delivery employee can deliver the order.
+
+**Note: All user’s passwords of the provided data are “123”.**
 
 ## Backend configuration
 
